@@ -1,0 +1,41 @@
+Job ID: 32698774
+Running on node: dcc-schultzlab-01
+Number of CPUs: 4
+Starting R script at: Fri Jul 25 10:17:50 AM EDT 2025
+==> R script has started and loaded ==>
+Library path:
+[1] "/work/tfs3/gsAI/4paul/rlib"               
+[2] "/admin/apps/rhel9/R-4.4.0/lib64/R/library"
+R script started
+[1] 5
+==> Entering main prediction loop...
+Starting iteration i = 1 
+  Fold j = 1 
+[1] "2025-07-25 10:23:11 EDT"
+[1] 1885
+[1]  2357 36427
+[1] 0.39
+       AX-574114010 AX-564298109 AX-574114011 AX-577073921 AX-564298209
+B-1000           -1           -1           -1           -1           -1
+B-1002           -1           -1           -1            1            1
+B-1003           -1           -1            0           -1            0
+B-1005           -1           -1            1            1            0
+B-1006           -1           -1            1            1            1
+       AX-574114024 AX-576891682 AX-564298228 AX-576891683 AX-574396910
+B-1000           -1           -1            1            1            0
+B-1002            1            1            1            1           -1
+B-1003            0            0            0            0            0
+B-1005            0            0            0            0           -1
+B-1006            1            1            1            1            0
+       AX-574130565 AX-574134397 AX-574135028 AX-574180778 AX-574183310
+B-1000           -1           -1            0            0            1
+B-1002           -1           -1            0            0            1
+B-1003           -1           -1           -1           -1            1
+B-1005           -1           -1            1            0            0
+B-1006           -1           -1           -1            0            1
+       AX-574188112 AX-568192687 AX-568192722 AX-574188340 AX-574191280
+B-1000           -1           -1           -1            0           -1
+B-1002           -1           -1           -1            0            0
+B-1003           -1           -1           -1           -1           -1
+B-1005           -1           -1           -1           -1           -1
+B-1006            0            0            0            0            0

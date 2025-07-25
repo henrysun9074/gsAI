@@ -1,2 +1,4 @@
 *.csv
 *.xlsx
+*.dat
+/4paul/rlib
