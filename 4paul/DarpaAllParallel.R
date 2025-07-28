@@ -175,7 +175,7 @@ colnames(DARPAGEBV) <- c("ID","GBLUP_Mean", "GBLUP_SD", "LASSO_Mean", "LASSO_SD"
 DARPAGEBV2 <- merge(DARPAGEBV, phenTrain[, c("ID", "Status")], by = "ID", all.x = TRUE)
 
 # Write output
-write_xlsx(DARPAGEBV2, "CrossValDarpaGebv.xlsx")
+write_xlsx(DARPAGEBV2, "CrossValDarpaGebv_Parallel.xlsx")
 
 # Correlations
 cat("Correlations with Status:\n")
