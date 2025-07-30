@@ -5,8 +5,8 @@
 #SBATCH --partition=common
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=10
-#SBATCH --mem=80G
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=200G
 #SBATCH --exclusive
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=hs325@duke.edu

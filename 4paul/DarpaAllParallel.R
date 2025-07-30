@@ -1,5 +1,5 @@
 # ================================
-# DarpaAllCV.R - Parallel Genomic Prediction
+# DarpaAllParallel.R - Parallel Genomic Prediction
 # ================================
 
 # Logging + Error Handling
@@ -61,6 +61,8 @@ cat("==> Entering main prediction loop...\n")
 
 results <- foreach(i = 1:10, .packages = c("BWGS", "dplyr", "BGLR", "rrBLUP", "readxl")) %dopar% {
   cat(sprintf("Starting iteration i = %d\n", i))
+  memory_used <- pryr::mem_used()  
+  cat(sprintf("Worker %d memory used: %.2f GB\n", i, memory_used / 1e9))
   
   pred_GBLUP <- vector("list", 5)
   pred_LASSO <- vector("list", 5)
@@ -185,6 +187,42 @@ cat("RKHS: ",  cor(DARPAGEBV2$RKHS_Mean, DARPAGEBV2$Status, use = "complete.obs"
 cat("EGBLUP:", cor(DARPAGEBV2$EGBLUP_Mean, DARPAGEBV2$Status, use = "complete.obs"), "\n")
 cat("BRR:   ", cor(DARPAGEBV2$BRR_Mean, DARPAGEBV2$Status, use = "complete.obs"), "\n")
 cat("BayesB:", cor(DARPAGEBV2$BayesB_Mean, DARPAGEBV2$Status, use = "complete.obs"), "\n")
+
+cor_df <- data.frame(
+  Model = c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB"),
+  Correlation = c(
+    cor(DARPAGEBV2$GBLUP_Mean,  DARPAGEBV2$Status, use = "complete.obs"),
+    cor(DARPAGEBV2$LASSO_Mean,  DARPAGEBV2$Status, use = "complete.obs"),
+    cor(DARPAGEBV2$RKHS_Mean,   DARPAGEBV2$Status, use = "complete.obs"),
+    cor(DARPAGEBV2$EGBLUP_Mean, DARPAGEBV2$Status, use = "complete.obs"),
+    cor(DARPAGEBV2$BRR_Mean,    DARPAGEBV2$Status, use = "complete.obs"),
+    cor(DARPAGEBV2$BayesB_Mean, DARPAGEBV2$Status, use = "complete.obs")
+  ),
+  SD = c(
+    sd(DARPAGEBV2$GBLUP_Mean,  na.rm = TRUE),
+    sd(DARPAGEBV2$LASSO_Mean,  na.rm = TRUE),
+    sd(DARPAGEBV2$RKHS_Mean,   na.rm = TRUE),
+    sd(DARPAGEBV2$EGBLUP_Mean, na.rm = TRUE),
+    sd(DARPAGEBV2$BRR_Mean,    na.rm = TRUE),
+    sd(DARPAGEBV2$BayesB_Mean, na.rm = TRUE)
+  )
+)
+
+# Barchart
+ggplot(cor_df, aes(x = Model, y = Correlation)) +
+  geom_bar(stat = "identity", width = 0.7) +
+  geom_errorbar(aes(ymin = Correlation - SD, ymax = Correlation + SD), 
+                width = 0.2, color = "black") +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set2") +
+  labs(
+    y = "Correlation (± SD)",
+    x = "Model"
+  ) +
+  theme(
+    text = element_text(size = 12),
+    plot.title = element_text(hjust = 0.5)
+  )
 
 # Pairwise scatterplot
 Pairwise <- DARPAGEBV2 %>%
