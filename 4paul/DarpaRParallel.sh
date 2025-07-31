@@ -14,14 +14,17 @@
 cd /work/tfs3/gsAI/4paul
 module load R/4.4.0
 export R_LIBS=/work/tfs3/gsAI/4paul/rlib
+export LD_LIBRARY_PATH=/work/tfs3/gsAI/4paul/rlib/BGLR:$LD_LIBRARY_PATH
 
 echo "Job ID: $SLURM_JOB_ID"
 echo "Running on node: $(hostname)"
 echo "Number of CPUs: $SLURM_CPUS_PER_TASK"
 echo "Starting R script at: $(date)"
 
+echo "Checking LAPACK linkage:"
+ldd /work/tfs3/gsAI/4paul/rlib/BGLR/libs/BGLR.so | grep lapack
+
 Rscript DarpaAllParallel.R
 # Rscript testR.R
 
 echo "R script finished at: $(date)"
-

@@ -250,6 +250,7 @@ colnames(DARPAGEBV) <- c("ID","GBLUP_Mean", "GBLUP_SD", "LASSO_Mean", "LASSO_SD"
 DARPAGEBV2 <- merge(DARPAGEBV, phenTrain[, c("ID", "Status")],
                    by = "ID", all.x = TRUE)
 
+
 write_xlsx(DARPAGEBV2, "CrossValDarpaGebv.xlsx")
 
 cor(DARPAGEBV2$GBLUP_Mean, DARPAGEBV2$Status, use = "complete.obs")

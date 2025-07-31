@@ -1,3 +1,5 @@
+#######################################
+
 .libPaths("/work/tfs3/gsAI/4paul/rlib")
 cat("Library path:\n")
 print(.libPaths())
@@ -7,6 +9,8 @@ library(tidyverse)
 library(readxl)
 
 setwd("/work/tfs3/gsAI/4paul")
+# load(".RData")
+
 df <- read_xlsx("CrossValDarpaGebv.xlsx")
 DARPAGEBV2 <- df
 
@@ -51,6 +55,8 @@ ggplot(cor_df, aes(x = Model, y = Correlation)) +
     text = element_text(size = 12),
     plot.title = element_text(hjust = 0.5)
   )
+
+# save.image("testfile.Rdata") 
 
 ### must figure out - how to get correlation SDs rather than GEBV SDs
 ### have to compute raw correlation for each run rather than taking mean

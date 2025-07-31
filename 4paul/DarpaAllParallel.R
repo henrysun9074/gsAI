@@ -2,20 +2,14 @@
 # DarpaAllParallel.R - Parallel Genomic Prediction
 # ================================
 
-# Logging + Error Handling
-options(error = function() {
-  traceback()
-  quit(save = "no", status = 1, runLast = FALSE)
-})
-
 cat("==> R script has started and loaded ==>\n")
 .libPaths("/work/tfs3/gsAI/4paul/rlib")
 cat("Library path:\n")
 print(.libPaths())
 
 # Load Libraries
-library(doParallel)
-library(foreach)
+library(future)
+library(furrr)
 library(rlang)
 library(tidyverse)
 library(rrBLUP)
@@ -23,7 +17,6 @@ library(BGLR)
 library(BWGS)
 library(qqman)
 library(readxl)
-library(dplyr)
 library(genetics)
 library(corrplot)
 library(writexl)
@@ -58,11 +51,13 @@ registerDoParallel(cl)
 
 # Run parallel loop
 cat("==> Entering main prediction loop...\n")
+n_cores <- as.integer(Sys.getenv("SLURM_CPUS_PER_TASK"))
+if (is.na(n_cores) || n_cores < 1) n_cores <- 1
+cat("Using", n_cores, "cores\n")
 
-results <- foreach(i = 1:10, .packages = c("BWGS", "dplyr", "BGLR", "rrBLUP", "readxl")) %dopar% {
-  cat(sprintf("Starting iteration i = %d\n", i))
-  memory_used <- pryr::mem_used()  
-  cat(sprintf("Worker %d memory used: %.2f GB\n", i, memory_used / 1e9))
+cat("==> Entering main prediction loop...\n")
+results <- future_map(1:10, function(i) {
+  message(sprintf("Starting iteration i = %d", i))
   
   pred_GBLUP <- vector("list", 5)
   pred_LASSO <- vector("list", 5)
@@ -102,11 +97,11 @@ results <- foreach(i = 1:10, .packages = c("BWGS", "dplyr", "BGLR", "rrBLUP", "r
     BRR    = do.call(rbind, pred_BRR),
     BayesB = do.call(rbind, pred_BayesB)
   )
-}
+}, .options = furrr_options(seed = TRUE))
 
-stopCluster(cl)
+save.image("cv_parallel.RData")  # optional full workspace save
 
-# Collect results
+cat("==> Collecting model predictions from future_map results...\n")
 GBLUP_all_preds2  <- lapply(results, `[[`, "GBLUP")
 LASSO_all_preds2  <- lapply(results, `[[`, "LASSO")
 RKHS_all_preds2   <- lapply(results, `[[`, "RKHS")
