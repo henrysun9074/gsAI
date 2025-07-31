@@ -8,9 +8,10 @@ cat("Library path:\n")
 print(.libPaths())
 
 # Load Libraries
+# library(rlang)
 library(future)
 library(furrr)
-library(rlang)
+library(pryr)
 library(tidyverse)
 library(rrBLUP)
 library(BGLR)
@@ -24,11 +25,19 @@ library(writexl)
 # Set working directory
 setwd("/work/tfs3/gsAI/4paul")
 
-# Load data
-cat("Reading phenotype and genotype files...\n")
-phenTrain <- read_xlsx("phenTrainDarpa.xlsx")
-train_base <- read_csv("train_baseDarpa.csv")
-train_base <- column_to_rownames(train_base, var = colnames(train_base)[1])
+# cat("Reading phenotype and genotype files...\n")
+# phenTrain <- read_xlsx("phenTrainDarpa.xlsx")
+# train_base <- read_csv("train_baseDarpa.csv")
+# train_base <- column_to_rownames(train_base, var = colnames(train_base)[1])
+# save(phenTrain, train_base, file = "darpa_input_data.RData")
+# cat("Saved preloaded data to darpa_input_data.RData\n")
+
+## for repeat loads
+cat("Loading pre-saved data from RData file...\n")
+load("darpa_input_data.RData")
+cat("Loaded data from darpa_input_data.RData\n")
+
+############################# Preprocessing and parallelization ###########################
 
 # Split setup
 n_samples <- nrow(train_base)
@@ -43,21 +52,24 @@ pheno_train_vec1 <- phenTrain$Status
 names(pheno_train_vec1) <- phenTrain$ID
 
 # Parallel setup
+options(future.globals.maxSize = 2 * 1024^3)  # 2 GB per worker
 n_cores <- as.integer(Sys.getenv("SLURM_CPUS_PER_TASK"))
 if (is.na(n_cores) || n_cores < 1) n_cores <- 1
-cat("Using", n_cores, "cores\n")
-cl <- makeCluster(n_cores)
-registerDoParallel(cl)
+cat("Using", n_cores, "cores via future::multicore\n")
+plan(multicore, workers = n_cores)
+dir.create("logs", showWarnings = FALSE)
 
-# Run parallel loop
-cat("==> Entering main prediction loop...\n")
-n_cores <- as.integer(Sys.getenv("SLURM_CPUS_PER_TASK"))
-if (is.na(n_cores) || n_cores < 1) n_cores <- 1
-cat("Using", n_cores, "cores\n")
+############################# CROSS VALIDATION ################################
 
 cat("==> Entering main prediction loop...\n")
 results <- future_map(1:10, function(i) {
   message(sprintf("Starting iteration i = %d", i))
+  
+  log_file <- sprintf("logs/worker_%02d.log", i)
+  log_con <- file(log_file, open = "wt")
+  sink(log_con, split = TRUE)
+  on.exit({ sink(); close(log_con) }, add = TRUE)
+  cat(sprintf("==> Worker %d started at %s\n", i, Sys.time()))
   
   pred_GBLUP <- vector("list", 5)
   pred_LASSO <- vector("list", 5)
@@ -67,6 +79,8 @@ results <- future_map(1:10, function(i) {
   pred_BayesB <- vector("list", 5)
   
   for (j in 1:5) {
+    cat(sprintf("-- Fold %d --\n", j))
+    
     Statusgeno_target <- train_base[split_indices[[j]], ]
     Statusgeno_train <- train_base[-split_indices[[j]], ]
     Statuspheno_train_vec_j <- pheno_train_vec1[rownames(Statusgeno_train)]
@@ -81,13 +95,34 @@ results <- future_map(1:10, function(i) {
       geno.impute.method = "MNI"
     )
     
-    pred_GBLUP[[j]]  <- do.call(bwgs.predict, c(common_args, list(predict.method = "GBLUP")))
-    pred_LASSO[[j]]  <- do.call(bwgs.predict, c(common_args, list(predict.method = "BL")))
-    pred_RKHS[[j]]   <- do.call(bwgs.predict, c(common_args, list(predict.method = "RKHS")))
-    pred_EGBLUP[[j]] <- do.call(bwgs.predict, c(common_args, list(predict.method = "EGBLUP")))
-    pred_BRR[[j]]    <- do.call(bwgs.predict, c(common_args, list(predict.method = "BRR")))
-    pred_BayesB[[j]] <- do.call(bwgs.predict, c(common_args, list(predict.method = "BB")))
+    cat("Running GBLUP...\n")
+    t1 <- system.time(pred_GBLUP[[j]] <- do.call(bwgs.predict, c(common_args, list(predict.method = "GBLUP"))))
+    print(t1)
+    
+    cat("Running LASSO...\n")
+    t2 <- system.time(pred_LASSO[[j]] <- do.call(bwgs.predict, c(common_args, list(predict.method = "BL"))))
+    print(t2)
+    
+    cat("Running RKHS...\n")
+    t3 <- system.time(pred_RKHS[[j]] <- do.call(bwgs.predict, c(common_args, list(predict.method = "RKHS"))))
+    print(t3)
+    
+    cat("Running EGBLUP...\n")
+    t4 <- system.time(pred_EGBLUP[[j]] <- do.call(bwgs.predict, c(common_args, list(predict.method = "EGBLUP"))))
+    print(t4)
+    
+    cat("Running BRR...\n")
+    t5 <- system.time(pred_BRR[[j]] <- do.call(bwgs.predict, c(common_args, list(predict.method = "BRR"))))
+    print(t5)
+    
+    cat("Running BayesB...\n")
+    t6 <- system.time(pred_BayesB[[j]] <- do.call(bwgs.predict, c(common_args, list(predict.method = "BB"))))
+    print(t6)
   }
+  
+  cat(sprintf("==> Worker %d finished at %s\n", i, Sys.time()))
+  mem <- pryr::mem_used()
+  message(sprintf("Worker %d memory used: %.2f GB", i, as.numeric(mem) / 1e9))
   
   list(
     GBLUP  = do.call(rbind, pred_GBLUP),
@@ -98,8 +133,10 @@ results <- future_map(1:10, function(i) {
     BayesB = do.call(rbind, pred_BayesB)
   )
 }, .options = furrr_options(seed = TRUE))
-
 save.image("cv_parallel.RData")  # optional full workspace save
+
+
+############################# GEBV Computation ################################
 
 cat("==> Collecting model predictions from future_map results...\n")
 GBLUP_all_preds2  <- lapply(results, `[[`, "GBLUP")
@@ -202,6 +239,9 @@ cor_df <- data.frame(
     sd(DARPAGEBV2$BayesB_Mean, na.rm = TRUE)
   )
 )
+
+# TODO: modify the below section so it automatically computes SD of correlation rather than
+# SD of GEBVs
 
 # Barchart
 ggplot(cor_df, aes(x = Model, y = Correlation)) +

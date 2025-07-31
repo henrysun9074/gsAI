@@ -2,6 +2,8 @@
 *.xlsx
 *.dat
 /4paul/rlib
+/4paul/logs
+*.RData
 *.out
 *.err
 *.pth
