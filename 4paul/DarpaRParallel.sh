@@ -4,12 +4,14 @@
 #SBATCH --error=paul_parallel.err
 #SBATCH --partition=common
 #SBATCH --ntasks=1
-#SBATCH --nodes=1
+#SBATCH --nodes=1 
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=300G
 #SBATCH --exclusive
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=hs325@duke.edu
+
+## try adding more nodes for more memory
 
 cd /work/tfs3/gsAI/4paul
 module load R/4.4.0
