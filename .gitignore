@@ -3,6 +3,7 @@
 *.dat
 /4paul/rlib
 /4paul/logs
+/models
 *.RData
 *.out
 *.err
