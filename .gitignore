@@ -5,6 +5,7 @@
 /4paul/logs
 /models
 *.RData
+*.rds
 *.out
 *.err
 *.joblib
