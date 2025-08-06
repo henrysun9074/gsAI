@@ -43,6 +43,8 @@ for df in pd.read_csv('MeanImputedScaledData.csv', chunksize=chunksize, index_co
 
 result = pd.concat(list_of_dataframes)
 df = result
+df['ID'] = df.index
+ids = df["ID"].to_numpy()
 
 print_with_time("Preparing features and labels...")
 ax_columns = [col for col in df.columns if col.startswith('AX')]
@@ -64,7 +66,9 @@ gebv_records = []
 
 for loop_idx in range(10):
     skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=loop_idx)
-    
+
+    print(f"\nStarting fold {loop_idx} out of 10")
+
     for fold_idx, (train_val_idx, test_idx) in enumerate(skf.split(X, y)):
         X_train_val, X_test = X[train_val_idx], X[test_idx]
         y_train_val, y_test = y[train_val_idx], y[test_idx]
@@ -97,7 +101,6 @@ for loop_idx in range(10):
                 'gebv': prob_class1
             })
 
-        # print(f"Loop {loop_idx}, Fold {fold_idx}: Accuracy = {acc:.4f}")
         print_with_time(f"    Accuracy for fold {fold_idx + 1}: {acc:.4f}")
 
 print("\nAverage Accuracy over 50 folds:", np.mean(fold_accuracies))
