@@ -9,7 +9,7 @@ library(tidyverse)
 library(readxl)
 
 setwd("/work/tfs3/gsAI/4paul")
-# load(".RData")
+load("cv_parallel.RData")
 
 df <- read_xlsx("CrossValDarpaGebv.xlsx")
 DARPAGEBV2 <- df
