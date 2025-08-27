@@ -1,8 +1,13 @@
+## Set libpaths
+.libPaths("/work/tfs3/gsAI/4paul/rlib")
+cat("Library path:\n")
+print(.libPaths())
+
 rm(list = ls())
 
 library(rlang)
 # library(asreml)
-library(ASRgenomics)
+# library(ASRgenomics)
 library(tidyverse)
 library(rrBLUP)
 library(BGLR)
@@ -21,12 +26,14 @@ library(writexl)
 theme_set(
   theme_minimal(base_family = "Arial"))
 
-getwd()
-setwd("/Users/henrysun_1/Desktop/Duke/PhD 2025-2026/genomic selection/DARPA data 3 generations combined")
-phen <- read_xlsx("/Users/henrysun_1/Desktop/Duke/PhD 2025-2026/genomic selection/DARPA data 3 generations combined/F0F1F2_phenotype.xlsx")
-filter_phen <- read_csv("/Users/henrysun_1/Desktop/Duke/PhD 2025-2026/genomic selection/DARPA data 3 generations combined/FilteredPhenotypeData.csv")
 
-genotable <- read.table("F0F1F2.ped")
+########## UPDATE FILE PATHS ################
+setwd("/work/tfs3/gsAI/4paul")
+getwd()
+phen <- read_xlsx("/raw/F0F1F2_phenotype.xlsx")
+filter_phen <- read_csv("/raw/FilteredPhenotypeData.csv")
+genotable <- read.table("/raw/F0F1F2.ped")
+
 n <- nrow(genotable)
 meta <- data.frame(
  IID = genotable[[1]],            # Individual ID (assumed column 1)
@@ -73,10 +80,6 @@ colnames(Geno) <- map$Marker
 genotable<-genotable[-nonmatchingrows,]
 rownames(Geno) <- genotable$V1
 
-write_xlsx(Geno, "DarpaGeno.xlsx")
-library(readr)
-write_csv(as.data.frame(Geno), "DarpaGeno.csv")
-test<-as.data.frame(Geno)
 
 #############
 
@@ -104,52 +107,12 @@ phenTrain$ID <- sub("_.*", "", phenTrain$ID)
 Phen_to_remove<-which(!phenTrain$`ID` %in% rownames(MaxMinQC))
 phenTrain<-phenTrain[-Phen_to_remove,]
 
-######## GWAS
 
-MaxMinQC <- round(MaxMinQC, digits=0)
-train_base <- MaxMinQC
-train_base <- train_base[complete.cases(train_base), ]
-dim(train_base)
+####### write CSV
 
-Map <- map[map$Marker%in%colnames(MaxMinQC), ]
-Map <- Map[, c(2, 1, 3:ncol(MaxMinQC))]
-colnames(Map) <- c("marker","chrom","pos")
-
-phenTrain <- phenTrain[ , -5]
-pheno.data = phenTrain
-sum(is.na(phenTrain))
-
-phenTrain[[1]] <- seq_len(nrow(phenTrain))
-rownames(train_base) <- seq_len(nrow(train_base))
-
-
-Base.pre.gwas <- pre.gwas(
-  pheno.data = pheno.data, indiv = "ID", resp = "Status", 
-  geno.data = train_base, Q.method = "K",
-  method = "VanRaden",
-  maf = 0.05, marker.callrate = 0.05, ind.callrate = 0.05,
-  impute = FALSE)
-
-variance<-Base.pre.gwas$plot.scree 
-variance+ggtitle("Status Base QC Explained Variance")
-
-gwasS <- gwas.asreml(
-  pheno.data = Base.pre.gwas$pheno.data, resp = "Status", gen = "ID",
-  Kinv = Base.pre.gwas$Kinv, Q = Base.pre.gwas$Q, npc = 7,
-  geno.data = Base.pre.gwas$geno.data, map.data = Base.pre.gwas$map.data,
-  pvalue.thr = 0.0005, bonferroni = FALSE, 
-  P3D = TRUE)############### 48 markers
-
-gwasS$heritability  ################################# vc =  SE =  // pev = 
-gwasSall<-gwasS$gwas.all
-gwasSall$marker <- gsub("_", "-", gwasSall$marker)
-gwasSall$chrom <- Map$marker[match(gwasSall$marker, Map$chrom)]
-gwasSall$chrom <- as.numeric(as.character(gwasSall$chrom))
-gwasSall <- gwasSall[order(gwasSall$chrom), ]
-gwasSalltemp <- gwasSall %>%
-  group_by(chrom) %>%
-  mutate(pos = rank(pos, na.last = "keep"))
-manhattan.plot(gwas.table = gwasSalltemp, pvalue.thr = 0.05/36000, point.size = 1)
-manhattan(gwasSalltemp, chr = "chrom", bp = "pos", p = "p.value", snp = "marker")
+write_xlsx(Geno, "DarpaGeno.xlsx")
+library(readr)
+write_csv(as.data.frame(Geno), "DarpaGeno.csv")
+test<-as.data.frame(Geno)
 
 
