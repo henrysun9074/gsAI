@@ -1,12 +1,12 @@
 *.csv
-*.xlsx
 *.dat
 /4paul/rlib
 /4paul/logs
 /models
 *.RData
 *.rds
-*.out
-*.err
+/4paul/paul_parallel.err
+/4paul/paul_parallel.out
 *.joblib
 *.pth
+/4paul/raw

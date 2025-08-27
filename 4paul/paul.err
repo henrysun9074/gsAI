@@ -1,0 +1,23 @@
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ purrr::%@%()         masks rlang::%@%()
+✖ dplyr::filter()      masks stats::filter()
+✖ purrr::flatten()     masks rlang::flatten()
+✖ purrr::flatten_chr() masks rlang::flatten_chr()
+✖ purrr::flatten_dbl() masks rlang::flatten_dbl()
+✖ purrr::flatten_int() masks rlang::flatten_int()
+✖ purrr::flatten_lgl() masks rlang::flatten_lgl()
+✖ purrr::flatten_raw() masks rlang::flatten_raw()
+✖ purrr::invoke()      masks rlang::invoke()
+✖ dplyr::lag()         masks stats::lag()
+✖ purrr::splice()      masks rlang::splice()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+Error: package or namespace load failed for ‘BGLR’ in dyn.load(file, DLLpath = DLLpath, ...):
+ unable to load shared object '/work/tfs3/gsAI/4paul/rlib/BGLR/libs/BGLR.so':
+  liblapack.so.3: cannot open shared object file: No such file or directory
+Execution halted
