@@ -56,8 +56,7 @@ def get_search_spaces():
         ),
         "GB": (
             XGBClassifier(
-                tree_method="hist", device="cuda",
-                eval_metric="logloss", use_label_encoder=False
+                tree_method="hist", device="cuda", eval_metric="logloss"
             ),
             {
                 "n_estimators": Integer(100, 2000),
@@ -69,18 +68,18 @@ def get_search_spaces():
                 "gamma": Real(0, 5),
             },
         ),
-        "MLP": (
-            MLPClassifier(max_iter=200),
-            {
-                "hidden_layer_sizes": Categorical(
-                    [(64,), (128,), (256,), (128, 64), (256, 128), (128, 128, 64)]
-                ),
-                "alpha": Real(1e-6, 1e-1, prior="log-uniform"),
-                "learning_rate_init": Real(1e-4, 1e-1, prior="log-uniform"),
-                "batch_size": Integer(32, 512),
-                "max_iter": Integer(100, 1000),
-            },
-        ),
+        # "MLP": (
+        #     MLPClassifier(max_iter=200),
+        #     {
+        #         "hidden_layer_sizes": Categorical(
+        #             [(64,), (128,), (256,), (128, 64), (256, 128), (128, 128, 64)]
+        #         ),
+        #         "alpha": Real(1e-6, 1e-1, prior="log-uniform"),
+        #         "learning_rate_init": Real(1e-4, 1e-1, prior="log-uniform"),
+        #         "batch_size": Integer(32, 512),
+        #         "max_iter": Integer(100, 1000),
+        #     },
+        # ),
     }
 
 
