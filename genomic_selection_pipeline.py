@@ -180,13 +180,13 @@ def main():
     logger.info("Running nested CV with calibration...")
     prob_df = nested_cv(X, y, ids, tuned_models, n_jobs=-1)
 
-    prob_df.to_csv("predicted_probabilities.csv", index=False)
-    logger.info("Predicted calibrated probabilities saved to predicted_probabilities.csv")
+    prob_df.to_csv("GEBVs_10foldCV.csv", index=False)
+    logger.info("Predicted calibrated probabilities saved")
     
     # ---- Save trained models ----
     os.makedirs("models", exist_ok=True)
     for name, model in tuned_models.items():
-        path = os.path.join("models", f"{name}_model_10foldCV.joblib")
+        path = os.path.join("models/sep4/", f"{name}_model_10foldCV.joblib")
         joblib.dump(model, path)
         logger.info(f"Saved {name} model to {path}")
 
