@@ -1,3 +1,9 @@
+'''
+### TODO: Fix section where the AUC is not printing for each fold
+### TODO: Fix model saving in correct directory
+### TODO: Suppress warnings in script
+'''
+
 import logging
 import numpy as np
 import pandas as pd
@@ -84,7 +90,7 @@ def get_search_spaces():
 
 
 # ------------------- Hyperparameter Tuning -------------------
-def tune_model(X, y, model_name, n_iter=25):
+def tune_model(X, y, model_name, n_iter=50):
     base_model, search_space = get_search_spaces()[model_name]
     logger.info(f"Starting Bayesian optimization for {model_name}...")
 
@@ -186,7 +192,7 @@ def main():
     # ---- Save trained models ----
     os.makedirs("models", exist_ok=True)
     for name, model in tuned_models.items():
-        path = os.path.join("models/sep4/", f"{name}_model_10foldCV.joblib")
+        path = os.path.join("models/sep4", f"{name}_model_10foldCV.joblib")
         joblib.dump(model, path)
         logger.info(f"Saved {name} model to {path}")
 
