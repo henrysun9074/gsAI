@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 import joblib, os, json
 
+from datetime import datetime
 from sklearn.model_selection import StratifiedKFold, train_test_split
 from sklearn.metrics import roc_auc_score, log_loss
 from sklearn.calibration import CalibratedClassifierCV
@@ -105,10 +106,12 @@ def main():
     scaler = StandardScaler()
     X = scaler.fit_transform(X)
 
+    today_str = datetime.now().strftime("%b%d").lower()  # e.g., "sep05"
+
     # ---- Load hyperparameters from Script 1 ----
-    with open("models/sep05/best_hyperparams.json", "r") as f:
+    with open(f"models/{today_str}/best_hyperparams.json", "r") as f:
         best_params = json.load(f)
-    logger.info("Loaded best hyperparameters.")
+        logger.info("Loaded best hyperparameters")
 
     # ---- Nested CV with calibration ----
     logger.info("Running nested CV with calibration")
@@ -124,11 +127,11 @@ def main():
 
     # Save predictions and fold metrics
     prob_df = pd.concat(all_folds, axis=0).sort_values("ID")
-    prob_df.to_csv("Sep05_GEBVs_10foldCV.csv", index=False)
+    prob_df.to_csv(f"{today_str}_GEBVs_10foldCV.csv", index=False)
     logger.info("Saved predicted breeding values")
 
     metrics_df = pd.concat(all_metrics, axis=0)
-    metrics_df.to_csv("Sep05_fold_metrics.csv", index=False)
+    metrics_df.to_csv(f"{today_str}_fold_metrics.csv", index=False)
     logger.info("Saved fold metrics")
 
 
