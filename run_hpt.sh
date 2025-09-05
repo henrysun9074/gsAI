@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=genomic_selection
-#SBATCH --output=genomic_selection.out
-#SBATCH --error=genomic_selection.err
+#SBATCH --output=01_hpt.out
+#SBATCH --error=01_hpt.err
 #SBATCH --partition=gpu-common 
 #SBATCH --gres=gpu:1
 #SBATCH --exclusive
@@ -27,4 +27,4 @@ echo "Number of CPUs: $SLURM_CPUS_PER_TASK"
 
 source /hpc/group/schultzlab/hs325/miniconda3/etc/profile.d/conda.sh
 conda activate gsAI
-python genomic_selection_pipeline.py
+python 01_hpt.py
