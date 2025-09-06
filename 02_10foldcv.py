@@ -80,7 +80,6 @@ def run_outer_fold(fold, train_val_idx, test_idx, X, y, ids, best_params, seed=4
             "fold": fold+1,
             "model": name,
             "AUC": auc,
-            "Brier": brier,
             "LogLoss": logloss_val
         })
 
