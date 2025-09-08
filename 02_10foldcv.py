@@ -9,7 +9,7 @@ import joblib, os, json
 
 from datetime import datetime
 from sklearn.model_selection import StratifiedKFold, train_test_split
-from sklearn.metrics import roc_auc_score, log_loss
+from sklearn.metrics import roc_auc_score, log_loss, brier_score_loss
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
@@ -74,7 +74,8 @@ def run_outer_fold(fold, train_val_idx, test_idx, X, y, ids, best_params, seed=4
         # Evaluate
         auc = roc_auc_score(y_test, probs)
         logloss_val = log_loss(y_test, probs)
-        logger.info(f"{name} | Fold {fold+1}: AUC={auc:.3f}, LogLoss={logloss_val:.3f}")
+        brier_val = brier_score_loss(y_test, probs)
+        logger.info(f"{name} | Fold {fold+1}: AUC={auc:.3f}, LogLoss={logloss_val:.3f}, Brier={brier_val:.3f}")
 
         fold_metrics.append({
             "fold": fold+1,

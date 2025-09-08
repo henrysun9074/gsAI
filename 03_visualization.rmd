@@ -15,10 +15,12 @@ library(writexl)
 
 ```{r}
 
-setwd("/work/tfs3/gsAI/4paul")
-load("cv_parallel.RData")
-DARPAGEBV <- read.csv("/work/tfs3/gsAI/sep05_GEBVs_10foldCV.csv")
-DARPAGEBV2 <- read_xlsx("CrossValDarpaGebv.xlsx")
+setwd("/work/tfs3/gsAI/")
+
+### Update paths for current runs!
+load("/work/tfs3/gsAI/4paul/cv_parallel.RData")
+DARPAGEBV <- read.csv("/work/tfs3/gsAI/gebvs/sep05_GEBVs_10foldCV.csv") # Henry
+DARPAGEBV2 <- read_xlsx("/work/tfs3/gsAI/4paul/CrossValDarpaGebv.xlsx") # Paul
 df <- merge(DARPAGEBV, DARPAGEBV2)
 df
 
@@ -66,5 +68,33 @@ ggplot(cor_df, aes(x = Model, y = Correlation)) +
     text = element_text(size = 12),
     plot.title = element_text(hjust = 0.5)
   )
+```
+
+```{r}
+# corrplot
+Pairwise <- df[, c("GBLUP_Mean", "LASSO_Mean", "RKHS_Mean", 
+                   "EGBLUP_Mean", "BRR_Mean", "BayesB_Mean",
+                   "LR", "RF", "GB")]
+
+colnames(Pairwise) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
+                        "LR", "RF", "GB")
+cor_matrix <- cor(Pairwise, use = "complete.obs")
+
+# Plot correlation heatmap
+corrplot(cor_matrix, method = "color", 
+         type = "upper", 
+         tl.cex = 1.0, 
+         addCoef.col = "black",
+         number.cex = 0.7,
+         title = "Comparison of Genomic Prediction Models for Status",
+         mar = c(0,0,2,0))
+
+```
+
+
+```{r}
+# df <- df %>%
+#   rename(BayesB = BayesB_Mean, BRR = BRR_Mean, GBLUP = GBLUP_Mean, EGBLUP = EGBLUP_Mean, LASSO = LASSO_Mean, RKHS = RKHS_Mean)
+write.csv(df, "/work/tfs3/gsAI/gebvs/sep08_GEBVs_10foldCV.csv", row.names = FALSE)
 ```
 

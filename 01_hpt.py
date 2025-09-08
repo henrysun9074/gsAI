@@ -48,7 +48,7 @@ def get_search_spaces():
         ),
         "GB": (
             XGBClassifier(
-                tree_method="hist", device="cuda", eval_metric="logloss"
+                tree_method="hist", eval_metric="logloss"
             ),
             {
                 "n_estimators": Integer(100, 2000),
@@ -63,7 +63,7 @@ def get_search_spaces():
     }
 
 # ------------------- Hyperparameter Tuning -------------------
-def tune_model(X, y, model_name, n_iter=50):
+def tune_model(X, y, model_name, n_iter=100):
     base_model, search_space = get_search_spaces()[model_name]
     logger.info(f"Starting Bayesian optimization for {model_name}...")
 
