@@ -1,0 +1,70 @@
+# Import all packages 
+
+```{r}
+library(pryr)
+library(tidyverse)
+library(rrBLUP)
+library(BGLR)
+library(BWGS)
+library(qqman)
+library(readxl)
+library(genetics)
+library(corrplot)
+library(writexl)
+```
+
+```{r}
+
+setwd("/work/tfs3/gsAI/4paul")
+load("cv_parallel.RData")
+DARPAGEBV <- read.csv("/work/tfs3/gsAI/sep05_GEBVs_10foldCV.csv")
+DARPAGEBV2 <- read_xlsx("CrossValDarpaGebv.xlsx")
+df <- merge(DARPAGEBV, DARPAGEBV2)
+df
+
+```
+
+
+```{r}
+
+cat("Correlations with Status:\n")
+cat("GBLUP: ", cor(DARPAGEBV2$GBLUP_Mean, DARPAGEBV2$Status, use = "complete.obs"), "\n")
+cat("LASSO: ", cor(DARPAGEBV2$LASSO_Mean, DARPAGEBV2$Status, use = "complete.obs"), "\n")
+cat("RKHS: ",  cor(DARPAGEBV2$RKHS_Mean, DARPAGEBV2$Status, use = "complete.obs"), "\n")
+cat("EGBLUP:", cor(DARPAGEBV2$EGBLUP_Mean, DARPAGEBV2$Status, use = "complete.obs"), "\n")
+cat("BRR:   ", cor(DARPAGEBV2$BRR_Mean, DARPAGEBV2$Status, use = "complete.obs"), "\n")
+cat("BayesB:", cor(DARPAGEBV2$BayesB_Mean, DARPAGEBV2$Status, use = "complete.obs"), "\n")
+cat("LR:", cor(DARPAGEBV$LR, DARPAGEBV2$Status, use = "complete.obs"), "\n")
+cat("RF:   ", cor(DARPAGEBV$RF, DARPAGEBV2$Status, use = "complete.obs"), "\n")
+cat("GB:", cor(DARPAGEBV$GB, DARPAGEBV2$Status, use = "complete.obs"), "\n")
+
+cor_df <- data.frame(
+  Model = c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB", "LR", "RF", "GB"),
+  Correlation = c(
+    cor(DARPAGEBV2$GBLUP_Mean,  DARPAGEBV2$Status, use = "complete.obs"),
+    cor(DARPAGEBV2$LASSO_Mean,  DARPAGEBV2$Status, use = "complete.obs"),
+    cor(DARPAGEBV2$RKHS_Mean,   DARPAGEBV2$Status, use = "complete.obs"),
+    cor(DARPAGEBV2$EGBLUP_Mean, DARPAGEBV2$Status, use = "complete.obs"),
+    cor(DARPAGEBV2$BRR_Mean,    DARPAGEBV2$Status, use = "complete.obs"),
+    cor(DARPAGEBV2$BayesB_Mean, DARPAGEBV2$Status, use = "complete.obs"),
+    cor(DARPAGEBV$LR, DARPAGEBV2$Status, use = "complete.obs"),
+    cor(DARPAGEBV$RF,    DARPAGEBV2$Status, use = "complete.obs"),
+    cor(DARPAGEBV$GB, DARPAGEBV2$Status, use = "complete.obs")
+  )
+)
+
+# Barchart
+ggplot(cor_df, aes(x = Model, y = Correlation)) +
+  geom_bar(stat = "identity", width = 0.7) +
+  scale_fill_brewer(palette = "Set2") +
+  theme_minimal() +
+  labs(
+    y = "Correlation",
+    x = "Model"
+  ) +
+  theme(
+    text = element_text(size = 12),
+    plot.title = element_text(hjust = 0.5)
+  )
+```
+
