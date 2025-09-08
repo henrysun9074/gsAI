@@ -81,11 +81,15 @@ colnames(Pairwise) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
 cor_matrix <- cor(Pairwise, use = "complete.obs")
 
 # Plot correlation heatmap
-corrplot(cor_matrix, method = "color", 
+corrplot(cor_matrix, 
+         method = "color", 
          type = "upper", 
          tl.cex = 1.0, 
-         addCoef.col = "black",
+         tl.col = "black",        # axis text color
+         addCoef.col = "black",   # numeric labels color
          number.cex = 0.7,
+         order = "hclust",        # hierarchical clustering
+         addrect = 2,             # draw rectangles around clusters
          title = "Comparison of Genomic Prediction Models for Status",
          mar = c(0,0,2,0))
 
