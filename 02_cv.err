@@ -6,3 +6,7 @@ CUDA 12.8
 2025-09-10 10:18:08,119 - INFO - Outer Fold 1/10
 2025-09-10 10:20:14,880 - INFO - LR | Fold 1: AUC=0.613, LogLoss=0.683, Brier=0.244, PearsonR=0.193
 2025-09-10 10:20:23,838 - INFO - RF | Fold 1: AUC=0.606, LogLoss=0.680, Brier=0.243, PearsonR=0.186
+2025-09-10 10:26:29,437 - INFO - GB | Fold 1: AUC=0.639, LogLoss=0.662, Brier=0.235, PearsonR=0.246
+2025-09-10 10:26:29,471 - INFO - Outer Fold 2/10
+2025-09-10 10:28:43,463 - INFO - LR | Fold 2: AUC=0.609, LogLoss=0.670, Brier=0.239, PearsonR=0.199
+2025-09-10 10:28:52,144 - INFO - RF | Fold 2: AUC=0.599, LogLoss=0.673, Brier=0.240, PearsonR=0.184

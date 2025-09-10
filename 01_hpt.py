@@ -60,12 +60,11 @@ def get_search_spaces():
 
 # ------------------- Hyperparameter Tuning -------------------
 
-def pearson_scorer(estimator, X, y):
+def pearson_corr_func(estimator, X, y):
+    """Return Pearson correlation between predicted probs and true labels"""
     y_pred = estimator.predict_proba(X)[:, 1]
     corr, _ = pearsonr(y_pred, y)
     return corr
-pearson_scorer = make_scorer(pearson_scorer, greater_is_better=True, needs_proba=True)
-
 
 def tune_model(X, y, model_name, n_iter=100):
     base_model, search_space = get_search_spaces()[model_name]
@@ -76,7 +75,7 @@ def tune_model(X, y, model_name, n_iter=100):
         search_spaces=search_space,
         n_iter=n_iter,
         cv=5,
-        scoring=pearson_scorer,
+        scoring=pearson_corr_func,
         n_jobs=-1,
         verbose=0,
     )
