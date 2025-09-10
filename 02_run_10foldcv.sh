@@ -25,5 +25,5 @@ echo "Number of CPUs: $SLURM_CPUS_PER_TASK"
 
 source /hpc/group/schultzlab/hs325/miniconda3/etc/profile.d/conda.sh
 conda activate gsAI
-# python 01_hpt.py # Rerun to test running job in sequence
+# python 01_hpt.py 
 python 02_10foldcv.py

@@ -1,15 +1,11 @@
-'''
-### TODO: Fix section where the AUC is not printing for each fold
-### TODO: Fix model saving in correct directory
-### TODO: Suppress warnings in script
-'''
-
 import logging
 import numpy as np
 import pandas as pd
 import joblib, os
 import json
 
+from sklearn.metrics import make_scorer
+from scipy.stats import pearsonr
 from datetime import datetime
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
@@ -48,7 +44,7 @@ def get_search_spaces():
         ),
         "GB": (
             XGBClassifier(
-                tree_method="hist", eval_metric="logloss"
+                tree_method="hist", device="cuda", eval_metric="logloss"
             ),
             {
                 "n_estimators": Integer(100, 2000),
@@ -63,6 +59,14 @@ def get_search_spaces():
     }
 
 # ------------------- Hyperparameter Tuning -------------------
+
+def pearson_scorer(estimator, X, y):
+    y_pred = estimator.predict_proba(X)[:, 1]
+    corr, _ = pearsonr(y_pred, y)
+    return corr
+pearson_scorer = make_scorer(pearson_scorer, greater_is_better=True, needs_proba=True)
+
+
 def tune_model(X, y, model_name, n_iter=100):
     base_model, search_space = get_search_spaces()[model_name]
     logger.info(f"Starting Bayesian optimization for {model_name}...")
@@ -72,7 +76,7 @@ def tune_model(X, y, model_name, n_iter=100):
         search_spaces=search_space,
         n_iter=n_iter,
         cv=5,
-        scoring="roc_auc",
+        scoring=pearson_scorer,
         n_jobs=-1,
         verbose=0,
     )

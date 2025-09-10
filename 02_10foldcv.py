@@ -17,6 +17,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.frozen import FrozenEstimator
 from sklearn.preprocessing import StandardScaler
 from xgboost import XGBClassifier
+from scipy.stats import pearsonr
 
 # ------------------- Logging Setup -------------------
 logging.basicConfig(
@@ -75,13 +76,19 @@ def run_outer_fold(fold, train_val_idx, test_idx, X, y, ids, best_params, seed=4
         auc = roc_auc_score(y_test, probs)
         logloss_val = log_loss(y_test, probs)
         brier_val = brier_score_loss(y_test, probs)
-        logger.info(f"{name} | Fold {fold+1}: AUC={auc:.3f}, LogLoss={logloss_val:.3f}, Brier={brier_val:.3f}")
-
+        r_val, _ = pearsonr(probs, y_test)
+        logger.info(
+            f"{name} | Fold {fold+1}: "
+            f"AUC={auc:.3f}, LogLoss={logloss_val:.3f}, "
+            f"Brier={brier_val:.3f}, PearsonR={r_val:.3f}"
+        )
         fold_metrics.append({
             "fold": fold+1,
             "model": name,
             "AUC": auc,
-            "LogLoss": logloss_val
+            "LogLoss": logloss_val,
+            "Brier": brier_val,
+            "PearsonR": r_val
         })
 
     return fold_results, pd.DataFrame(fold_metrics)

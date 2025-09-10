@@ -2,7 +2,9 @@
 #SBATCH --job-name=genomic_selection
 #SBATCH --output=01_hpt.out
 #SBATCH --error=01_hpt.err
-#SBATCH --partition=common 
+#SBATCH --partition=gpu-common 
+#SBATCH --gres=gpu:1
+#SBATCH --exclusive
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
