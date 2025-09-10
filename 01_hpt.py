@@ -4,7 +4,7 @@ import pandas as pd
 import joblib, os
 import json
 
-from sklearn.metrics import make_scorer
+from sklearn.metrics import make_scorer, brier_score_loss, roc_auc_score
 from scipy.stats import pearsonr
 from datetime import datetime
 from sklearn.linear_model import LogisticRegression
@@ -60,11 +60,19 @@ def get_search_spaces():
 
 # ------------------- Hyperparameter Tuning -------------------
 
-def pearson_corr_func(estimator, X, y):
+def pearson_corr_func(y_true, y_pred):
     """Return Pearson correlation between predicted probs and true labels"""
-    y_pred = estimator.predict_proba(X)[:, 1]
-    corr, _ = pearsonr(y_pred, y)
-    return corr
+    if y_pred.ndim == 2:  
+        y_pred = y_pred[:, 1] 
+    if np.allclose(y_pred, y_pred[0]):
+        return 0.0
+    corr, _ = pearsonr(y_pred, y_true)
+    return corr if not np.isnan(corr) else 0.0
+
+pearson_scorer = make_scorer(
+    pearson_corr_func,
+    response_method="predict_proba"
+)
 
 def tune_model(X, y, model_name, n_iter=100):
     base_model, search_space = get_search_spaces()[model_name]
@@ -75,7 +83,7 @@ def tune_model(X, y, model_name, n_iter=100):
         search_spaces=search_space,
         n_iter=n_iter,
         cv=5,
-        scoring=pearson_corr_func,
+        scoring=pearson_scorer,
         n_jobs=-1,
         verbose=0,
     )
