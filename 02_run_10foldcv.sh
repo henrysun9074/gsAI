@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=genomic_selection
+#SBATCH --job-name=10foldCV_genomic_selection
 #SBATCH --output=02_cv.out
 #SBATCH --error=02_cv.err
 #SBATCH --partition=common 

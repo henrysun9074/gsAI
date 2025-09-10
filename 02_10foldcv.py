@@ -1,7 +1,3 @@
-'''
-TODO: Check run logs to make sure logging at each fold is working
-'''
-
 import logging
 import numpy as np
 import pandas as pd
@@ -18,6 +14,7 @@ from sklearn.frozen import FrozenEstimator
 from sklearn.preprocessing import StandardScaler
 from xgboost import XGBClassifier
 from scipy.stats import pearsonr
+from collections import defaultdict
 
 # ------------------- Logging Setup -------------------
 logging.basicConfig(
@@ -121,26 +118,51 @@ def main():
         logger.info("Loaded best hyperparameters")
 
     # ---- Nested CV with calibration ----
-    logger.info("Running nested CV with calibration")
-    skf_outer = StratifiedKFold(n_splits=10, shuffle=True, random_state=42)
-
-    all_folds = []
+    logger.info("Running 5x repeated 10-fold CV with calibration")
+    all_predictions = defaultdict(list) 
     all_metrics = []
 
-    for fold, (train_val_idx, test_idx) in enumerate(skf_outer.split(X, y)):
-        fold_results, fold_metrics = run_outer_fold(fold, train_val_idx, test_idx, X, y, ids, best_params)
-        all_folds.append(fold_results)
-        all_metrics.append(fold_metrics)
+    for repeat in range(5):
+        logger.info(f"=== Repetition {repeat+1}/5 ===")
+        skf_outer = StratifiedKFold(n_splits=10, shuffle=True, random_state=42 + repeat)
+
+        for fold, (train_val_idx, test_idx) in enumerate(skf_outer.split(X, y)):
+            fold_results, fold_metrics = run_outer_fold(fold, train_val_idx, test_idx, X, y, ids, best_params)
+            all_metrics.append(fold_metrics)
+
+            # Store predictions for each model
+            for _, row in fold_results.iterrows():
+                ID = row["ID"]
+                for col in fold_results.columns:
+                    if col not in ["ID", "Status"]:
+                        all_predictions[(ID, col)].append(row[col])
+
+    # ---- Aggregate predictions (mean and SD per model per animal) ----
+    final_records = []
+    unique_ids = np.unique(ids)
+
+    for ID in unique_ids:
+        record = {"ID": ID}
+        # recover true label from df
+        record["Status"] = df.loc[df["ID"] == ID, "Status"].iloc[0]
+        for model_name in best_params.keys():
+            preds = all_predictions[(ID, model_name)]
+            record[model_name] = np.mean(preds)
+            record[f"{model_name}_SD"] = np.std(preds, ddof=1)
+        final_records.append(record)
+
+    prob_df = pd.DataFrame(final_records).sort_values("ID")
 
     # Save predictions and fold metrics
+    os.makedirs("gebvs", exist_ok=True)
+
     prob_df = pd.concat(all_folds, axis=0).sort_values("ID")
-    prob_df.to_csv(f"{today_str}_GEBVs_10foldCV.csv", index=False)
+    prob_df.to_csv(os.path.join("gebvs", f"{today_str}_GEBVs_10foldCV.csv"), index=False)
     logger.info("Saved predicted breeding values")
 
     metrics_df = pd.concat(all_metrics, axis=0)
-    metrics_df.to_csv(f"{today_str}_fold_metrics.csv", index=False)
+    metrics_df.to_csv(os.path.join("gebvs", f"{today_str}_fold_metrics.csv"), index=False)
     logger.info("Saved fold metrics")
-
 
 if __name__ == "__main__":
     main()

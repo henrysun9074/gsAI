@@ -17,12 +17,19 @@ library(writexl)
 
 setwd("/work/tfs3/gsAI/")
 
-### Update paths for current runs!
+### Update paths for current runs! ###########################################
 load("/work/tfs3/gsAI/4paul/cv_parallel.RData")
-DARPAGEBV <- read.csv("/work/tfs3/gsAI/gebvs/sep05_GEBVs_10foldCV.csv") # Henry
-DARPAGEBV2 <- read_xlsx("/work/tfs3/gsAI/4paul/CrossValDarpaGebv.xlsx") # Paul
+
+ml_models_path <- "/work/tfs3/gsAI/gebvs/sep10_GEBVs_10foldCV.csv"
+r_models_path <- "/work/tfs3/gsAI/4paul/CrossValDarpaGebv.xlsx"
+
+DARPAGEBV <- read.csv(ml_models_path) 
+DARPAGEBV2 <- read_xlsx(r_models_path) 
 df <- merge(DARPAGEBV, DARPAGEBV2)
 df
+write.csv(df, file = ml_models_path, row.names = FALSE)
+
+###############################################################################
 
 ```
 
@@ -93,12 +100,5 @@ corrplot(cor_matrix,
          title = "Comparison of Genomic Prediction Models for Status",
          mar = c(0,0,2,0))
 
-```
-
-
-```{r}
-# df <- df %>%
-#   rename(BayesB = BayesB_Mean, BRR = BRR_Mean, GBLUP = GBLUP_Mean, EGBLUP = EGBLUP_Mean, LASSO = LASSO_Mean, RKHS = RKHS_Mean)
-write.csv(df, "/work/tfs3/gsAI/gebvs/sep08_GEBVs_10foldCV.csv", row.names = FALSE)
 ```
 

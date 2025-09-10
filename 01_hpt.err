@@ -1,0 +1,77 @@
+CUDA 12.8
+2025-09-10 10:18:35,251 - INFO - Loading dataset...
+2025-09-10 10:19:09,612 - INFO - Starting Bayesian optimization for LR...
+joblib.externals.loky.process_executor._RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/joblib/externals/loky/process_executor.py", line 490, in _process_worker
+    r = call_item()
+        ^^^^^^^^^^^
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/joblib/externals/loky/process_executor.py", line 291, in __call__
+    return self.fn(*self.args, **self.kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/joblib/parallel.py", line 607, in __call__
+    return [func(*args, **kwargs) for func, args, kwargs in self.items]
+            ^^^^^^^^^^^^^^^^^^^^^
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/utils/parallel.py", line 139, in __call__
+    return self.function(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/model_selection/_validation.py", line 888, in _fit_and_score
+    test_scores = _score(
+                  ^^^^^^^
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/model_selection/_validation.py", line 949, in _score
+    scores = scorer(estimator, X_test, y_test, **score_params)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/metrics/_scorer.py", line 288, in __call__
+    return self._score(partial(_cached_call, None), estimator, X, y_true, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/metrics/_scorer.py", line 388, in _score
+    return self._sign * self._score_func(y_true, y_pred, **scoring_kwargs)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: pearson_scorer() got an unexpected keyword argument 'needs_proba'
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/work/tfs3/gsAI/01_hpt.py", line 131, in <module>
+    main()
+  File "/work/tfs3/gsAI/01_hpt.py", line 110, in main
+    best_model, best_params = tune_model(X, y, model_name)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/tfs3/gsAI/01_hpt.py", line 83, in tune_model
+    opt.fit(X, y)
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/skopt/searchcv.py", line 542, in fit
+    super().fit(X=X, y=y, groups=groups, **fit_params)
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/base.py", line 1389, in wrapper
+    return fit_method(estimator, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/model_selection/_search.py", line 1024, in fit
+    self._run_search(evaluate_candidates)
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/skopt/searchcv.py", line 599, in _run_search
+    optim_result, score_name = self._step(
+                               ^^^^^^^^^^^
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/skopt/searchcv.py", line 453, in _step
+    all_results = evaluate_candidates(params_dict)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/model_selection/_search.py", line 970, in evaluate_candidates
+    out = parallel(
+          ^^^^^^^^^
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/utils/parallel.py", line 77, in __call__
+    return super().__call__(iterable_with_config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/joblib/parallel.py", line 2072, in __call__
+    return output if self.return_generator else list(output)
+                                                ^^^^^^^^^^^^
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/joblib/parallel.py", line 1682, in _get_outputs
+    yield from self._retrieve()
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/joblib/parallel.py", line 1784, in _retrieve
+    self._raise_error_fast()
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/joblib/parallel.py", line 1859, in _raise_error_fast
+    error_job.get_result(self.timeout)
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/joblib/parallel.py", line 758, in get_result
+    return self._return_or_raise()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/joblib/parallel.py", line 773, in _return_or_raise
+    raise self._result
+TypeError: pearson_scorer() got an unexpected keyword argument 'needs_proba'

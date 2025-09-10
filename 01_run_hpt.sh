@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=genomic_selection
+#SBATCH --job-name=hpt_tuning_genomic_selection
 #SBATCH --output=01_hpt.out
 #SBATCH --error=01_hpt.err
 #SBATCH --partition=gpu-common 
