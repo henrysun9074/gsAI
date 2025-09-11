@@ -156,10 +156,14 @@ def main():
     os.makedirs("gebvs", exist_ok=True)
     prob_df.to_csv(os.path.join("gebvs", f"{today_str}_GEBVs_10foldCV.csv"), index=False)
     logger.info("Saved predicted breeding values")
+    logger.info(f"Prediction file shape: {prob_df.shape}")
+    logger.info("Prediction dataframe preview:")
+    logger.info("\n" + str(prob_df.head()))
 
     metrics_df = pd.concat(all_metrics, axis=0)
     metrics_df.to_csv(os.path.join("gebvs", f"{today_str}_fold_metrics.csv"), index=False)
     logger.info("Saved fold metrics")
+
 
 if __name__ == "__main__":
     main()

@@ -1,1 +1,73 @@
 CUDA 12.8
+2025-09-11 07:50:11,788 - INFO - Loading dataset...
+2025-09-11 07:50:55,596 - INFO - Loaded best hyperparameters
+2025-09-11 07:50:55,596 - INFO - Running 5x repeated 10-fold CV with calibration
+2025-09-11 07:50:55,596 - INFO - === Repetition 1/5 ===
+2025-09-11 07:50:55,598 - INFO - Outer Fold 1/10
+2025-09-11 07:52:59,094 - INFO - LR | Fold 1: AUC=0.612, LogLoss=0.683, Brier=0.244, PearsonR=0.193
+2025-09-11 07:53:12,276 - INFO - RF | Fold 1: AUC=0.601, LogLoss=0.685, Brier=0.245, PearsonR=0.175
+2025-09-11 08:00:08,574 - INFO - GB | Fold 1: AUC=0.643, LogLoss=0.659, Brier=0.234, PearsonR=0.250
+2025-09-11 08:00:08,602 - INFO - Outer Fold 2/10
+2025-09-11 08:02:18,578 - INFO - LR | Fold 2: AUC=0.609, LogLoss=0.670, Brier=0.239, PearsonR=0.199
+2025-09-11 08:02:31,799 - INFO - RF | Fold 2: AUC=0.589, LogLoss=0.677, Brier=0.242, PearsonR=0.165
+2025-09-11 08:09:10,551 - INFO - GB | Fold 2: AUC=0.610, LogLoss=0.670, Brier=0.239, PearsonR=0.200
+2025-09-11 08:09:10,569 - INFO - Outer Fold 3/10
+2025-09-11 08:11:21,824 - INFO - LR | Fold 3: AUC=0.662, LogLoss=0.659, Brier=0.233, PearsonR=0.261
+2025-09-11 08:11:35,109 - INFO - RF | Fold 3: AUC=0.627, LogLoss=0.668, Brier=0.238, PearsonR=0.221
+2025-09-11 08:18:27,236 - INFO - GB | Fold 3: AUC=0.662, LogLoss=0.652, Brier=0.230, PearsonR=0.291
+2025-09-11 08:18:27,254 - INFO - Outer Fold 4/10
+2025-09-11 08:20:54,657 - INFO - LR | Fold 4: AUC=0.639, LogLoss=0.660, Brier=0.234, PearsonR=0.245
+2025-09-11 08:21:07,879 - INFO - RF | Fold 4: AUC=0.645, LogLoss=0.660, Brier=0.234, PearsonR=0.246
+2025-09-11 08:28:03,272 - INFO - GB | Fold 4: AUC=0.657, LogLoss=0.650, Brier=0.229, PearsonR=0.283
+2025-09-11 08:28:03,304 - INFO - Outer Fold 5/10
+2025-09-11 08:30:11,659 - INFO - LR | Fold 5: AUC=0.649, LogLoss=0.659, Brier=0.234, PearsonR=0.255
+2025-09-11 08:30:24,837 - INFO - RF | Fold 5: AUC=0.601, LogLoss=0.673, Brier=0.240, PearsonR=0.189
+2025-09-11 08:37:18,669 - INFO - GB | Fold 5: AUC=0.628, LogLoss=0.663, Brier=0.235, PearsonR=0.235
+2025-09-11 08:37:18,709 - INFO - Outer Fold 6/10
+2025-09-11 08:39:39,857 - INFO - LR | Fold 6: AUC=0.683, LogLoss=0.643, Brier=0.226, PearsonR=0.319
+2025-09-11 08:39:53,096 - INFO - RF | Fold 6: AUC=0.658, LogLoss=0.654, Brier=0.231, PearsonR=0.275
+2025-09-11 08:46:43,605 - INFO - GB | Fold 6: AUC=0.673, LogLoss=0.646, Brier=0.227, PearsonR=0.302
+2025-09-11 08:46:43,624 - INFO - Outer Fold 7/10
+2025-09-11 08:49:01,233 - INFO - LR | Fold 7: AUC=0.628, LogLoss=0.660, Brier=0.235, PearsonR=0.241
+2025-09-11 08:49:14,588 - INFO - RF | Fold 7: AUC=0.604, LogLoss=0.674, Brier=0.241, PearsonR=0.185
+2025-09-11 08:55:57,972 - INFO - GB | Fold 7: AUC=0.648, LogLoss=0.658, Brier=0.233, PearsonR=0.252
+2025-09-11 08:55:58,005 - INFO - Outer Fold 8/10
+2025-09-11 08:58:12,727 - INFO - LR | Fold 8: AUC=0.628, LogLoss=0.664, Brier=0.236, PearsonR=0.234
+2025-09-11 08:58:25,841 - INFO - RF | Fold 8: AUC=0.646, LogLoss=0.663, Brier=0.235, PearsonR=0.243
+2025-09-11 09:05:20,506 - INFO - GB | Fold 8: AUC=0.644, LogLoss=0.659, Brier=0.234, PearsonR=0.258
+2025-09-11 09:05:20,525 - INFO - Outer Fold 9/10
+2025-09-11 09:07:24,814 - INFO - LR | Fold 9: AUC=0.645, LogLoss=0.661, Brier=0.234, PearsonR=0.247
+2025-09-11 09:07:38,017 - INFO - RF | Fold 9: AUC=0.636, LogLoss=0.667, Brier=0.237, PearsonR=0.219
+2025-09-11 09:14:30,828 - INFO - GB | Fold 9: AUC=0.652, LogLoss=0.657, Brier=0.232, PearsonR=0.262
+2025-09-11 09:14:30,847 - INFO - Outer Fold 10/10
+2025-09-11 09:16:31,805 - INFO - LR | Fold 10: AUC=0.611, LogLoss=0.678, Brier=0.241, PearsonR=0.190
+2025-09-11 09:16:45,097 - INFO - RF | Fold 10: AUC=0.636, LogLoss=0.663, Brier=0.235, PearsonR=0.240
+2025-09-11 09:23:37,447 - INFO - GB | Fold 10: AUC=0.643, LogLoss=0.660, Brier=0.234, PearsonR=0.250
+2025-09-11 09:23:37,474 - INFO - === Repetition 2/5 ===
+2025-09-11 09:23:37,475 - INFO - Outer Fold 1/10
+2025-09-11 09:25:42,604 - INFO - LR | Fold 1: AUC=0.511, LogLoss=0.708, Brier=0.257, PearsonR=0.045
+2025-09-11 09:25:55,632 - INFO - RF | Fold 1: AUC=0.522, LogLoss=0.701, Brier=0.254, PearsonR=0.057
+2025-09-11 09:32:43,761 - INFO - GB | Fold 1: AUC=0.567, LogLoss=0.685, Brier=0.246, PearsonR=0.135
+2025-09-11 09:32:43,780 - INFO - Outer Fold 2/10
+2025-09-11 09:34:50,937 - INFO - LR | Fold 2: AUC=0.568, LogLoss=0.688, Brier=0.247, PearsonR=0.124
+2025-09-11 09:35:04,087 - INFO - RF | Fold 2: AUC=0.565, LogLoss=0.687, Brier=0.247, PearsonR=0.121
+2025-09-11 09:41:53,572 - INFO - GB | Fold 2: AUC=0.595, LogLoss=0.681, Brier=0.244, PearsonR=0.162
+2025-09-11 09:41:53,590 - INFO - Outer Fold 3/10
+2025-09-11 09:44:11,102 - INFO - LR | Fold 3: AUC=0.671, LogLoss=0.639, Brier=0.225, PearsonR=0.326
+2025-09-11 09:44:24,423 - INFO - RF | Fold 3: AUC=0.637, LogLoss=0.656, Brier=0.233, PearsonR=0.260
+2025-09-11 09:51:21,649 - INFO - GB | Fold 3: AUC=0.655, LogLoss=0.649, Brier=0.229, PearsonR=0.285
+2025-09-11 09:51:21,677 - INFO - Outer Fold 4/10
+2025-09-11 09:53:38,465 - INFO - LR | Fold 4: AUC=0.637, LogLoss=0.660, Brier=0.234, PearsonR=0.244
+2025-09-11 09:53:51,769 - INFO - RF | Fold 4: AUC=0.659, LogLoss=0.656, Brier=0.232, PearsonR=0.277
+2025-09-11 10:00:41,767 - INFO - GB | Fold 4: AUC=0.676, LogLoss=0.647, Brier=0.228, PearsonR=0.301
+2025-09-11 10:00:41,785 - INFO - Outer Fold 5/10
+2025-09-11 10:03:00,800 - INFO - LR | Fold 5: AUC=0.686, LogLoss=0.646, Brier=0.227, PearsonR=0.310
+2025-09-11 10:03:13,878 - INFO - RF | Fold 5: AUC=0.659, LogLoss=0.662, Brier=0.233, PearsonR=0.252
+2025-09-11 10:10:04,325 - INFO - GB | Fold 5: AUC=0.659, LogLoss=0.655, Brier=0.231, PearsonR=0.271
+2025-09-11 10:10:04,349 - INFO - Outer Fold 6/10
+2025-09-11 10:12:12,627 - INFO - LR | Fold 6: AUC=0.628, LogLoss=0.666, Brier=0.237, PearsonR=0.228
+2025-09-11 10:12:25,694 - INFO - RF | Fold 6: AUC=0.622, LogLoss=0.671, Brier=0.239, PearsonR=0.205
+2025-09-11 10:19:14,555 - INFO - GB | Fold 6: AUC=0.630, LogLoss=0.665, Brier=0.236, PearsonR=0.236
+2025-09-11 10:19:14,577 - INFO - Outer Fold 7/10
+2025-09-11 10:21:41,071 - INFO - LR | Fold 7: AUC=0.692, LogLoss=0.630, Brier=0.221, PearsonR=0.344
+2025-09-11 10:21:54,316 - INFO - RF | Fold 7: AUC=0.668, LogLoss=0.643, Brier=0.227, PearsonR=0.310
