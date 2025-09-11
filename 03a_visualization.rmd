@@ -20,7 +20,7 @@ setwd("/work/tfs3/gsAI/")
 ### Update paths for current runs! ###########################################
 load("/work/tfs3/gsAI/4paul/cv_parallel.RData")
 
-ml_models_path <- "/work/tfs3/gsAI/gebvs/sep10_GEBVs_10foldCV.csv"
+ml_models_path <- "/work/tfs3/gsAI/gebvs/sep11_GEBVs_10foldCV.csv"
 r_models_path <- "/work/tfs3/gsAI/4paul/CrossValDarpaGebv.xlsx"
 
 DARPAGEBV <- read.csv(ml_models_path) 
