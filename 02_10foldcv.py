@@ -143,7 +143,6 @@ def main():
 
     for ID in unique_ids:
         record = {"ID": ID}
-        # recover true label from df
         record["Status"] = df.loc[df["ID"] == ID, "Status"].iloc[0]
         for model_name in best_params.keys():
             preds = all_predictions[(ID, model_name)]
@@ -155,8 +154,6 @@ def main():
 
     # Save predictions and fold metrics
     os.makedirs("gebvs", exist_ok=True)
-
-    prob_df = pd.concat(all_folds, axis=0).sort_values("ID")
     prob_df.to_csv(os.path.join("gebvs", f"{today_str}_GEBVs_10foldCV.csv"), index=False)
     logger.info("Saved predicted breeding values")
 
