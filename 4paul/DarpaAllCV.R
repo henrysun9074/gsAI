@@ -105,87 +105,6 @@ for (i in 1:10) {
   cat("Completed iteration i =", i, "\n")
 }
 
-# for (i in 1:10) {
-#   testPREDICT_GBLUP2_i <- NULL
-#   testPREDICT_LASSO2_i <- NULL
-#   testPREDICT_RKHS2_i <- NULL
-#   testPREDICT_EGBLUP2_i <- NULL
-#   testPREDICT_BRR2_i <- NULL
-#   testPREDICT_BayesB2_i <- NULL
-# 
-#   pheno_train_vec1 <- phenTrain$Status
-#   names(pheno_train_vec1) <- phenTrain$ID
-#   class(pheno_train_vec1)
-# 
-#   for (j in 1:5) {
-#     Statusgeno_target <- train_base[split_indices[[j]], ]
-#     Statusgeno_train <- train_base[-split_indices[[j]], ]
-#     Statuspheno_train_vec_j <- pheno_train_vec1[rownames(Statusgeno_train)]
-# 
-#     # Predict for each method using the current split
-#     testPREDICT_GBLUP2_i <- rbind(testPREDICT_GBLUP2_i,
-#                                   bwgs.predict(geno_train = Statusgeno_train,
-#                                                pheno_train = Statuspheno_train_vec_j,
-#                                                geno_target = Statusgeno_target,
-#                                                MAXNA = 1, MAF = 0,
-#                                                geno.reduct.method = "NULL", reduct.size = "NULL",
-#                                                r2 = "NULL", pval = "NULL", MAP = "NULL",
-#                                                geno.impute.method = "MNI", predict.method = "GBLUP"))
-# 
-#     testPREDICT_LASSO2_i <- rbind(testPREDICT_LASSO2_i,
-#                                   bwgs.predict(geno_train = Statusgeno_train,
-#                                                pheno_train = Statuspheno_train_vec_j,
-#                                                geno_target = Statusgeno_target,
-#                                                MAXNA = 1, MAF = 0,
-#                                                geno.reduct.method = "NULL", reduct.size = "NULL",
-#                                                r2 = "NULL", pval = "NULL", MAP = "NULL",
-#                                                geno.impute.method = "MNI", predict.method = "BL"))
-# 
-#     testPREDICT_RKHS2_i <- rbind(testPREDICT_RKHS2_i,
-#                                  bwgs.predict(geno_train = Statusgeno_train,
-#                                               pheno_train = Statuspheno_train_vec_j,
-#                                               geno_target = Statusgeno_target,
-#                                               MAXNA = 1, MAF = 0,
-#                                               geno.reduct.method = "NULL", reduct.size = "NULL",
-#                                               r2 = "NULL", pval = "NULL", MAP = "NULL",
-#                                               geno.impute.method = "MNI", predict.method = "RKHS"))
-# 
-#     testPREDICT_EGBLUP2_i <- rbind(testPREDICT_EGBLUP2_i,
-#                                    bwgs.predict(geno_train = Statusgeno_train,
-#                                                 pheno_train = Statuspheno_train_vec_j,
-#                                                 geno_target = Statusgeno_target,
-#                                                 MAXNA = 1, MAF = 0,
-#                                                 geno.reduct.method = "NULL", reduct.size = "NULL",
-#                                                 r2 = "NULL", pval = "NULL", MAP = "NULL",
-#                                                 geno.impute.method = "MNI", predict.method = "EGBLUP"))
-# 
-#     testPREDICT_BRR2_i <- rbind(testPREDICT_BRR2_i,
-#                                 bwgs.predict(geno_train = Statusgeno_train,
-#                                              pheno_train = Statuspheno_train_vec_j,
-#                                              geno_target = Statusgeno_target,
-#                                              MAXNA = 1, MAF = 0,
-#                                              geno.reduct.method = "NULL", reduct.size = "NULL",
-#                                              r2 = "NULL", pval = "NULL", MAP = "NULL",
-#                                              geno.impute.method = "MNI", predict.method = "BRR"))
-# 
-#     testPREDICT_BayesB2_i <- rbind(testPREDICT_BayesB2_i,
-#                                    bwgs.predict(geno_train = Statusgeno_train,
-#                                                 pheno_train = Statuspheno_train_vec_j,
-#                                                 geno_target = Statusgeno_target,
-#                                                 MAXNA = 1, MAF = 0,
-#                                                 geno.reduct.method = "NULL", reduct.size = "NULL",
-#                                                 r2 = "NULL", pval = "NULL", MAP = "NULL",
-#                                                 geno.impute.method = "MNI", predict.method = "BB"))
-#   }
-# 
-#   GBLUP_all_preds2[[i]] <- testPREDICT_GBLUP2_i
-#   LASSO_all_preds2[[i]] <- testPREDICT_LASSO2_i
-#   RKHS_all_preds2[[i]] <- testPREDICT_RKHS2_i
-#   EGBLUP_all_preds2[[i]] <- testPREDICT_EGBLUP2_i
-#   BRR_all_preds2[[i]] <- testPREDICT_BRR2_i
-#   BayesB_all_preds2[[i]] <- testPREDICT_BayesB2_i
-# }
-
 #################################################################
 
 average_GEBV2 <- function(preds_list2) {
@@ -325,11 +244,3 @@ ggplot(cor_df, aes(x = Model, y = Correlation)) +
     text = element_text(size = 12),
     plot.title = element_text(hjust = 0.5)
   )
-
-# save.image("testfile.Rdata") 
-
-### must figure out - how to get correlation SDs rather than GEBV SDs
-### have to compute raw correlation for each run rather than taking mean
-
-# geom_errorbar(aes(ymin = Correlation - SD, ymax = Correlation + SD),
-#               width = 0.2, color = "black") +

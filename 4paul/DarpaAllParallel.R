@@ -21,6 +21,7 @@ library(readxl)
 library(genetics)
 library(corrplot)
 library(writexl)
+library(pROC)
 
 # Set working directory
 setwd("/work/tfs3/gsAI/4paul")
@@ -58,7 +59,6 @@ if (is.na(n_cores) || n_cores < 1) n_cores <- 1
 cat("Using", n_cores, "cores via future::multicore\n")
 plan(multicore, workers = n_cores)
 dir.create("logs", showWarnings = FALSE)
-
 ############################# CROSS VALIDATION ################################
 
 cat("==> Entering main prediction loop...\n")
@@ -78,12 +78,50 @@ results <- future_map(1:10, function(i) {
   pred_BRR <- vector("list", 5)
   pred_BayesB <- vector("list", 5)
   
+  metrics_list <- list()
+  
+  run_and_eval <- function(method_name, train_args) {
+    cat("Running", method_name, "...\n")
+    res <- do.call(bwgs.predict, c(train_args, list(predict.method = method_name)))
+    preds <- res[, 1]
+    obs <- as.numeric(y_test)
+    
+    # ROC AUC
+    auc_val <- tryCatch({
+      roc_obj <- pROC::roc(obs, preds, quiet = TRUE)
+      as.numeric(pROC::auc(roc_obj))
+    }, error = function(e) NA)
+    
+    # Pearson correlation
+    corr_val <- suppressWarnings(cor(preds, obs, use = "complete.obs"))
+    
+    # Brier score
+    brier_val <- mean((obs - preds)^2, na.rm = TRUE)
+    
+    # Log loss (with clipping)
+    eps <- 1e-15
+    preds_clipped <- pmin(pmax(preds, eps), 1 - eps)
+    logloss_val <- -mean(obs * log(preds_clipped) + (1 - obs) * log(1 - preds_clipped))
+    
+    metrics_list[[length(metrics_list)+1]] <<- data.frame(
+      Iteration   = i,
+      Fold        = j,
+      Model       = method_name,
+      AUC         = auc_val,
+      Correlation = corr_val,
+      Brier       = brier_val,
+      LogLoss     = logloss_val
+    )
+    return(res)
+  }
+  
   for (j in 1:5) {
     cat(sprintf("-- Fold %d --\n", j))
     
     Statusgeno_target <- train_base[split_indices[[j]], ]
     Statusgeno_train <- train_base[-split_indices[[j]], ]
     Statuspheno_train_vec_j <- pheno_train_vec1[rownames(Statusgeno_train)]
+    y_test <- pheno_train_vec1[rownames(Statusgeno_target)]
     
     common_args <- list(
       geno_train = Statusgeno_train,
@@ -95,29 +133,12 @@ results <- future_map(1:10, function(i) {
       geno.impute.method = "MNI"
     )
     
-    cat("Running GBLUP...\n")
-    t1 <- system.time(pred_GBLUP[[j]] <- do.call(bwgs.predict, c(common_args, list(predict.method = "GBLUP"))))
-    print(t1)
-    
-    cat("Running LASSO...\n")
-    t2 <- system.time(pred_LASSO[[j]] <- do.call(bwgs.predict, c(common_args, list(predict.method = "BL"))))
-    print(t2)
-    
-    cat("Running RKHS...\n")
-    t3 <- system.time(pred_RKHS[[j]] <- do.call(bwgs.predict, c(common_args, list(predict.method = "RKHS"))))
-    print(t3)
-    
-    cat("Running EGBLUP...\n")
-    t4 <- system.time(pred_EGBLUP[[j]] <- do.call(bwgs.predict, c(common_args, list(predict.method = "EGBLUP"))))
-    print(t4)
-    
-    cat("Running BRR...\n")
-    t5 <- system.time(pred_BRR[[j]] <- do.call(bwgs.predict, c(common_args, list(predict.method = "BRR"))))
-    print(t5)
-    
-    cat("Running BayesB...\n")
-    t6 <- system.time(pred_BayesB[[j]] <- do.call(bwgs.predict, c(common_args, list(predict.method = "BB"))))
-    print(t6)
+    pred_GBLUP[[j]]  <- run_and_eval("GBLUP",  common_args)
+    pred_LASSO[[j]]  <- run_and_eval("BL",     common_args)
+    pred_RKHS[[j]]   <- run_and_eval("RKHS",   common_args)
+    pred_EGBLUP[[j]] <- run_and_eval("EGBLUP", common_args)
+    pred_BRR[[j]]    <- run_and_eval("BRR",    common_args)
+    pred_BayesB[[j]] <- run_and_eval("BB",     common_args)
   }
   
   cat(sprintf("==> Worker %d finished at %s\n", i, Sys.time()))
@@ -125,69 +146,50 @@ results <- future_map(1:10, function(i) {
   message(sprintf("Worker %d memory used: %.2f GB", i, as.numeric(mem) / 1e9))
   
   list(
-    GBLUP  = do.call(rbind, pred_GBLUP),
-    LASSO  = do.call(rbind, pred_LASSO),
-    RKHS   = do.call(rbind, pred_RKHS),
-    EGBLUP = do.call(rbind, pred_EGBLUP),
-    BRR    = do.call(rbind, pred_BRR),
-    BayesB = do.call(rbind, pred_BayesB)
+    preds = list(
+      GBLUP  = do.call(rbind, pred_GBLUP),
+      LASSO  = do.call(rbind, pred_LASSO),
+      RKHS   = do.call(rbind, pred_RKHS),
+      EGBLUP = do.call(rbind, pred_EGBLUP),
+      BRR    = do.call(rbind, pred_BRR),
+      BayesB = do.call(rbind, pred_BayesB)
+    ),
+    metrics = do.call(rbind, metrics_list)
   )
 }, .options = furrr_options(seed = TRUE))
+
+cat("==> Collecting and saving fold metrics...\n")
+all_metrics_df <- do.call(rbind, lapply(results, function(x) x$metrics))
+metrics_outfile <- sprintf("%s_CrossValDarpaFoldMetrics.csv", format(Sys.Date(), "%b%d"))
+write.csv(all_metrics_df, metrics_outfile, row.names = FALSE)
+cat("Saved fold metrics to", metrics_outfile, "\n")
+
 save.image("cv_parallel.RData")  # optional full workspace save
 
 
 ############################# GEBV Computation ################################
 
-cat("==> Collecting model predictions from future_map results...\n")
-GBLUP_all_preds2  <- lapply(results, `[[`, "GBLUP")
-LASSO_all_preds2  <- lapply(results, `[[`, "LASSO")
-RKHS_all_preds2   <- lapply(results, `[[`, "RKHS")
-EGBLUP_all_preds2 <- lapply(results, `[[`, "EGBLUP")
-BRR_all_preds2    <- lapply(results, `[[`, "BRR")
-BayesB_all_preds2 <- lapply(results, `[[`, "BayesB")
+GBLUP_all_preds2  <- lapply(results, function(x) x$preds$GBLUP)
+LASSO_all_preds2  <- lapply(results, function(x) x$preds$LASSO)
+RKHS_all_preds2   <- lapply(results, function(x) x$preds$RKHS)
+EGBLUP_all_preds2 <- lapply(results, function(x) x$preds$EGBLUP)
+BRR_all_preds2    <- lapply(results, function(x) x$preds$BRR)
+BayesB_all_preds2 <- lapply(results, function(x) x$preds$BayesB)
 
 cat("==> Saving cross-validation results to disk...\n")
 saveRDS(list(
   GBLUP = GBLUP_all_preds2,
   LASSO = LASSO_all_preds2,
-  RKHS = RKHS_all_preds2,
+  RKHS  = RKHS_all_preds2,
   EGBLUP = EGBLUP_all_preds2,
-  BRR = BRR_all_preds2,
+  BRR   = BRR_all_preds2,
   BayesB = BayesB_all_preds2
-), file = "cv_results_checkpoint.rds")
+), file = sprintf("%s_cv_results_checkpoint.rds", format(Sys.Date(), "%b%d")))
 
 # Post-processing
 cat("==> Aggregating results...\n")
 
-average_GEBV2 <- function(preds_list2) {
-  preds_matrix2 <- do.call(cbind, preds_list2)
-  row_means2 <- apply(preds_matrix2, 1, mean)
-  row_sd2 <- apply(preds_matrix2, 1, sd)
-  list(mean = row_means2, sd = row_sd2)
-}
-
-# Summary per model
-summarize_model <- function(pred_list2) {
-  predicts2 <- sapply(pred_list2, function(x) x[, 1])
-  stds2     <- sapply(pred_list2, function(x) x[, 2])
-  data.frame(
-    mean_predict2 = rowMeans(predicts2),
-    mean_std2     = rowMeans(stds2)
-  )
-}
-
-model_lists <- list(
-  GBLUP2  = GBLUP_all_preds2,
-  LASSO2  = LASSO_all_preds2,
-  RKHS2   = RKHS_all_preds2,
-  EGBLUP2 = EGBLUP_all_preds2,
-  BRR2    = BRR_all_preds2,
-  BayesB2 = BayesB_all_preds2
-)
-
-mean_results2 <- lapply(model_lists, summarize_model)
-
-# Combine to final table
+# Function to combine across repetitions/folds
 combine_summary <- function(preds) {
   m <- sapply(preds, function(x) x[, 1])
   s <- sapply(preds, function(x) x[, 2])
@@ -201,67 +203,23 @@ EGBLUP_GEBVS <- combine_summary(EGBLUP_all_preds2)
 BRR_GEBVS    <- combine_summary(BRR_all_preds2)
 BayesB_GEBVS <- combine_summary(BayesB_all_preds2)
 
-DARPAGEBV <- cbind(GBLUP_GEBVS, LASSO_GEBVS, RKHS_GEBVS, EGBLUP_GEBVS, BRR_GEBVS, BayesB_GEBVS)
+DARPAGEBV <- cbind(
+  GBLUP_GEBVS, LASSO_GEBVS, RKHS_GEBVS, EGBLUP_GEBVS, BRR_GEBVS, BayesB_GEBVS
+)
 DARPAGEBV <- data.frame(ID = rownames(DARPAGEBV), DARPAGEBV, row.names = NULL)
-colnames(DARPAGEBV) <- c("ID","GBLUP_Mean", "GBLUP_SD", "LASSO_Mean", "LASSO_SD","RKHS_Mean", "RKHS_SD","EGBLUP_Mean", "EGBLUP_SD","BRR_Mean", "BRR_SD","BayesB_Mean", "BayesB_SD")
-
-# Merge with phenotype
-DARPAGEBV2 <- merge(DARPAGEBV, phenTrain[, c("ID", "Status")], by = "ID", all.x = TRUE)
-
-# Write output
-write_xlsx(DARPAGEBV2, "CrossValDarpaGebv_Parallel.xlsx")
-
-# Correlations
-cat("Correlations with Status:\n")
-cat("GBLUP: ", cor(DARPAGEBV2$GBLUP_Mean, DARPAGEBV2$Status, use = "complete.obs"), "\n")
-cat("LASSO: ", cor(DARPAGEBV2$LASSO_Mean, DARPAGEBV2$Status, use = "complete.obs"), "\n")
-cat("RKHS: ",  cor(DARPAGEBV2$RKHS_Mean, DARPAGEBV2$Status, use = "complete.obs"), "\n")
-cat("EGBLUP:", cor(DARPAGEBV2$EGBLUP_Mean, DARPAGEBV2$Status, use = "complete.obs"), "\n")
-cat("BRR:   ", cor(DARPAGEBV2$BRR_Mean, DARPAGEBV2$Status, use = "complete.obs"), "\n")
-cat("BayesB:", cor(DARPAGEBV2$BayesB_Mean, DARPAGEBV2$Status, use = "complete.obs"), "\n")
-
-cor_df <- data.frame(
-  Model = c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB"),
-  Correlation = c(
-    cor(DARPAGEBV2$GBLUP_Mean,  DARPAGEBV2$Status, use = "complete.obs"),
-    cor(DARPAGEBV2$LASSO_Mean,  DARPAGEBV2$Status, use = "complete.obs"),
-    cor(DARPAGEBV2$RKHS_Mean,   DARPAGEBV2$Status, use = "complete.obs"),
-    cor(DARPAGEBV2$EGBLUP_Mean, DARPAGEBV2$Status, use = "complete.obs"),
-    cor(DARPAGEBV2$BRR_Mean,    DARPAGEBV2$Status, use = "complete.obs"),
-    cor(DARPAGEBV2$BayesB_Mean, DARPAGEBV2$Status, use = "complete.obs")
-  ),
-  SD = c(
-    sd(DARPAGEBV2$GBLUP_Mean,  na.rm = TRUE),
-    sd(DARPAGEBV2$LASSO_Mean,  na.rm = TRUE),
-    sd(DARPAGEBV2$RKHS_Mean,   na.rm = TRUE),
-    sd(DARPAGEBV2$EGBLUP_Mean, na.rm = TRUE),
-    sd(DARPAGEBV2$BRR_Mean,    na.rm = TRUE),
-    sd(DARPAGEBV2$BayesB_Mean, na.rm = TRUE)
-  )
+colnames(DARPAGEBV) <- c(
+  "ID",
+  "GBLUP_Mean", "GBLUP_SD",
+  "LASSO_Mean", "LASSO_SD",
+  "RKHS_Mean", "RKHS_SD",
+  "EGBLUP_Mean", "EGBLUP_SD",
+  "BRR_Mean", "BRR_SD",
+  "BayesB_Mean", "BayesB_SD"
 )
 
-# TODO: modify the below section so it automatically computes SD of correlation rather than
-# SD of GEBVs
+DARPAGEBV2 <- merge(DARPAGEBV, phenTrain[, c("ID", "Status")], by = "ID", all.x = TRUE)
 
-# Barchart
-ggplot(cor_df, aes(x = Model, y = Correlation)) +
-  geom_bar(stat = "identity", width = 0.7) +
-  geom_errorbar(aes(ymin = Correlation - SD, ymax = Correlation + SD), 
-                width = 0.2, color = "black") +
-  theme_minimal() +
-  scale_fill_brewer(palette = "Set2") +
-  labs(
-    y = "Correlation (± SD)",
-    x = "Model"
-  ) +
-  theme(
-    text = element_text(size = 12),
-    plot.title = element_text(hjust = 0.5)
-  )
-
-# Pairwise scatterplot
-Pairwise <- DARPAGEBV2 %>%
-  select(GBLUP_Mean, LASSO_Mean, RKHS_Mean, EGBLUP_Mean, BRR_Mean, BayesB_Mean)
-pairs(Pairwise, main = "Comparison of Genomic Prediction Models for Status", cex.labels = 1.5, upper.panel = NULL, cex = 0.75)
-
+outfile <- sprintf("%s_CrossValDarpaGebv_Parallel.xlsx", format(Sys.Date(), "%b%d"))
+write_xlsx(DARPAGEBV2, outfile)
+cat("Saved GEBVs to", outfile, "\n")
 cat("==> Script completed at", Sys.time(), "\n")

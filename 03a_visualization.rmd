@@ -22,13 +22,18 @@ load("/work/tfs3/gsAI/4paul/cv_parallel.RData")
 
 ml_models_path <- "/work/tfs3/gsAI/gebvs/sep11_GEBVs_10foldCV.csv"
 r_models_path <- "/work/tfs3/gsAI/4paul/CrossValDarpaGebv.xlsx"
+ml_metrics_path <- "/work/tfs3/gsAI/gebvs/sep11_fold_metrics.csv"
+# r_metrics_path <- "TBA"
 
 DARPAGEBV <- read.csv(ml_models_path) 
 DARPAGEBV2 <- read_xlsx(r_models_path) 
 df <- merge(DARPAGEBV, DARPAGEBV2)
-df
 write.csv(df, file = ml_models_path, row.names = FALSE)
 
+MLMETRICS <- read.csv(ml_metrics_path) 
+# RMETRICS <- read.csv(r_metrics_path) 
+# df <- merge(DARPAGEBV, DARPAGEBV2)
+MLMETRICS
 ###############################################################################
 
 ```
@@ -99,6 +104,30 @@ corrplot(cor_matrix,
          addrect = 2,             # draw rectangles around clusters
          title = "Comparison of Genomic Prediction Models for Status",
          mar = c(0,0,2,0))
+
+```
+
+```{r}
+metrics_summary <- MLMETRICS %>%
+  group_by(model) %>%
+  summarise(
+    mean_PearsonR = mean(PearsonR, na.rm = TRUE),
+    sd_PearsonR   = sd(PearsonR, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Plot
+ggplot(metrics_summary, aes(x = model, y = mean_PearsonR)) +
+  geom_point() +
+  geom_errorbar(aes(
+    ymin = mean_PearsonR - sd_PearsonR,
+    ymax = mean_PearsonR + sd_PearsonR
+  ), width = 0.2) +
+  theme_minimal(base_size = 14) +
+  labs(
+    x = "Model",
+    y = "Correlation"
+  )
 
 ```
 
