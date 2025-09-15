@@ -26,8 +26,6 @@ from sklearn.metrics import classification_report, accuracy_score, confusion_mat
 from scipy.stats import pearsonr
 
 from xgboost import XGBClassifier
-
-from skopt import BayesSearchCV
 from bayes_opt import BayesianOptimization
 
 from joblib import Parallel, delayed
