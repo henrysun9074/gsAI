@@ -92,8 +92,8 @@ def run_outer_fold(fold, train_val_idx, test_idx, X, y, ids, best_params, seed=4
 
 
 # ------------------- Main -------------------
-filename = "DarpaQCGenoPheno.csv"
-# filename = "noQC/MeanImputedScaledData.csv"
+# filename = "DarpaQCGenoPheno.csv"
+filename = "noQC/MeanImputedScaledData.csv"
 logger.info(f"Loading data from {filename}...")
 
 def main():
@@ -102,6 +102,7 @@ def main():
     for df in pd.read_csv(filename, chunksize=chunksize, index_col=0):
         list_of_dataframes.append(df)
     df = pd.concat(list_of_dataframes)
+    df = df[df['Generation'] == "F0"]
 
     ids = df["ID"].values
     ax_columns = [col for col in df.columns if col.startswith("AX")]
@@ -113,7 +114,7 @@ def main():
     scaler = StandardScaler()
     X = scaler.fit_transform(X)
 
-    today_str = datetime.now().strftime("%b%d").lower()  # e.g., "sep05"
+    today_str = "sep22_F0hpt_noqc"
 
     # ---- Load hyperparameters from Script 1 ----
     with open(f"models/{today_str}/best_hyperparams.json", "r") as f:
@@ -121,7 +122,7 @@ def main():
         logger.info("Loaded best hyperparameters")
 
     # ---- Nested CV with calibration ----
-    logger.info("Running 5x repeated 10-fold CV with calibration")
+    logger.info("Running 5x repeated 10-fold CV with calibration for NOQC + F0 GENERATION")
     all_predictions = defaultdict(list) 
     all_metrics = []
 
