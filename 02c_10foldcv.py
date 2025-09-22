@@ -121,7 +121,7 @@ def main():
         logger.info("Loaded best hyperparameters")
 
     # ---- Nested CV with calibration ----
-    logger.info("Running 5x repeated 10-fold CV with calibration for NOQC + F0 GENERATION")
+    logger.info("Running 5x repeated 10-fold CV with calibration for NOQC + ALL GENERATIONS")
     all_predictions = defaultdict(list) 
     all_metrics = []
 

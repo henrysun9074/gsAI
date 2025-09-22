@@ -29,8 +29,11 @@ conda activate gsAI
 # python 02_10foldcv.py
 
 python 02a_10foldcv.py ## NO QC F0 gen
+echo "Finished script A"
 python 02b_10foldcv.py ## QC F2 gen
+echo "Finished script B"
 python 02c_10foldcv.py ## NO QC ALL gen
+echo "Finished script C"
 
 ## TODO in python after this: NO QC F2 gen
 
