@@ -96,17 +96,17 @@ def main():
     chunksize = 100
     list_of_dataframes = []
 
-    filename = "DarpaQCGenoPheno.csv"
-    # filename = "noQC/MeanImputedScaledData.csv"
-    logger.info(f"Loading data from {filename}...")
+    ''' 
+    CHANGE THIS WHEN RUNNING WITH VS WITHOUT QC DATA || 1 GENERATION VS ALL GENERATIONS
+    '''
+
+    # filename = "DarpaQCGenoPheno.csv"
+    filename = "noQC/MeanImputedScaledData.csv"
+    logger.info(f"Loading data from {filename}... FOR ALL GENERATIONS")
     for df in pd.read_csv(filename, chunksize=chunksize, index_col=0):
         list_of_dataframes.append(df)
     df = pd.concat(list_of_dataframes)
 
-    ''' 
-    CHANGE THIS WHEN RUNNING WITH VS WITHOUT QC DATA || 1 GENERATION VS ALL GENERATIONS
-    '''
-    df = df[df['Generation'] == "F2"]
 
     ids = df["ID"].values
     ax_columns = [col for col in df.columns if col.startswith("AX")]
@@ -126,10 +126,7 @@ def main():
         tuned_models[model_name] = best_model
         tuned_params[model_name] = best_params
 
-    ## Change to save new
-    # today_str = datetime.now().strftime("%b%d").lower() 
-    today_str = "sep22_F2QC"
-
+    today_str = "sep22_allhpt_noqc"
     run_dir = os.path.join("models", today_str)
     os.makedirs(run_dir, exist_ok=True)
 
