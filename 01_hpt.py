@@ -93,12 +93,20 @@ def tune_model(X, y, model_name, n_iter=100):
 
 # ------------------- Main -------------------
 def main():
-    logger.info("Loading dataset...")
     chunksize = 100
     list_of_dataframes = []
-    for df in pd.read_csv("DarpaQCGenoPheno.csv", chunksize=chunksize, index_col=0):
+
+    filename = "DarpaQCGenoPheno.csv"
+    # filename = "noQC/MeanImputedScaledData.csv"
+    logger.info(f"Loading data from {filename}...")
+    for df in pd.read_csv(filename, chunksize=chunksize, index_col=0):
         list_of_dataframes.append(df)
     df = pd.concat(list_of_dataframes)
+
+    ''' 
+    CHANGE THIS WHEN RUNNING WITH VS WITHOUT QC DATA || 1 GENERATION VS ALL GENERATIONS
+    '''
+    df = df[df['Generation'] == "F0"]
 
     ids = df["ID"].values
     ax_columns = [col for col in df.columns if col.startswith("AX")]
