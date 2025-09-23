@@ -102,3 +102,14 @@ The following objects are masked from ‘package:stats’:
 
 New names:
 • `` -> `...1`
+Rows: 2423 Columns: 65902
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr     (5): ID, Pop, Plate, Group, Generation
+dbl (65897): ...1, Unnamed: 0, AX-574114010, AX-564298109, AX-564298112, AX-...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Starting iteration i = 1
+Error: object 'pheno_train_vec1' not found
+Execution halted
