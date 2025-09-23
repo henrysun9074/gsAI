@@ -5,8 +5,8 @@
 #SBATCH --partition=common
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=4
-#SBATCH --mem=64G
+#SBATCH --cpus-per-task=12
+#SBATCH --mem=200G
 #SBATCH --exclusive
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=hs325@duke.edu
@@ -20,8 +20,8 @@ echo "Running on node: $(hostname)"
 echo "Number of CPUs: $SLURM_CPUS_PER_TASK"
 echo "Starting R script at: $(date)"
 
-Rscript DarpaAllCV.R
-# Rscript testR.R
+#rerunning noQC test cases
+Rscript DarpaCV_NoQC.R
 
 echo "R script finished at: $(date)"
 

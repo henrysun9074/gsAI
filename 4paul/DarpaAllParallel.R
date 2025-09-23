@@ -44,7 +44,7 @@ cat("Loaded data from darpa_input_data.RData\n")
 n_samples <- nrow(train_base)
 set.seed(123)
 shuffled_indices <- sample(1:n_samples)
-test_size <- 472
+test_size <- ceiling(0.2 * n_samples)
 split_indices <- split(shuffled_indices, ceiling(seq_along(shuffled_indices) / test_size))
 cat("Number of folds:", length(split_indices), "\n")
 

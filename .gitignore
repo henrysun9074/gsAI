@@ -10,3 +10,4 @@
 *.joblib
 *.pth
 /4paul/raw
+core.*

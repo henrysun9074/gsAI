@@ -36,6 +36,13 @@ test_size<-472
 split_indices <- split(shuffled_indices, ceiling(seq_along(shuffled_indices) / test_size))
 length(split_indices)
 
+
+df_noAX <- train_base[, !grepl("^AX", colnames(train_base))]
+
+# To just print them:
+print(df_noAX)
+
+
 GBLUP_all_preds2 <- list()
 LASSO_all_preds2 <- list()
 RKHS_all_preds2 <- list()

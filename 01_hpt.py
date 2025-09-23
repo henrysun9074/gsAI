@@ -97,16 +97,11 @@ def main():
     list_of_dataframes = []
 
     filename = "DarpaQCGenoPheno.csv"
-    # filename = "noQC/MeanImputedScaledData.csv"
+    # filename = "DarpaNoQCGenoPheno.csv"
     logger.info(f"Loading data from {filename}...")
     for df in pd.read_csv(filename, chunksize=chunksize, index_col=0):
         list_of_dataframes.append(df)
     df = pd.concat(list_of_dataframes)
-
-    ''' 
-    CHANGE THIS WHEN RUNNING WITH VS WITHOUT QC DATA || 1 GENERATION VS ALL GENERATIONS
-    '''
-    df = df[df['Generation'] == "F2"]
 
     ids = df["ID"].values
     ax_columns = [col for col in df.columns if col.startswith("AX")]
