@@ -99,7 +99,7 @@ def main():
     # filename = "DarpaQCGenoPheno.csv"
     filename = "noQC/MeanImputedScaledData.csv"
     logger.info(f"Loading data from {filename}... FOR JUST F0 GENERATION")
-    for df in pd.read_csv(filename, chunksize=chunksize, index_col=0):
+    for df in pd.read_csv(filename, chunksize=chunksize, index_col=None):
         list_of_dataframes.append(df)
     df = pd.concat(list_of_dataframes)
 

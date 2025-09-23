@@ -28,11 +28,10 @@ echo "Number of CPUs: $SLURM_CPUS_PER_TASK"
 source /hpc/group/schultzlab/hs325/miniconda3/etc/profile.d/conda.sh
 conda activate gsAI
 
-echo "Processing F2 with QC"
-python 01_hpt.py
+# echo "Processing F2 with QC"
+# python 01_hpt.py
 
 ### extra runs
-
 echo "Processing F0 without QC"
 python 01a_F0hpt_noqc.py 
 
@@ -41,4 +40,3 @@ python 01b_Allhpt_noqc.py
 
 echo "Processing F2 without QC"
 python 01c_F2hpt_noqc.py
-# update 01a to run with NO QC F2 GEN

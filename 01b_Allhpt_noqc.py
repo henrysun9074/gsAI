@@ -99,11 +99,10 @@ def main():
     ''' 
     CHANGE THIS WHEN RUNNING WITH VS WITHOUT QC DATA || 1 GENERATION VS ALL GENERATIONS
     '''
-
     # filename = "DarpaQCGenoPheno.csv"
     filename = "noQC/MeanImputedScaledData.csv"
     logger.info(f"Loading data from {filename}... FOR ALL GENERATIONS")
-    for df in pd.read_csv(filename, chunksize=chunksize, index_col=0):
+    for df in pd.read_csv(filename, chunksize=chunksize, index_col=None):
         list_of_dataframes.append(df)
     df = pd.concat(list_of_dataframes)
 
