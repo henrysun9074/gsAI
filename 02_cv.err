@@ -116,3 +116,93 @@ CUDA 12.8
 2025-09-23 12:30:17,056 - INFO - Outer Fold 8/10
 2025-09-23 12:30:26,832 - INFO - LR | Fold 8: AUC=0.642, LogLoss=0.666, Brier=0.236, PearsonR=0.253
 2025-09-23 12:30:31,841 - INFO - RF | Fold 8: AUC=0.657, LogLoss=0.660, Brier=0.233, PearsonR=0.267
+2025-09-23 12:31:20,607 - INFO - GB | Fold 8: AUC=0.657, LogLoss=0.659, Brier=0.232, PearsonR=0.276
+2025-09-23 12:31:20,616 - INFO - Outer Fold 9/10
+2025-09-23 12:31:29,217 - INFO - LR | Fold 9: AUC=0.614, LogLoss=0.673, Brier=0.240, PearsonR=0.198
+2025-09-23 12:31:34,241 - INFO - RF | Fold 9: AUC=0.577, LogLoss=0.682, Brier=0.244, PearsonR=0.152
+2025-09-23 12:32:23,318 - INFO - GB | Fold 9: AUC=0.601, LogLoss=0.678, Brier=0.243, PearsonR=0.170
+2025-09-23 12:32:23,326 - INFO - Outer Fold 10/10
+2025-09-23 12:32:33,102 - INFO - LR | Fold 10: AUC=0.594, LogLoss=0.686, Brier=0.246, PearsonR=0.173
+2025-09-23 12:32:38,240 - INFO - RF | Fold 10: AUC=0.617, LogLoss=0.675, Brier=0.241, PearsonR=0.193
+2025-09-23 12:33:27,214 - INFO - GB | Fold 10: AUC=0.594, LogLoss=0.688, Brier=0.247, PearsonR=0.168
+2025-09-23 12:33:27,223 - INFO - === Repetition 4/5 ===
+2025-09-23 12:33:27,223 - INFO - Outer Fold 1/10
+2025-09-23 12:33:37,232 - INFO - LR | Fold 1: AUC=0.624, LogLoss=0.674, Brier=0.239, PearsonR=0.220
+2025-09-23 12:33:42,236 - INFO - RF | Fold 1: AUC=0.628, LogLoss=0.660, Brier=0.235, PearsonR=0.248
+2025-09-23 12:34:31,783 - INFO - GB | Fold 1: AUC=0.614, LogLoss=0.674, Brier=0.240, PearsonR=0.215
+2025-09-23 12:34:31,791 - INFO - Outer Fold 2/10
+2025-09-23 12:34:41,523 - INFO - LR | Fold 2: AUC=0.611, LogLoss=0.666, Brier=0.237, PearsonR=0.222
+2025-09-23 12:34:46,621 - INFO - RF | Fold 2: AUC=0.582, LogLoss=0.678, Brier=0.243, PearsonR=0.172
+2025-09-23 12:35:35,960 - INFO - GB | Fold 2: AUC=0.556, LogLoss=0.691, Brier=0.249, PearsonR=0.114
+2025-09-23 12:35:35,968 - INFO - Outer Fold 3/10
+2025-09-23 12:35:44,887 - INFO - LR | Fold 3: AUC=0.606, LogLoss=0.669, Brier=0.238, PearsonR=0.216
+2025-09-23 12:35:49,922 - INFO - RF | Fold 3: AUC=0.538, LogLoss=0.692, Brier=0.250, PearsonR=0.107
+2025-09-23 12:36:38,518 - INFO - GB | Fold 3: AUC=0.630, LogLoss=0.663, Brier=0.235, PearsonR=0.242
+2025-09-23 12:36:38,526 - INFO - Outer Fold 4/10
+2025-09-23 12:36:47,414 - INFO - LR | Fold 4: AUC=0.609, LogLoss=0.686, Brier=0.246, PearsonR=0.179
+2025-09-23 12:36:52,524 - INFO - RF | Fold 4: AUC=0.591, LogLoss=0.690, Brier=0.248, PearsonR=0.145
+2025-09-23 12:37:40,946 - INFO - GB | Fold 4: AUC=0.602, LogLoss=0.688, Brier=0.247, PearsonR=0.175
+2025-09-23 12:37:40,955 - INFO - Outer Fold 5/10
+2025-09-23 12:37:50,421 - INFO - LR | Fold 5: AUC=0.605, LogLoss=0.676, Brier=0.241, PearsonR=0.196
+2025-09-23 12:37:55,540 - INFO - RF | Fold 5: AUC=0.583, LogLoss=0.683, Brier=0.245, PearsonR=0.154
+2025-09-23 12:38:44,132 - INFO - GB | Fold 5: AUC=0.597, LogLoss=0.683, Brier=0.245, PearsonR=0.167
+2025-09-23 12:38:44,140 - INFO - Outer Fold 6/10
+2025-09-23 12:38:53,712 - INFO - LR | Fold 6: AUC=0.648, LogLoss=0.668, Brier=0.237, PearsonR=0.281
+2025-09-23 12:38:58,861 - INFO - RF | Fold 6: AUC=0.661, LogLoss=0.672, Brier=0.239, PearsonR=0.285
+2025-09-23 12:39:47,438 - INFO - GB | Fold 6: AUC=0.609, LogLoss=0.683, Brier=0.245, PearsonR=0.213
+2025-09-23 12:39:47,446 - INFO - Outer Fold 7/10
+2025-09-23 12:39:56,653 - INFO - LR | Fold 7: AUC=0.672, LogLoss=0.646, Brier=0.227, PearsonR=0.303
+2025-09-23 12:40:01,683 - INFO - RF | Fold 7: AUC=0.645, LogLoss=0.667, Brier=0.236, PearsonR=0.249
+2025-09-23 12:40:50,955 - INFO - GB | Fold 7: AUC=0.667, LogLoss=0.653, Brier=0.230, PearsonR=0.281
+2025-09-23 12:40:50,964 - INFO - Outer Fold 8/10
+2025-09-23 12:41:00,715 - INFO - LR | Fold 8: AUC=0.707, LogLoss=0.641, Brier=0.225, PearsonR=0.353
+2025-09-23 12:41:05,801 - INFO - RF | Fold 8: AUC=0.739, LogLoss=0.639, Brier=0.223, PearsonR=0.418
+2025-09-23 12:41:54,252 - INFO - GB | Fold 8: AUC=0.668, LogLoss=0.656, Brier=0.232, PearsonR=0.279
+2025-09-23 12:41:54,260 - INFO - Outer Fold 9/10
+2025-09-23 12:42:04,034 - INFO - LR | Fold 9: AUC=0.654, LogLoss=0.663, Brier=0.235, PearsonR=0.256
+2025-09-23 12:42:09,011 - INFO - RF | Fold 9: AUC=0.667, LogLoss=0.666, Brier=0.236, PearsonR=0.294
+2025-09-23 12:42:57,869 - INFO - GB | Fold 9: AUC=0.631, LogLoss=0.668, Brier=0.238, PearsonR=0.221
+2025-09-23 12:42:57,877 - INFO - Outer Fold 10/10
+2025-09-23 12:43:07,328 - INFO - LR | Fold 10: AUC=0.663, LogLoss=0.646, Brier=0.227, PearsonR=0.299
+2025-09-23 12:43:12,379 - INFO - RF | Fold 10: AUC=0.664, LogLoss=0.650, Brier=0.229, PearsonR=0.287
+2025-09-23 12:44:01,385 - INFO - GB | Fold 10: AUC=0.670, LogLoss=0.652, Brier=0.229, PearsonR=0.287
+2025-09-23 12:44:01,393 - INFO - === Repetition 5/5 ===
+2025-09-23 12:44:01,394 - INFO - Outer Fold 1/10
+2025-09-23 12:44:11,142 - INFO - LR | Fold 1: AUC=0.652, LogLoss=0.663, Brier=0.235, PearsonR=0.253
+2025-09-23 12:44:16,304 - INFO - RF | Fold 1: AUC=0.603, LogLoss=0.677, Brier=0.242, PearsonR=0.183
+2025-09-23 12:45:04,782 - INFO - GB | Fold 1: AUC=0.609, LogLoss=0.673, Brier=0.240, PearsonR=0.201
+2025-09-23 12:45:04,792 - INFO - Outer Fold 2/10
+2025-09-23 12:45:14,215 - INFO - LR | Fold 2: AUC=0.663, LogLoss=0.658, Brier=0.233, PearsonR=0.278
+2025-09-23 12:45:19,328 - INFO - RF | Fold 2: AUC=0.663, LogLoss=0.664, Brier=0.236, PearsonR=0.266
+2025-09-23 12:46:07,735 - INFO - GB | Fold 2: AUC=0.639, LogLoss=0.667, Brier=0.237, PearsonR=0.234
+2025-09-23 12:46:07,744 - INFO - Outer Fold 3/10
+2025-09-23 12:46:17,192 - INFO - LR | Fold 3: AUC=0.548, LogLoss=0.730, Brier=0.265, PearsonR=0.085
+2025-09-23 12:46:22,306 - INFO - RF | Fold 3: AUC=0.540, LogLoss=0.714, Brier=0.259, PearsonR=0.066
+2025-09-23 12:47:11,434 - INFO - GB | Fold 3: AUC=0.602, LogLoss=0.682, Brier=0.244, PearsonR=0.190
+2025-09-23 12:47:11,441 - INFO - Outer Fold 4/10
+2025-09-23 12:47:20,598 - INFO - LR | Fold 4: AUC=0.652, LogLoss=0.657, Brier=0.232, PearsonR=0.266
+2025-09-23 12:47:25,611 - INFO - RF | Fold 4: AUC=0.616, LogLoss=0.673, Brier=0.240, PearsonR=0.205
+2025-09-23 12:48:13,743 - INFO - GB | Fold 4: AUC=0.670, LogLoss=0.651, Brier=0.229, PearsonR=0.297
+2025-09-23 12:48:13,764 - INFO - Outer Fold 5/10
+2025-09-23 12:48:23,823 - INFO - LR | Fold 5: AUC=0.634, LogLoss=0.662, Brier=0.235, PearsonR=0.245
+2025-09-23 12:48:28,927 - INFO - RF | Fold 5: AUC=0.664, LogLoss=0.655, Brier=0.231, PearsonR=0.280
+2025-09-23 12:49:17,538 - INFO - GB | Fold 5: AUC=0.644, LogLoss=0.660, Brier=0.234, PearsonR=0.251
+2025-09-23 12:49:17,546 - INFO - Outer Fold 6/10
+2025-09-23 12:49:26,745 - INFO - LR | Fold 6: AUC=0.569, LogLoss=0.687, Brier=0.247, PearsonR=0.124
+2025-09-23 12:49:31,815 - INFO - RF | Fold 6: AUC=0.594, LogLoss=0.680, Brier=0.244, PearsonR=0.169
+2025-09-23 12:50:20,622 - INFO - GB | Fold 6: AUC=0.595, LogLoss=0.679, Brier=0.243, PearsonR=0.168
+2025-09-23 12:50:20,630 - INFO - Outer Fold 7/10
+2025-09-23 12:50:30,101 - INFO - LR | Fold 7: AUC=0.725, LogLoss=0.612, Brier=0.212, PearsonR=0.399
+2025-09-23 12:50:35,188 - INFO - RF | Fold 7: AUC=0.728, LogLoss=0.614, Brier=0.212, PearsonR=0.399
+2025-09-23 12:51:23,875 - INFO - GB | Fold 7: AUC=0.677, LogLoss=0.645, Brier=0.227, PearsonR=0.310
+2025-09-23 12:51:23,883 - INFO - Outer Fold 8/10
+2025-09-23 12:51:33,919 - INFO - LR | Fold 8: AUC=0.625, LogLoss=0.662, Brier=0.235, PearsonR=0.244
+2025-09-23 12:51:39,020 - INFO - RF | Fold 8: AUC=0.611, LogLoss=0.669, Brier=0.239, PearsonR=0.211
+2025-09-23 12:52:27,365 - INFO - GB | Fold 8: AUC=0.634, LogLoss=0.660, Brier=0.234, PearsonR=0.255
+2025-09-23 12:52:27,373 - INFO - Outer Fold 9/10
+2025-09-23 12:52:36,577 - INFO - LR | Fold 9: AUC=0.644, LogLoss=0.660, Brier=0.234, PearsonR=0.260
+2025-09-23 12:52:41,613 - INFO - RF | Fold 9: AUC=0.637, LogLoss=0.665, Brier=0.237, PearsonR=0.235
+2025-09-23 12:53:30,518 - INFO - GB | Fold 9: AUC=0.650, LogLoss=0.660, Brier=0.234, PearsonR=0.277
+2025-09-23 12:53:30,526 - INFO - Outer Fold 10/10
+2025-09-23 12:53:39,965 - INFO - LR | Fold 10: AUC=0.766, LogLoss=0.600, Brier=0.206, PearsonR=0.445
+2025-09-23 12:53:45,043 - INFO - RF | Fold 10: AUC=0.761, LogLoss=0.600, Brier=0.206, PearsonR=0.452

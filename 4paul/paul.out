@@ -1,10 +1,9 @@
-R 4.4.0
-Job ID: 33112200
-Running on node: dcc-schultzlab-01
-Number of CPUs: 4
-Starting R script at: Thu Jul 31 09:56:16 AM EDT 2025
+Job ID: 37115494
+Running on node: dcc-core-06
+Number of CPUs: 12
+Starting R script at: Tue Sep 23 12:52:57 PM EDT 2025
 ==> R script has started and loaded ==>
 Library path:
 [1] "/work/tfs3/gsAI/4paul/rlib"               
 [2] "/admin/apps/rhel9/R-4.4.0/lib64/R/library"
-R script finished at: Thu Jul 31 09:56:21 AM EDT 2025
+R script started

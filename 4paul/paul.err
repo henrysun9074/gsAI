@@ -1,3 +1,6 @@
+R 4.4.0
+Warning message:
+package ‘pryr’ was built under R version 4.4.3 
 ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ✔ dplyr     1.1.4     ✔ readr     2.1.5
 ✔ forcats   1.0.0     ✔ stringr   1.5.1
@@ -5,19 +8,97 @@
 ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
 ✔ purrr     1.0.2     
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-✖ purrr::%@%()         masks rlang::%@%()
-✖ dplyr::filter()      masks stats::filter()
-✖ purrr::flatten()     masks rlang::flatten()
-✖ purrr::flatten_chr() masks rlang::flatten_chr()
-✖ purrr::flatten_dbl() masks rlang::flatten_dbl()
-✖ purrr::flatten_int() masks rlang::flatten_int()
-✖ purrr::flatten_lgl() masks rlang::flatten_lgl()
-✖ purrr::flatten_raw() masks rlang::flatten_raw()
-✖ purrr::invoke()      masks rlang::invoke()
-✖ dplyr::lag()         masks stats::lag()
-✖ purrr::splice()      masks rlang::splice()
+✖ purrr::compose() masks pryr::compose()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+✖ purrr::partial() masks pryr::partial()
+✖ dplyr::where()   masks pryr::where()
 ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
-Error: package or namespace load failed for ‘BGLR’ in dyn.load(file, DLLpath = DLLpath, ...):
- unable to load shared object '/work/tfs3/gsAI/4paul/rlib/BGLR/libs/BGLR.so':
-  liblapack.so.3: cannot open shared object file: No such file or directory
-Execution halted
+
+For example usage please run: vignette('qqman')
+
+Citation appreciated but not required:
+Turner, (2018). qqman: an R package for visualizing GWAS results using Q-Q and manhattan plots. Journal of Open Source Software, 3(25), 731, https://doi.org/10.21105/joss.00731.
+
+Loading required package: combinat
+
+Attaching package: ‘combinat’
+
+The following object is masked from ‘package:utils’:
+
+    combn
+
+Loading required package: gdata
+
+Attaching package: ‘gdata’
+
+The following objects are masked from ‘package:dplyr’:
+
+    combine, first, last, starts_with
+
+The following object is masked from ‘package:purrr’:
+
+    keep
+
+The following object is masked from ‘package:tidyr’:
+
+    starts_with
+
+The following object is masked from ‘package:pryr’:
+
+    object_size
+
+The following object is masked from ‘package:stats’:
+
+    nobs
+
+The following object is masked from ‘package:utils’:
+
+    object.size
+
+The following object is masked from ‘package:base’:
+
+    startsWith
+
+Loading required package: gtools
+Loading required package: MASS
+
+Attaching package: ‘MASS’
+
+The following object is masked from ‘package:dplyr’:
+
+    select
+
+Loading required package: mvtnorm
+
+
+NOTE: THIS PACKAGE IS NOW OBSOLETE.
+
+
+
+  The R-Genetics project has developed an set of enhanced genetics
+
+  packages to replace 'genetics'. Please visit the project homepage
+
+  at http://rgenetics.org for informtion.
+
+
+
+
+Attaching package: ‘genetics’
+
+The following objects are masked from ‘package:base’:
+
+    as.factor, %in%, order
+
+corrplot 0.95 loaded
+Type 'citation("pROC")' for a citation.
+
+Attaching package: ‘pROC’
+
+The following objects are masked from ‘package:stats’:
+
+    cov, smooth, var
+
+New names:
+• `` -> `...1`
