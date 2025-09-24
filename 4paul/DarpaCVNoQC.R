@@ -24,7 +24,8 @@ setwd("/work/tfs3/gsAI/4paul")
 phenTrain<-read_xlsx("phenTrainDarpa.xlsx")
 
 train_base<-read_csv("/work/tfs3/gsAI/DarpaNoQCGenoPheno.csv")
-train_base <- column_to_rownames(train_base, var = colnames(train_base)[1])
+# train_base <- column_to_rownames(train_base, var = colnames(train_base)[1])
+train_base <- column_to_rownames(train_base, var = "ID")
 train_base <- train_base[, grepl("^AX", colnames(train_base))]
 
 n_samples <- nrow(train_base)
@@ -35,12 +36,9 @@ test_size <- ceiling(0.2 * n_samples)
 split_indices <- split(shuffled_indices, ceiling(seq_along(shuffled_indices) / test_size))
 length(split_indices)
 
-GBLUP_all_preds2 <- list()
-LASSO_all_preds2 <- list()
-RKHS_all_preds2 <- list()
-EGBLUP_all_preds2 <- list()
-BRR_all_preds2 <- list()
-BayesB_all_preds2 <- list()
+pheno_train_vec1 <- phenTrain$Status
+names(pheno_train_vec1) <- phenTrain$ID
+
 
 ############################# CROSS VALIDATION ################################
 
@@ -133,14 +131,15 @@ for (i in 1:10) {
   )
 }
 
+save.image("CV_noQCAllGens.RData")  # optional full workspace save
+## change to save today's date
+
 cat("==> Collecting and saving fold metrics...\n")
 all_metrics_df <- do.call(rbind, lapply(results, function(x) x$metrics))
 metrics_outfile <- sprintf("%s_CrossValDarpaFoldMetrics.csv", format(Sys.Date(), "%b%d"))
 write.csv(all_metrics_df, metrics_outfile, row.names = FALSE)
 cat("Saved fold metrics to", metrics_outfile, "\n")
 
-save.image("cv_serial.RData")  # optional full workspace save
-## change to save today's date
 
 ############################# GEBV Computation ################################
 
