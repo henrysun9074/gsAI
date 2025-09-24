@@ -32,9 +32,6 @@ conda activate gsAI
 # python 01_hpt.py
 
 ### extra runs
-echo "Processing F0 without QC"
-python 01a_F0hpt_noqc.py 
-
 echo "Processing all gens without QC"
 python 01b_Allhpt_noqc.py
 
