@@ -102,6 +102,8 @@ def main():
     for df in pd.read_csv(filename, chunksize=chunksize, index_col=0):
         list_of_dataframes.append(df)
     df = pd.concat(list_of_dataframes)
+
+    ##### F2
     df = df[df['Generation'] == "F2"]
 
     ids = df["ID"].values

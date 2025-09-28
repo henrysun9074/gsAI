@@ -6,6 +6,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --exclusive
 #SBATCH --ntasks=1
+#SBATCH --time=2-00:00:00
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
 #SBATCH --mail-type=ALL
@@ -28,12 +29,8 @@ echo "Number of CPUs: $SLURM_CPUS_PER_TASK"
 source /hpc/group/schultzlab/hs325/miniconda3/etc/profile.d/conda.sh
 conda activate gsAI
 
-# echo "Processing F2 with QC"
+# echo "Running script"
 # python 01_hpt.py
-
-### extra runs
-echo "Processing all gens without QC"
-python 01b_Allhpt_noqc.py
 
 echo "Processing F2 without QC"
 python 01c_F2hpt_noqc.py

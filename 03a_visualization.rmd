@@ -23,13 +23,15 @@ load("/work/tfs3/gsAI/4paul/RModelCorrelations.RData")
 
 ml_models_path <- "/work/tfs3/gsAI/gebvs/sep22_F2QC_GEBVs_10foldCV.csv"
 r_models_path <- "/work/tfs3/gsAI/4paul/CrossValDarpaGebv.xlsx"
-ml_metrics_path <- "/work/tfs3/gsAI/gebvs/sep22_fold_metrics.csv"
+ml_metrics_path <- "/work/tfs3/gsAI/gebvs/sep22_F2QC_fold_metrics.csv"
 # r_metrics_path <- "TBA"
 
 DARPAGEBV <- read.csv(ml_models_path) 
 DARPAGEBV2 <- read_xlsx(r_models_path) 
 df <- merge(DARPAGEBV, DARPAGEBV2)
-write.csv(df, file = ml_models_path, row.names = FALSE)
+
+## Turn on to overwrite ML GEBV CSV with R MODEL VALUES
+# write.csv(df, file = ml_models_path, row.names = FALSE)
 
 MLMETRICS <- read.csv(ml_metrics_path) 
 # RMETRICS <- read.csv(r_metrics_path) 
@@ -39,11 +41,11 @@ MLMETRICS
 
 ```
 
-RUN THIS CODE CHUNK FOR 1 GEN DATA: FILTER OUT EXTRA ROWS.
+RUN THIS CODE CHUNK FOR 1 GEN DATA and FILTER OUT EXTRA ROWS.
 ```{r}
-# DARPAGEBV2_filtered <- DARPAGEBV2 %>%
-#   semi_join(DARPAGEBV, by = "ID")
-# DARPAGEBV2 <- DARPAGEBV2_filtered
+DARPAGEBV2_filtered <- DARPAGEBV2 %>%
+  semi_join(DARPAGEBV, by = "ID")
+DARPAGEBV2 <- DARPAGEBV2_filtered
 ```
 
 ```{r}
