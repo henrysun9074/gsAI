@@ -97,7 +97,7 @@ def main():
     list_of_dataframes = []
 
     filename = "DarpaNoQCGenoPheno.csv"
-    logger.info(f"Loading data from {filename}... FOR ALL GENERATIONS")
+    logger.info(f"Loading data from {filename}... FOR F2 GENERATION")
     for df in pd.read_csv(filename, chunksize=chunksize, index_col=None):
         list_of_dataframes.append(df)
     df = pd.concat(list_of_dataframes)
