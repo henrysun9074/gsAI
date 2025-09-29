@@ -99,7 +99,7 @@ logger.info(f"Loading data from {filename}...")
 def main():
     chunksize = 100
     list_of_dataframes = []
-    for df in pd.read_csv(filename, chunksize=chunksize, index_col=0):
+    for df in pd.read_csv(filename, chunksize=chunksize, index_col=None):
         list_of_dataframes.append(df)
     df = pd.concat(list_of_dataframes)
 

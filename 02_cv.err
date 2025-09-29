@@ -1,220 +1,76 @@
 CUDA 12.8
-2025-09-25 14:48:06,572 - INFO - Loading data from DarpaQCGenoPheno.csv...
-2025-09-25 14:48:48,490 - INFO - Loaded best hyperparameters
-2025-09-25 14:48:48,491 - INFO - Running 5x repeated 10-fold CV with calibration for NOQC + F2 GENERATION
-2025-09-25 14:48:48,492 - INFO - === Repetition 1/5 ===
-2025-09-25 14:48:48,493 - INFO - Outer Fold 1/10
-2025-09-25 14:48:57,844 - INFO - LR | Fold 1: AUC=0.647, LogLoss=0.658, Brier=0.233, PearsonR=0.261
-2025-09-25 14:49:02,704 - INFO - RF | Fold 1: AUC=0.657, LogLoss=0.656, Brier=0.232, PearsonR=0.270
-2025-09-25 14:49:55,829 - INFO - GB | Fold 1: AUC=0.623, LogLoss=0.670, Brier=0.239, PearsonR=0.216
-2025-09-25 14:49:55,838 - INFO - Outer Fold 2/10
-2025-09-25 14:50:04,211 - INFO - LR | Fold 2: AUC=0.564, LogLoss=0.702, Brier=0.253, PearsonR=0.094
-2025-09-25 14:50:09,022 - INFO - RF | Fold 2: AUC=0.598, LogLoss=0.684, Brier=0.245, PearsonR=0.142
-2025-09-25 14:51:00,491 - INFO - GB | Fold 2: AUC=0.611, LogLoss=0.674, Brier=0.240, PearsonR=0.196
-2025-09-25 14:51:00,500 - INFO - Outer Fold 3/10
-2025-09-25 14:51:08,872 - INFO - LR | Fold 3: AUC=0.571, LogLoss=0.691, Brier=0.249, PearsonR=0.128
-2025-09-25 14:51:13,650 - INFO - RF | Fold 3: AUC=0.582, LogLoss=0.687, Brier=0.247, PearsonR=0.139
-2025-09-25 14:52:04,602 - INFO - GB | Fold 3: AUC=0.524, LogLoss=0.702, Brier=0.254, PearsonR=0.043
-2025-09-25 14:52:04,614 - INFO - Outer Fold 4/10
-2025-09-25 14:52:12,763 - INFO - LR | Fold 4: AUC=0.730, LogLoss=0.631, Brier=0.219, PearsonR=0.387
-2025-09-25 14:52:17,741 - INFO - RF | Fold 4: AUC=0.660, LogLoss=0.657, Brier=0.232, PearsonR=0.270
-2025-09-25 14:53:08,736 - INFO - GB | Fold 4: AUC=0.715, LogLoss=0.631, Brier=0.219, PearsonR=0.380
-2025-09-25 14:53:08,744 - INFO - Outer Fold 5/10
-2025-09-25 14:53:17,137 - INFO - LR | Fold 5: AUC=0.621, LogLoss=0.667, Brier=0.237, PearsonR=0.224
-2025-09-25 14:53:21,968 - INFO - RF | Fold 5: AUC=0.603, LogLoss=0.674, Brier=0.241, PearsonR=0.194
-2025-09-25 14:54:16,718 - INFO - GB | Fold 5: AUC=0.641, LogLoss=0.665, Brier=0.236, PearsonR=0.234
-2025-09-25 14:54:16,727 - INFO - Outer Fold 6/10
-2025-09-25 14:54:27,812 - INFO - LR | Fold 6: AUC=0.620, LogLoss=0.673, Brier=0.240, PearsonR=0.232
-2025-09-25 14:54:32,565 - INFO - RF | Fold 6: AUC=0.562, LogLoss=0.682, Brier=0.245, PearsonR=0.149
-2025-09-25 14:55:26,131 - INFO - GB | Fold 6: AUC=0.586, LogLoss=0.681, Brier=0.244, PearsonR=0.154
-2025-09-25 14:55:26,139 - INFO - Outer Fold 7/10
-2025-09-25 14:55:36,026 - INFO - LR | Fold 7: AUC=0.539, LogLoss=0.734, Brier=0.266, PearsonR=0.087
-2025-09-25 14:55:42,289 - INFO - RF | Fold 7: AUC=0.586, LogLoss=0.691, Brier=0.248, PearsonR=0.159
-2025-09-25 14:56:48,104 - INFO - GB | Fold 7: AUC=0.580, LogLoss=0.695, Brier=0.250, PearsonR=0.142
-2025-09-25 14:56:48,114 - INFO - Outer Fold 8/10
-2025-09-25 14:56:58,474 - INFO - LR | Fold 8: AUC=0.714, LogLoss=0.628, Brier=0.219, PearsonR=0.380
-2025-09-25 14:57:04,342 - INFO - RF | Fold 8: AUC=0.673, LogLoss=0.645, Brier=0.227, PearsonR=0.330
-2025-09-25 14:58:11,327 - INFO - GB | Fold 8: AUC=0.661, LogLoss=0.653, Brier=0.230, PearsonR=0.285
-2025-09-25 14:58:11,359 - INFO - Outer Fold 9/10
-2025-09-25 14:58:21,617 - INFO - LR | Fold 9: AUC=0.603, LogLoss=0.676, Brier=0.242, PearsonR=0.183
-2025-09-25 14:58:27,388 - INFO - RF | Fold 9: AUC=0.594, LogLoss=0.682, Brier=0.244, PearsonR=0.151
-2025-09-25 14:59:26,936 - INFO - GB | Fold 9: AUC=0.596, LogLoss=0.680, Brier=0.243, PearsonR=0.163
-2025-09-25 14:59:26,944 - INFO - Outer Fold 10/10
-2025-09-25 14:59:35,697 - INFO - LR | Fold 10: AUC=0.707, LogLoss=0.637, Brier=0.223, PearsonR=0.381
-2025-09-25 14:59:40,447 - INFO - RF | Fold 10: AUC=0.715, LogLoss=0.637, Brier=0.223, PearsonR=0.399
-2025-09-25 15:00:35,540 - INFO - GB | Fold 10: AUC=0.746, LogLoss=0.624, Brier=0.217, PearsonR=0.423
-2025-09-25 15:00:35,548 - INFO - === Repetition 2/5 ===
-2025-09-25 15:00:35,549 - INFO - Outer Fold 1/10
-2025-09-25 15:00:44,167 - INFO - LR | Fold 1: AUC=0.537, LogLoss=0.725, Brier=0.264, PearsonR=0.067
-2025-09-25 15:00:48,972 - INFO - RF | Fold 1: AUC=0.557, LogLoss=0.709, Brier=0.256, PearsonR=0.094
-2025-09-25 15:01:39,969 - INFO - GB | Fold 1: AUC=0.515, LogLoss=0.768, Brier=0.282, PearsonR=0.019
-2025-09-25 15:01:39,982 - INFO - Outer Fold 2/10
-2025-09-25 15:01:48,838 - INFO - LR | Fold 2: AUC=0.674, LogLoss=0.644, Brier=0.226, PearsonR=0.312
-2025-09-25 15:01:53,658 - INFO - RF | Fold 2: AUC=0.701, LogLoss=0.643, Brier=0.226, PearsonR=0.347
-2025-09-25 15:02:46,134 - INFO - GB | Fold 2: AUC=0.674, LogLoss=0.647, Brier=0.227, PearsonR=0.305
-2025-09-25 15:02:46,143 - INFO - Outer Fold 3/10
-2025-09-25 15:02:54,977 - INFO - LR | Fold 3: AUC=0.663, LogLoss=0.643, Brier=0.227, PearsonR=0.303
-2025-09-25 15:02:59,786 - INFO - RF | Fold 3: AUC=0.649, LogLoss=0.656, Brier=0.233, PearsonR=0.267
-2025-09-25 15:03:50,896 - INFO - GB | Fold 3: AUC=0.693, LogLoss=0.636, Brier=0.222, PearsonR=0.338
-2025-09-25 15:03:50,906 - INFO - Outer Fold 4/10
-2025-09-25 15:03:59,590 - INFO - LR | Fold 4: AUC=0.615, LogLoss=0.672, Brier=0.240, PearsonR=0.215
-2025-09-25 15:04:04,424 - INFO - RF | Fold 4: AUC=0.630, LogLoss=0.668, Brier=0.238, PearsonR=0.223
-2025-09-25 15:04:55,065 - INFO - GB | Fold 4: AUC=0.626, LogLoss=0.671, Brier=0.239, PearsonR=0.216
-2025-09-25 15:04:55,074 - INFO - Outer Fold 5/10
-2025-09-25 15:05:03,519 - INFO - LR | Fold 5: AUC=0.651, LogLoss=0.655, Brier=0.232, PearsonR=0.277
-2025-09-25 15:05:08,305 - INFO - RF | Fold 5: AUC=0.627, LogLoss=0.671, Brier=0.239, PearsonR=0.222
-2025-09-25 15:05:59,238 - INFO - GB | Fold 5: AUC=0.618, LogLoss=0.673, Brier=0.240, PearsonR=0.204
-2025-09-25 15:05:59,249 - INFO - Outer Fold 6/10
-2025-09-25 15:06:08,639 - INFO - LR | Fold 6: AUC=0.575, LogLoss=0.680, Brier=0.244, PearsonR=0.164
-2025-09-25 15:06:13,959 - INFO - RF | Fold 6: AUC=0.588, LogLoss=0.673, Brier=0.240, PearsonR=0.202
-2025-09-25 15:07:13,841 - INFO - GB | Fold 6: AUC=0.611, LogLoss=0.668, Brier=0.238, PearsonR=0.220
-2025-09-25 15:07:13,849 - INFO - Outer Fold 7/10
-2025-09-25 15:07:23,711 - INFO - LR | Fold 7: AUC=0.612, LogLoss=0.678, Brier=0.242, PearsonR=0.181
-2025-09-25 15:07:29,181 - INFO - RF | Fold 7: AUC=0.607, LogLoss=0.673, Brier=0.240, PearsonR=0.199
-2025-09-25 15:08:28,437 - INFO - GB | Fold 7: AUC=0.617, LogLoss=0.679, Brier=0.243, PearsonR=0.189
-2025-09-25 15:08:28,445 - INFO - Outer Fold 8/10
-2025-09-25 15:08:37,409 - INFO - LR | Fold 8: AUC=0.716, LogLoss=0.634, Brier=0.221, PearsonR=0.377
-2025-09-25 15:08:42,654 - INFO - RF | Fold 8: AUC=0.699, LogLoss=0.645, Brier=0.227, PearsonR=0.342
-2025-09-25 15:09:41,713 - INFO - GB | Fold 8: AUC=0.645, LogLoss=0.661, Brier=0.234, PearsonR=0.250
-2025-09-25 15:09:41,722 - INFO - Outer Fold 9/10
-2025-09-25 15:09:50,951 - INFO - LR | Fold 9: AUC=0.590, LogLoss=0.684, Brier=0.245, PearsonR=0.160
-2025-09-25 15:09:56,343 - INFO - RF | Fold 9: AUC=0.563, LogLoss=0.690, Brier=0.249, PearsonR=0.115
-2025-09-25 15:10:55,236 - INFO - GB | Fold 9: AUC=0.609, LogLoss=0.674, Brier=0.241, PearsonR=0.199
-2025-09-25 15:10:55,246 - INFO - Outer Fold 10/10
-2025-09-25 15:11:04,509 - INFO - LR | Fold 10: AUC=0.624, LogLoss=0.678, Brier=0.241, PearsonR=0.220
-2025-09-25 15:11:09,894 - INFO - RF | Fold 10: AUC=0.668, LogLoss=0.654, Brier=0.231, PearsonR=0.283
-2025-09-25 15:12:10,965 - INFO - GB | Fold 10: AUC=0.631, LogLoss=0.666, Brier=0.236, PearsonR=0.232
-2025-09-25 15:12:10,981 - INFO - === Repetition 3/5 ===
-2025-09-25 15:12:10,982 - INFO - Outer Fold 1/10
-2025-09-25 15:12:20,291 - INFO - LR | Fold 1: AUC=0.649, LogLoss=0.661, Brier=0.234, PearsonR=0.252
-2025-09-25 15:12:25,572 - INFO - RF | Fold 1: AUC=0.594, LogLoss=0.679, Brier=0.243, PearsonR=0.173
-2025-09-25 15:13:24,857 - INFO - GB | Fold 1: AUC=0.618, LogLoss=0.670, Brier=0.239, PearsonR=0.213
-2025-09-25 15:13:24,865 - INFO - Outer Fold 2/10
-2025-09-25 15:13:34,046 - INFO - LR | Fold 2: AUC=0.700, LogLoss=0.638, Brier=0.223, PearsonR=0.350
-2025-09-25 15:13:39,398 - INFO - RF | Fold 2: AUC=0.726, LogLoss=0.639, Brier=0.224, PearsonR=0.363
-2025-09-25 15:14:40,605 - INFO - GB | Fold 2: AUC=0.704, LogLoss=0.635, Brier=0.222, PearsonR=0.363
-2025-09-25 15:14:40,614 - INFO - Outer Fold 3/10
-2025-09-25 15:14:49,806 - INFO - LR | Fold 3: AUC=0.659, LogLoss=0.664, Brier=0.236, PearsonR=0.289
-2025-09-25 15:14:55,034 - INFO - RF | Fold 3: AUC=0.617, LogLoss=0.674, Brier=0.241, PearsonR=0.212
-2025-09-25 15:15:55,942 - INFO - GB | Fold 3: AUC=0.692, LogLoss=0.650, Brier=0.229, PearsonR=0.336
-2025-09-25 15:15:55,951 - INFO - Outer Fold 4/10
-2025-09-25 15:16:06,273 - INFO - LR | Fold 4: AUC=0.591, LogLoss=0.675, Brier=0.241, PearsonR=0.188
-2025-09-25 15:16:11,536 - INFO - RF | Fold 4: AUC=0.651, LogLoss=0.660, Brier=0.234, PearsonR=0.267
-2025-09-25 15:17:09,680 - INFO - GB | Fold 4: AUC=0.632, LogLoss=0.667, Brier=0.237, PearsonR=0.225
-2025-09-25 15:17:09,689 - INFO - Outer Fold 5/10
-2025-09-25 15:17:19,163 - INFO - LR | Fold 5: AUC=0.543, LogLoss=0.709, Brier=0.258, PearsonR=0.105
-2025-09-25 15:17:24,451 - INFO - RF | Fold 5: AUC=0.533, LogLoss=0.710, Brier=0.259, PearsonR=0.083
-2025-09-25 15:18:25,713 - INFO - GB | Fold 5: AUC=0.550, LogLoss=0.700, Brier=0.253, PearsonR=0.103
-2025-09-25 15:18:25,722 - INFO - Outer Fold 6/10
-2025-09-25 15:18:34,658 - INFO - LR | Fold 6: AUC=0.634, LogLoss=0.657, Brier=0.233, PearsonR=0.264
-2025-09-25 15:18:40,075 - INFO - RF | Fold 6: AUC=0.591, LogLoss=0.667, Brier=0.238, PearsonR=0.218
-2025-09-25 15:19:34,165 - INFO - GB | Fold 6: AUC=0.604, LogLoss=0.681, Brier=0.244, PearsonR=0.174
-2025-09-25 15:19:34,173 - INFO - Outer Fold 7/10
-2025-09-25 15:19:42,803 - INFO - LR | Fold 7: AUC=0.685, LogLoss=0.642, Brier=0.226, PearsonR=0.337
-2025-09-25 15:19:47,356 - INFO - RF | Fold 7: AUC=0.670, LogLoss=0.651, Brier=0.230, PearsonR=0.301
-2025-09-25 15:20:38,283 - INFO - GB | Fold 7: AUC=0.689, LogLoss=0.636, Brier=0.223, PearsonR=0.336
-2025-09-25 15:20:38,290 - INFO - Outer Fold 8/10
-2025-09-25 15:20:47,433 - INFO - LR | Fold 8: AUC=0.642, LogLoss=0.666, Brier=0.236, PearsonR=0.253
-2025-09-25 15:20:52,126 - INFO - RF | Fold 8: AUC=0.672, LogLoss=0.648, Brier=0.228, PearsonR=0.297
-2025-09-25 15:21:43,433 - INFO - GB | Fold 8: AUC=0.657, LogLoss=0.659, Brier=0.232, PearsonR=0.276
-2025-09-25 15:21:43,441 - INFO - Outer Fold 9/10
-2025-09-25 15:21:51,509 - INFO - LR | Fold 9: AUC=0.614, LogLoss=0.673, Brier=0.240, PearsonR=0.198
-2025-09-25 15:21:56,272 - INFO - RF | Fold 9: AUC=0.569, LogLoss=0.683, Brier=0.245, PearsonR=0.143
-2025-09-25 15:22:48,249 - INFO - GB | Fold 9: AUC=0.601, LogLoss=0.678, Brier=0.243, PearsonR=0.170
-2025-09-25 15:22:48,256 - INFO - Outer Fold 10/10
-2025-09-25 15:22:57,375 - INFO - LR | Fold 10: AUC=0.594, LogLoss=0.686, Brier=0.246, PearsonR=0.173
-2025-09-25 15:23:02,064 - INFO - RF | Fold 10: AUC=0.613, LogLoss=0.672, Brier=0.240, PearsonR=0.207
-2025-09-25 15:23:53,663 - INFO - GB | Fold 10: AUC=0.594, LogLoss=0.688, Brier=0.247, PearsonR=0.168
-2025-09-25 15:23:53,673 - INFO - === Repetition 4/5 ===
-2025-09-25 15:23:53,675 - INFO - Outer Fold 1/10
-2025-09-25 15:24:03,086 - INFO - LR | Fold 1: AUC=0.624, LogLoss=0.674, Brier=0.239, PearsonR=0.220
-2025-09-25 15:24:08,092 - INFO - RF | Fold 1: AUC=0.630, LogLoss=0.661, Brier=0.235, PearsonR=0.246
-2025-09-25 15:25:02,448 - INFO - GB | Fold 1: AUC=0.614, LogLoss=0.674, Brier=0.240, PearsonR=0.215
-2025-09-25 15:25:02,455 - INFO - Outer Fold 2/10
-2025-09-25 15:25:11,374 - INFO - LR | Fold 2: AUC=0.611, LogLoss=0.666, Brier=0.237, PearsonR=0.222
-2025-09-25 15:25:16,399 - INFO - RF | Fold 2: AUC=0.588, LogLoss=0.677, Brier=0.243, PearsonR=0.179
-2025-09-25 15:26:12,083 - INFO - GB | Fold 2: AUC=0.556, LogLoss=0.691, Brier=0.249, PearsonR=0.114
-2025-09-25 15:26:12,091 - INFO - Outer Fold 3/10
-2025-09-25 15:26:20,549 - INFO - LR | Fold 3: AUC=0.606, LogLoss=0.669, Brier=0.238, PearsonR=0.216
-2025-09-25 15:26:25,336 - INFO - RF | Fold 3: AUC=0.543, LogLoss=0.692, Brier=0.250, PearsonR=0.111
-2025-09-25 15:27:17,706 - INFO - GB | Fold 3: AUC=0.630, LogLoss=0.663, Brier=0.235, PearsonR=0.242
-2025-09-25 15:27:17,714 - INFO - Outer Fold 4/10
-2025-09-25 15:27:25,528 - INFO - LR | Fold 4: AUC=0.609, LogLoss=0.686, Brier=0.246, PearsonR=0.179
-2025-09-25 15:27:30,354 - INFO - RF | Fold 4: AUC=0.579, LogLoss=0.691, Brier=0.248, PearsonR=0.142
-2025-09-25 15:28:21,088 - INFO - GB | Fold 4: AUC=0.602, LogLoss=0.688, Brier=0.247, PearsonR=0.175
-2025-09-25 15:28:21,096 - INFO - Outer Fold 5/10
-2025-09-25 15:28:29,792 - INFO - LR | Fold 5: AUC=0.604, LogLoss=0.676, Brier=0.241, PearsonR=0.196
-2025-09-25 15:28:34,408 - INFO - RF | Fold 5: AUC=0.581, LogLoss=0.686, Brier=0.246, PearsonR=0.143
-2025-09-25 15:29:24,306 - INFO - GB | Fold 5: AUC=0.597, LogLoss=0.683, Brier=0.245, PearsonR=0.167
-2025-09-25 15:29:24,314 - INFO - Outer Fold 6/10
-2025-09-25 15:29:33,198 - INFO - LR | Fold 6: AUC=0.648, LogLoss=0.668, Brier=0.237, PearsonR=0.281
-2025-09-25 15:29:37,937 - INFO - RF | Fold 6: AUC=0.647, LogLoss=0.675, Brier=0.241, PearsonR=0.282
-2025-09-25 15:30:28,517 - INFO - GB | Fold 6: AUC=0.609, LogLoss=0.683, Brier=0.245, PearsonR=0.213
-2025-09-25 15:30:28,525 - INFO - Outer Fold 7/10
-2025-09-25 15:30:37,157 - INFO - LR | Fold 7: AUC=0.672, LogLoss=0.646, Brier=0.227, PearsonR=0.303
-2025-09-25 15:30:41,903 - INFO - RF | Fold 7: AUC=0.657, LogLoss=0.661, Brier=0.233, PearsonR=0.261
-2025-09-25 15:31:34,231 - INFO - GB | Fold 7: AUC=0.667, LogLoss=0.653, Brier=0.230, PearsonR=0.281
-2025-09-25 15:31:34,239 - INFO - Outer Fold 8/10
-2025-09-25 15:31:43,113 - INFO - LR | Fold 8: AUC=0.707, LogLoss=0.641, Brier=0.225, PearsonR=0.353
-2025-09-25 15:31:47,838 - INFO - RF | Fold 8: AUC=0.736, LogLoss=0.644, Brier=0.226, PearsonR=0.409
-2025-09-25 15:32:41,412 - INFO - GB | Fold 8: AUC=0.668, LogLoss=0.656, Brier=0.232, PearsonR=0.279
-2025-09-25 15:32:41,420 - INFO - Outer Fold 9/10
-2025-09-25 15:32:50,285 - INFO - LR | Fold 9: AUC=0.654, LogLoss=0.663, Brier=0.235, PearsonR=0.256
-2025-09-25 15:32:54,926 - INFO - RF | Fold 9: AUC=0.664, LogLoss=0.665, Brier=0.236, PearsonR=0.290
-2025-09-25 15:33:45,535 - INFO - GB | Fold 9: AUC=0.631, LogLoss=0.668, Brier=0.238, PearsonR=0.221
-2025-09-25 15:33:45,549 - INFO - Outer Fold 10/10
-2025-09-25 15:33:53,970 - INFO - LR | Fold 10: AUC=0.663, LogLoss=0.646, Brier=0.227, PearsonR=0.299
-2025-09-25 15:33:58,593 - INFO - RF | Fold 10: AUC=0.655, LogLoss=0.651, Brier=0.230, PearsonR=0.282
-2025-09-25 15:34:49,657 - INFO - GB | Fold 10: AUC=0.670, LogLoss=0.652, Brier=0.229, PearsonR=0.287
-2025-09-25 15:34:49,664 - INFO - === Repetition 5/5 ===
-2025-09-25 15:34:49,665 - INFO - Outer Fold 1/10
-2025-09-25 15:34:58,565 - INFO - LR | Fold 1: AUC=0.652, LogLoss=0.663, Brier=0.235, PearsonR=0.253
-2025-09-25 15:35:03,334 - INFO - RF | Fold 1: AUC=0.623, LogLoss=0.672, Brier=0.239, PearsonR=0.208
-2025-09-25 15:35:55,278 - INFO - GB | Fold 1: AUC=0.609, LogLoss=0.673, Brier=0.240, PearsonR=0.201
-2025-09-25 15:35:55,286 - INFO - Outer Fold 2/10
-2025-09-25 15:36:04,086 - INFO - LR | Fold 2: AUC=0.662, LogLoss=0.658, Brier=0.233, PearsonR=0.278
-2025-09-25 15:36:08,823 - INFO - RF | Fold 2: AUC=0.653, LogLoss=0.670, Brier=0.239, PearsonR=0.237
-2025-09-25 15:36:59,611 - INFO - GB | Fold 2: AUC=0.639, LogLoss=0.667, Brier=0.237, PearsonR=0.234
-2025-09-25 15:36:59,618 - INFO - Outer Fold 3/10
-2025-09-25 15:37:08,127 - INFO - LR | Fold 3: AUC=0.548, LogLoss=0.730, Brier=0.265, PearsonR=0.085
-2025-09-25 15:37:13,007 - INFO - RF | Fold 3: AUC=0.537, LogLoss=0.720, Brier=0.262, PearsonR=0.061
-2025-09-25 15:38:04,559 - INFO - GB | Fold 3: AUC=0.602, LogLoss=0.682, Brier=0.244, PearsonR=0.190
-2025-09-25 15:38:04,567 - INFO - Outer Fold 4/10
-2025-09-25 15:38:12,959 - INFO - LR | Fold 4: AUC=0.652, LogLoss=0.657, Brier=0.232, PearsonR=0.266
-2025-09-25 15:38:17,712 - INFO - RF | Fold 4: AUC=0.608, LogLoss=0.674, Brier=0.241, PearsonR=0.198
-2025-09-25 15:39:07,994 - INFO - GB | Fold 4: AUC=0.670, LogLoss=0.651, Brier=0.229, PearsonR=0.297
-2025-09-25 15:39:08,002 - INFO - Outer Fold 5/10
-2025-09-25 15:39:16,952 - INFO - LR | Fold 5: AUC=0.634, LogLoss=0.662, Brier=0.235, PearsonR=0.245
-2025-09-25 15:39:21,590 - INFO - RF | Fold 5: AUC=0.660, LogLoss=0.654, Brier=0.231, PearsonR=0.285
-2025-09-25 15:40:13,749 - INFO - GB | Fold 5: AUC=0.644, LogLoss=0.660, Brier=0.234, PearsonR=0.251
-2025-09-25 15:40:13,759 - INFO - Outer Fold 6/10
-2025-09-25 15:40:22,196 - INFO - LR | Fold 6: AUC=0.569, LogLoss=0.687, Brier=0.247, PearsonR=0.124
-2025-09-25 15:40:26,855 - INFO - RF | Fold 6: AUC=0.599, LogLoss=0.679, Brier=0.243, PearsonR=0.175
-2025-09-25 15:41:18,038 - INFO - GB | Fold 6: AUC=0.595, LogLoss=0.679, Brier=0.243, PearsonR=0.168
-2025-09-25 15:41:18,049 - INFO - Outer Fold 7/10
-2025-09-25 15:41:26,670 - INFO - LR | Fold 7: AUC=0.725, LogLoss=0.612, Brier=0.212, PearsonR=0.399
-2025-09-25 15:41:31,353 - INFO - RF | Fold 7: AUC=0.734, LogLoss=0.613, Brier=0.212, PearsonR=0.403
-2025-09-25 15:42:26,204 - INFO - GB | Fold 7: AUC=0.677, LogLoss=0.645, Brier=0.227, PearsonR=0.310
-2025-09-25 15:42:26,215 - INFO - Outer Fold 8/10
-2025-09-25 15:42:35,798 - INFO - LR | Fold 8: AUC=0.625, LogLoss=0.662, Brier=0.235, PearsonR=0.244
-2025-09-25 15:42:40,638 - INFO - RF | Fold 8: AUC=0.616, LogLoss=0.666, Brier=0.237, PearsonR=0.226
-2025-09-25 15:43:33,532 - INFO - GB | Fold 8: AUC=0.634, LogLoss=0.660, Brier=0.234, PearsonR=0.255
-2025-09-25 15:43:33,540 - INFO - Outer Fold 9/10
-2025-09-25 15:43:42,960 - INFO - LR | Fold 9: AUC=0.644, LogLoss=0.660, Brier=0.234, PearsonR=0.260
-2025-09-25 15:43:48,778 - INFO - RF | Fold 9: AUC=0.637, LogLoss=0.664, Brier=0.236, PearsonR=0.244
-2025-09-25 15:44:53,160 - INFO - GB | Fold 9: AUC=0.650, LogLoss=0.660, Brier=0.234, PearsonR=0.277
-2025-09-25 15:44:53,169 - INFO - Outer Fold 10/10
-2025-09-25 15:45:02,846 - INFO - LR | Fold 10: AUC=0.766, LogLoss=0.600, Brier=0.206, PearsonR=0.445
-2025-09-25 15:45:08,476 - INFO - RF | Fold 10: AUC=0.762, LogLoss=0.604, Brier=0.208, PearsonR=0.445
-2025-09-25 15:46:12,632 - INFO - GB | Fold 10: AUC=0.773, LogLoss=0.605, Brier=0.208, PearsonR=0.468
-2025-09-25 15:46:13,260 - INFO - Saved predicted breeding values
-2025-09-25 15:46:13,260 - INFO - Prediction file shape: (964, 8)
-2025-09-25 15:46:13,260 - INFO - Prediction dataframe preview:
-2025-09-25 15:46:13,330 - INFO - 
-       ID  Status        LR     LR_SD        RF     RF_SD        GB     GB_SD
-0  O_1000       0  0.641829  0.049274  0.641168  0.055647  0.632998  0.050879
-1  O_1002       1  0.482142  0.082387  0.412283  0.063741  0.433086  0.104969
-2  O_1003       0  0.570272  0.037068  0.527760  0.034352  0.520538  0.031274
-3  O_1005       0  0.512582  0.024382  0.492258  0.033510  0.481240  0.050286
-4  O_1010       0  0.541543  0.033979  0.523433  0.018972  0.575330  0.072618
-2025-09-25 15:46:13,418 - INFO - Saved fold metrics
+2025-09-28 22:54:43,938 - INFO - Loading data from noQC/MeanImputedScaledData.csv...
+Traceback (most recent call last):
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'ID'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/work/tfs3/gsAI/02a_10foldcv.py", line 173, in <module>
+    main()
+  File "/work/tfs3/gsAI/02a_10foldcv.py", line 107, in main
+    ids = df["ID"].values
+          ~~^^^^^^
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/pandas/core/frame.py", line 4102, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: 'ID'
+2025-09-28 22:58:06,467 - INFO - Loading data from noQC/MeanImputedScaledData.csv...
+Traceback (most recent call last):
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'ID'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/work/tfs3/gsAI/02c_10foldcv.py", line 172, in <module>
+    main()
+  File "/work/tfs3/gsAI/02c_10foldcv.py", line 106, in main
+    ids = df["ID"].values
+          ~~^^^^^^
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/pandas/core/frame.py", line 4102, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: 'ID'
+2025-09-28 23:01:28,202 - INFO - Loading data from noQC/MeanImputedScaledData.csv...
+Traceback (most recent call last):
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'ID'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/work/tfs3/gsAI/02d_10foldcv.py", line 175, in <module>
+    main()
+  File "/work/tfs3/gsAI/02d_10foldcv.py", line 109, in main
+    ids = df["ID"].values
+          ~~^^^^^^
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/pandas/core/frame.py", line 4102, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: 'ID'

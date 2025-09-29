@@ -6,9 +6,7 @@
 /4paul/paul.out
 /models
 *.RData
-*.rds
-/4paul/paul_parallel.err
-/4paul/paul_parallel.out
+*.rdscd 
 *.joblib
 *.pth
 /4paul/raw
