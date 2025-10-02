@@ -1,5 +1,6 @@
 *.csv
 *.dat
+/misc
 /4paul/rlib
 /4paul/logs
 /4paul/paul.err
