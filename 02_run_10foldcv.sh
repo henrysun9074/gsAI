@@ -27,12 +27,10 @@ echo "Number of CPUs: $SLURM_CPUS_PER_TASK"
 source /hpc/group/schultzlab/hs325/miniconda3/etc/profile.d/conda.sh
 conda activate gsAI
 
-# python 02_10foldcv.py
+echo "Running script"
+python 02_10foldcv.py
 
 ## extra runs
-python 02c_10foldcv.py
-echo "Finished NO QC ALL gen"
-
-python 02d_10foldcv.py 
-echo "Finished NO QC F2 gen"
+# python 02c_10foldcv.py
+# echo "Finished NO QC ALL gen"
 

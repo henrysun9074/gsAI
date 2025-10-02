@@ -1,0 +1,63 @@
+Job ID: 33343406
+Running on node: dcc-schultzlab-01
+Number of CPUs: 4
+[2025-08-06 10:27:33] Starting Python script and importing packages...
+[2025-08-06 10:27:40] Packages loaded
+Using device: cpu
+[2025-08-06 10:27:40] Loading and concatenating data chunks...
+[2025-08-06 10:30:32] Preparing features and labels...
+[2025-08-06 10:40:02]     Accuracy for fold 1: 0.6928
+[2025-08-06 10:49:29]     Accuracy for fold 2: 0.7134
+[2025-08-06 10:58:56]     Accuracy for fold 3: 0.6907
+[2025-08-06 11:08:20]     Accuracy for fold 4: 0.7066
+[2025-08-06 11:17:45]     Accuracy for fold 5: 0.7149
+[2025-08-06 11:27:08]     Accuracy for fold 1: 0.7196
+[2025-08-06 11:36:27]     Accuracy for fold 2: 0.7155
+[2025-08-06 11:45:51]     Accuracy for fold 3: 0.7402
+[2025-08-06 11:55:12]     Accuracy for fold 4: 0.6942
+[2025-08-06 12:04:33]     Accuracy for fold 5: 0.7004
+[2025-08-06 12:13:57]     Accuracy for fold 1: 0.7072
+[2025-08-06 12:23:23]     Accuracy for fold 2: 0.7196
+[2025-08-06 12:32:50]     Accuracy for fold 3: 0.6784
+[2025-08-06 12:42:14]     Accuracy for fold 4: 0.6860
+[2025-08-06 12:51:40]     Accuracy for fold 5: 0.7045
+[2025-08-06 13:01:04]     Accuracy for fold 1: 0.6969
+[2025-08-06 13:10:29]     Accuracy for fold 2: 0.7113
+[2025-08-06 13:19:53]     Accuracy for fold 3: 0.7113
+[2025-08-06 13:29:17]     Accuracy for fold 4: 0.7231
+[2025-08-06 13:38:42]     Accuracy for fold 5: 0.7025
+[2025-08-06 13:48:05]     Accuracy for fold 1: 0.7093
+[2025-08-06 13:57:28]     Accuracy for fold 2: 0.7258
+[2025-08-06 14:06:51]     Accuracy for fold 3: 0.6928
+[2025-08-06 14:16:12]     Accuracy for fold 4: 0.7149
+[2025-08-06 14:25:34]     Accuracy for fold 5: 0.6818
+[2025-08-06 14:34:58]     Accuracy for fold 1: 0.7258
+[2025-08-06 14:44:19]     Accuracy for fold 2: 0.7113
+[2025-08-06 14:53:40]     Accuracy for fold 3: 0.7072
+[2025-08-06 15:03:04]     Accuracy for fold 4: 0.7107
+[2025-08-06 15:12:27]     Accuracy for fold 5: 0.7252
+[2025-08-06 15:21:46]     Accuracy for fold 1: 0.7175
+[2025-08-06 15:31:06]     Accuracy for fold 2: 0.7175
+[2025-08-06 15:40:25]     Accuracy for fold 3: 0.7258
+[2025-08-06 15:49:44]     Accuracy for fold 4: 0.6798
+[2025-08-06 15:59:11]     Accuracy for fold 5: 0.7273
+[2025-08-06 16:08:33]     Accuracy for fold 1: 0.7340
+[2025-08-06 16:17:54]     Accuracy for fold 2: 0.6804
+[2025-08-06 16:27:22]     Accuracy for fold 3: 0.7052
+[2025-08-06 16:36:42]     Accuracy for fold 4: 0.7107
+[2025-08-06 16:46:03]     Accuracy for fold 5: 0.7004
+[2025-08-06 16:55:29]     Accuracy for fold 1: 0.7134
+[2025-08-06 17:04:50]     Accuracy for fold 2: 0.6804
+[2025-08-06 17:14:10]     Accuracy for fold 3: 0.7134
+[2025-08-06 17:23:36]     Accuracy for fold 4: 0.6880
+[2025-08-06 17:33:00]     Accuracy for fold 5: 0.7169
+[2025-08-06 17:42:22]     Accuracy for fold 1: 0.6969
+[2025-08-06 17:51:53]     Accuracy for fold 2: 0.7175
+[2025-08-06 18:01:13]     Accuracy for fold 3: 0.7113
+[2025-08-06 18:10:32]     Accuracy for fold 4: 0.6880
+[2025-08-06 18:20:01]     Accuracy for fold 5: 0.7252
+
+Average Accuracy over 50 folds: 0.7076742779245123
+Standard Deviation: 0.015036898778236345
+[2025-08-06 18:20:01] Script complete.
+Python script finished at: Wed Aug  6 06:20:02 PM EDT 2025
