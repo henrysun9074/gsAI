@@ -13,11 +13,8 @@ library(corrplot)
 library(writexl)
 ```
 
-```{r}
-load("/work/tfs3/gsAI/4paul/RModelCorrelations.RData")
-
-```
-
+Very rudimentary visualizations of model performance. Will make new R file eventually 
+to make nicer figures with results.
 
 ```{r}
 

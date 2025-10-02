@@ -27,6 +27,7 @@ train_base<-read_csv("/work/tfs3/gsAI/DarpaNoQCGenoPheno.csv")
 
 ## Modify to use only F2 data
 train_base <- train_base[train_base$Generation == "F2", ]
+phenTrain <- phenTrain[phenTrain$Generation == "F2", ]
 
 # train_base <- column_to_rownames(train_base, var = colnames(train_base)[1])
 train_base <- column_to_rownames(train_base, var = "ID")
