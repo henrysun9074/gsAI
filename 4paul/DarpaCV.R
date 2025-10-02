@@ -19,7 +19,7 @@ library(writexl)
 library(pROC)
 cat("R script started\n")
 
-# Ctrl f "## " to see all things which need to be modified each run
+# Ctrl f "## " to see all things which may need to be updated each run
 
 ## Modify file paths as needed
 phenTrain<-read_xlsx("phenTrainDarpa.xlsx")
@@ -29,9 +29,12 @@ train_base<-read_csv("/work/tfs3/gsAI/DarpaNoQCGenoPheno.csv")
 train_base <- train_base[train_base$Generation == "F2", ]
 phenTrain <- phenTrain[phenTrain$Generation == "F2", ]
 
-# train_base <- column_to_rownames(train_base, var = colnames(train_base)[1])
-train_base <- column_to_rownames(train_base, var = "ID")
+## Comment this if using whole dataset
+# train_base <- column_to_rownames(train_base, var = "ID")
 train_base <- train_base[, grepl("^AX", colnames(train_base))]
+
+## Comment this out if not working with just 1 generation
+train_base2 <- train_base[rownames(train_base) %in% phenTrain$ID, ]
 
 n_samples <- nrow(train_base)
 set.seed(123)
@@ -137,12 +140,12 @@ for (i in 1:10) {
 }
 
 ## Modify to save correct name
-save.image(paste0("out/", format(Sys.Date(), "%b%d"), "_CV_F2noQC.RData"))
+save.image(paste0("gebvs/", format(Sys.Date(), "%b%d"), "_CV_F2noQC.RData"))
 
 
 cat("==> Collecting and saving fold metrics...\n")
 all_metrics_df <- do.call(rbind, lapply(results, function(x) x$metrics))
-metrics_outfile <- sprintf("out/%s_CrossValFoldMetrics_F2noQC.csv", format(Sys.Date(), "%b%d"))
+metrics_outfile <- sprintf("gebvs/%s_CrossValFoldMetrics_F2noQC.csv", format(Sys.Date(), "%b%d"))
 write.csv(all_metrics_df, metrics_outfile, row.names = FALSE)
 cat("Saved fold metrics to", metrics_outfile, "\n")
 
@@ -190,7 +193,7 @@ colnames(DARPAGEBV) <- c(
 DARPAGEBV2 <- merge(DARPAGEBV, phenTrain[, c("ID", "Status")], by = "ID", all.x = TRUE)
 
 ## Modify to save correct name
-outfile <- sprintf("out/%s_CrossValDarpaGebv_F2noQC.xlsx", format(Sys.Date(), "%b%d"))
+outfile <- sprintf("gebvs/%s_CrossValDarpaGebv_F2noQC.xlsx", format(Sys.Date(), "%b%d"))
 write_xlsx(DARPAGEBV2, outfile)
 cat("Saved GEBVs to", outfile, "\n")
 cat("==> Script completed at", Sys.time(), "\n")

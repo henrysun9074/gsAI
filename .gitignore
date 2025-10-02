@@ -1,15 +1,16 @@
+# git rm -r --cached for removing files which are already committed
 *.csv
 *.dat
 /misc
 /4paul/rlib
 /4paul/logs
 /4paul/old
-/4paul/paul.err
-/4paul/paul.out
+/4paul/raw
 /models
 *.RData
 *.rdscd 
 *.joblib
 *.pth
-/4paul/raw
+*.err
+*.out
 core.*
