@@ -1,2 +1,5 @@
 paul.err
 paul.out
+*.rds
+*.csv
+*.xlsx
