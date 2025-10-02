@@ -1,76 +1,639 @@
 CUDA 12.8
-2025-09-28 22:54:43,938 - INFO - Loading data from noQC/MeanImputedScaledData.csv...
-Traceback (most recent call last):
-  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
-    return self._engine.get_loc(casted_key)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
-  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
-  File "pandas/_libs/hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
-  File "pandas/_libs/hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
-KeyError: 'ID'
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/work/tfs3/gsAI/02a_10foldcv.py", line 173, in <module>
-    main()
-  File "/work/tfs3/gsAI/02a_10foldcv.py", line 107, in main
-    ids = df["ID"].values
-          ~~^^^^^^
-  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/pandas/core/frame.py", line 4102, in __getitem__
-    indexer = self.columns.get_loc(key)
-              ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
-    raise KeyError(key) from err
-KeyError: 'ID'
-2025-09-28 22:58:06,467 - INFO - Loading data from noQC/MeanImputedScaledData.csv...
-Traceback (most recent call last):
-  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
-    return self._engine.get_loc(casted_key)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
-  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
-  File "pandas/_libs/hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
-  File "pandas/_libs/hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
-KeyError: 'ID'
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/work/tfs3/gsAI/02c_10foldcv.py", line 172, in <module>
-    main()
-  File "/work/tfs3/gsAI/02c_10foldcv.py", line 106, in main
-    ids = df["ID"].values
-          ~~^^^^^^
-  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/pandas/core/frame.py", line 4102, in __getitem__
-    indexer = self.columns.get_loc(key)
-              ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
-    raise KeyError(key) from err
-KeyError: 'ID'
-2025-09-28 23:01:28,202 - INFO - Loading data from noQC/MeanImputedScaledData.csv...
-Traceback (most recent call last):
-  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
-    return self._engine.get_loc(casted_key)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
-  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
-  File "pandas/_libs/hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
-  File "pandas/_libs/hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
-KeyError: 'ID'
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/work/tfs3/gsAI/02d_10foldcv.py", line 175, in <module>
-    main()
-  File "/work/tfs3/gsAI/02d_10foldcv.py", line 109, in main
-    ids = df["ID"].values
-          ~~^^^^^^
-  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/pandas/core/frame.py", line 4102, in __getitem__
-    indexer = self.columns.get_loc(key)
-              ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
-    raise KeyError(key) from err
-KeyError: 'ID'
+2025-09-29 23:13:25,358 - INFO - Loading data from noQC/MeanImputedScaledData.csv...
+2025-09-29 23:17:38,321 - INFO - Loaded best hyperparameters
+2025-09-29 23:17:38,323 - INFO - Running 5x repeated 10-fold CV with calibration for NOQC + ALL GENERATIONS
+2025-09-29 23:17:38,323 - INFO - === Repetition 1/5 ===
+2025-09-29 23:17:38,327 - INFO - Outer Fold 1/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-29 23:50:37,964 - INFO - LR | Fold 1: AUC=0.780, LogLoss=0.562, Brier=0.192, PearsonR=0.486
+2025-09-29 23:51:19,923 - INFO - RF | Fold 1: AUC=0.689, LogLoss=0.619, Brier=0.218, PearsonR=0.360
+2025-09-29 23:58:32,213 - INFO - GB | Fold 1: AUC=0.794, LogLoss=0.546, Brier=0.185, PearsonR=0.516
+2025-09-29 23:58:32,249 - INFO - Outer Fold 2/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 00:29:22,011 - INFO - LR | Fold 2: AUC=0.752, LogLoss=0.571, Brier=0.197, PearsonR=0.459
+2025-09-30 00:29:59,856 - INFO - RF | Fold 2: AUC=0.663, LogLoss=0.637, Brier=0.225, PearsonR=0.324
+2025-09-30 00:37:06,286 - INFO - GB | Fold 2: AUC=0.782, LogLoss=0.575, Brier=0.196, PearsonR=0.465
+2025-09-30 00:37:06,320 - INFO - Outer Fold 3/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 01:09:39,526 - INFO - LR | Fold 3: AUC=0.780, LogLoss=0.553, Brier=0.190, PearsonR=0.495
+2025-09-30 01:10:16,321 - INFO - RF | Fold 3: AUC=0.731, LogLoss=0.594, Brier=0.207, PearsonR=0.412
+2025-09-30 01:17:08,485 - INFO - GB | Fold 3: AUC=0.784, LogLoss=0.563, Brier=0.194, PearsonR=0.481
+2025-09-30 01:17:08,532 - INFO - Outer Fold 4/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 01:47:57,932 - INFO - LR | Fold 4: AUC=0.830, LogLoss=0.505, Brier=0.167, PearsonR=0.589
+2025-09-30 01:48:38,067 - INFO - RF | Fold 4: AUC=0.765, LogLoss=0.582, Brier=0.200, PearsonR=0.461
+2025-09-30 01:55:23,617 - INFO - GB | Fold 4: AUC=0.821, LogLoss=0.511, Brier=0.169, PearsonR=0.574
+2025-09-30 01:55:23,666 - INFO - Outer Fold 5/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 02:27:51,753 - INFO - LR | Fold 5: AUC=0.708, LogLoss=0.596, Brier=0.209, PearsonR=0.405
+2025-09-30 02:28:30,652 - INFO - RF | Fold 5: AUC=0.687, LogLoss=0.615, Brier=0.216, PearsonR=0.368
+2025-09-30 02:35:31,760 - INFO - GB | Fold 5: AUC=0.761, LogLoss=0.568, Brier=0.194, PearsonR=0.476
+2025-09-30 02:35:31,826 - INFO - Outer Fold 6/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 03:06:19,924 - INFO - LR | Fold 6: AUC=0.650, LogLoss=0.658, Brier=0.233, PearsonR=0.307
+2025-09-30 03:06:53,069 - INFO - RF | Fold 6: AUC=0.650, LogLoss=0.646, Brier=0.230, PearsonR=0.297
+2025-09-30 03:12:59,907 - INFO - GB | Fold 6: AUC=0.688, LogLoss=0.632, Brier=0.221, PearsonR=0.366
+2025-09-30 03:12:59,952 - INFO - Outer Fold 7/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 03:43:51,024 - INFO - LR | Fold 7: AUC=0.755, LogLoss=0.579, Brier=0.199, PearsonR=0.453
+2025-09-30 03:44:25,125 - INFO - RF | Fold 7: AUC=0.716, LogLoss=0.604, Brier=0.212, PearsonR=0.390
+2025-09-30 03:50:28,059 - INFO - GB | Fold 7: AUC=0.743, LogLoss=0.590, Brier=0.205, PearsonR=0.429
+2025-09-30 03:50:28,120 - INFO - Outer Fold 8/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 04:19:59,303 - INFO - LR | Fold 8: AUC=0.767, LogLoss=0.568, Brier=0.195, PearsonR=0.469
+2025-09-30 04:20:33,131 - INFO - RF | Fold 8: AUC=0.742, LogLoss=0.587, Brier=0.204, PearsonR=0.433
+2025-09-30 04:26:38,433 - INFO - GB | Fold 8: AUC=0.783, LogLoss=0.549, Brier=0.186, PearsonR=0.506
+2025-09-30 04:26:38,489 - INFO - Outer Fold 9/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 04:57:11,929 - INFO - LR | Fold 9: AUC=0.766, LogLoss=0.560, Brier=0.191, PearsonR=0.484
+2025-09-30 04:57:47,536 - INFO - RF | Fold 9: AUC=0.689, LogLoss=0.621, Brier=0.219, PearsonR=0.351
+2025-09-30 05:03:53,688 - INFO - GB | Fold 9: AUC=0.748, LogLoss=0.596, Brier=0.206, PearsonR=0.427
+2025-09-30 05:03:53,740 - INFO - Outer Fold 10/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 05:33:57,533 - INFO - LR | Fold 10: AUC=0.735, LogLoss=0.597, Brier=0.204, PearsonR=0.428
+2025-09-30 05:34:18,037 - INFO - RF | Fold 10: AUC=0.671, LogLoss=0.633, Brier=0.224, PearsonR=0.324
+2025-09-30 05:38:56,778 - INFO - GB | Fold 10: AUC=0.764, LogLoss=0.566, Brier=0.191, PearsonR=0.486
+2025-09-30 05:38:56,834 - INFO - === Repetition 2/5 ===
+2025-09-30 05:38:56,836 - INFO - Outer Fold 1/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 06:09:39,277 - INFO - LR | Fold 1: AUC=0.756, LogLoss=0.585, Brier=0.200, PearsonR=0.449
+2025-09-30 06:10:12,444 - INFO - RF | Fold 1: AUC=0.691, LogLoss=0.623, Brier=0.219, PearsonR=0.350
+2025-09-30 06:16:22,019 - INFO - GB | Fold 1: AUC=0.782, LogLoss=0.563, Brier=0.192, PearsonR=0.483
+2025-09-30 06:16:22,054 - INFO - Outer Fold 2/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 06:47:09,796 - INFO - LR | Fold 2: AUC=0.697, LogLoss=0.605, Brier=0.214, PearsonR=0.388
+2025-09-30 06:47:43,488 - INFO - RF | Fold 2: AUC=0.642, LogLoss=0.638, Brier=0.228, PearsonR=0.307
+2025-09-30 06:53:52,233 - INFO - GB | Fold 2: AUC=0.748, LogLoss=0.575, Brier=0.198, PearsonR=0.459
+2025-09-30 06:53:52,267 - INFO - Outer Fold 3/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 07:23:22,633 - INFO - LR | Fold 3: AUC=0.760, LogLoss=0.582, Brier=0.200, PearsonR=0.455
+2025-09-30 07:23:55,053 - INFO - RF | Fold 3: AUC=0.718, LogLoss=0.607, Brier=0.212, PearsonR=0.395
+2025-09-30 07:29:58,259 - INFO - GB | Fold 3: AUC=0.783, LogLoss=0.560, Brier=0.188, PearsonR=0.507
+2025-09-30 07:29:58,297 - INFO - Outer Fold 4/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 08:00:32,505 - INFO - LR | Fold 4: AUC=0.789, LogLoss=0.553, Brier=0.187, PearsonR=0.507
+2025-09-30 08:01:05,766 - INFO - RF | Fold 4: AUC=0.741, LogLoss=0.588, Brier=0.204, PearsonR=0.430
+2025-09-30 08:07:12,475 - INFO - GB | Fold 4: AUC=0.785, LogLoss=0.558, Brier=0.188, PearsonR=0.499
+2025-09-30 08:07:12,507 - INFO - Outer Fold 5/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 08:36:45,662 - INFO - LR | Fold 5: AUC=0.789, LogLoss=0.565, Brier=0.192, PearsonR=0.486
+2025-09-30 08:37:20,459 - INFO - RF | Fold 5: AUC=0.744, LogLoss=0.583, Brier=0.203, PearsonR=0.437
+2025-09-30 08:43:25,430 - INFO - GB | Fold 5: AUC=0.768, LogLoss=0.575, Brier=0.197, PearsonR=0.461
+2025-09-30 08:43:25,464 - INFO - Outer Fold 6/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 09:14:05,849 - INFO - LR | Fold 6: AUC=0.759, LogLoss=0.574, Brier=0.198, PearsonR=0.459
+2025-09-30 09:14:40,132 - INFO - RF | Fold 6: AUC=0.691, LogLoss=0.616, Brier=0.217, PearsonR=0.364
+2025-09-30 09:20:44,633 - INFO - GB | Fold 6: AUC=0.774, LogLoss=0.561, Brier=0.190, PearsonR=0.497
+2025-09-30 09:20:44,681 - INFO - Outer Fold 7/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 09:50:03,021 - INFO - LR | Fold 7: AUC=0.682, LogLoss=0.625, Brier=0.220, PearsonR=0.349
+2025-09-30 09:50:35,870 - INFO - RF | Fold 7: AUC=0.635, LogLoss=0.658, Brier=0.234, PearsonR=0.258
+2025-09-30 09:56:42,786 - INFO - GB | Fold 7: AUC=0.722, LogLoss=0.598, Brier=0.207, PearsonR=0.417
+2025-09-30 09:56:42,867 - INFO - Outer Fold 8/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 10:30:35,341 - INFO - LR | Fold 8: AUC=0.716, LogLoss=0.597, Brier=0.208, PearsonR=0.407
+2025-09-30 10:30:55,007 - INFO - RF | Fold 8: AUC=0.647, LogLoss=0.650, Brier=0.231, PearsonR=0.281
+2025-09-30 10:34:50,462 - INFO - GB | Fold 8: AUC=0.723, LogLoss=0.605, Brier=0.209, PearsonR=0.406
+2025-09-30 10:34:50,507 - INFO - Outer Fold 9/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 10:59:29,019 - INFO - LR | Fold 9: AUC=0.773, LogLoss=0.556, Brier=0.190, PearsonR=0.491
+2025-09-30 10:59:46,836 - INFO - RF | Fold 9: AUC=0.761, LogLoss=0.582, Brier=0.201, PearsonR=0.458
+2025-09-30 11:03:32,886 - INFO - GB | Fold 9: AUC=0.795, LogLoss=0.519, Brier=0.173, PearsonR=0.556
+2025-09-30 11:03:32,906 - INFO - Outer Fold 10/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 11:27:29,038 - INFO - LR | Fold 10: AUC=0.776, LogLoss=0.571, Brier=0.194, PearsonR=0.474
+2025-09-30 11:27:47,626 - INFO - RF | Fold 10: AUC=0.714, LogLoss=0.610, Brier=0.213, PearsonR=0.393
+2025-09-30 11:31:32,329 - INFO - GB | Fold 10: AUC=0.760, LogLoss=0.584, Brier=0.200, PearsonR=0.450
+2025-09-30 11:31:32,361 - INFO - === Repetition 3/5 ===
+2025-09-30 11:31:32,362 - INFO - Outer Fold 1/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 11:55:27,082 - INFO - LR | Fold 1: AUC=0.769, LogLoss=0.579, Brier=0.196, PearsonR=0.470
+2025-09-30 11:55:44,743 - INFO - RF | Fold 1: AUC=0.711, LogLoss=0.616, Brier=0.216, PearsonR=0.372
+2025-09-30 11:59:27,924 - INFO - GB | Fold 1: AUC=0.751, LogLoss=0.586, Brier=0.199, PearsonR=0.451
+2025-09-30 11:59:27,952 - INFO - Outer Fold 2/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 12:23:25,414 - INFO - LR | Fold 2: AUC=0.752, LogLoss=0.574, Brier=0.199, PearsonR=0.453
+2025-09-30 12:23:43,088 - INFO - RF | Fold 2: AUC=0.684, LogLoss=0.629, Brier=0.221, PearsonR=0.343
+2025-09-30 12:27:26,450 - INFO - GB | Fold 2: AUC=0.778, LogLoss=0.555, Brier=0.188, PearsonR=0.501
+2025-09-30 12:27:26,478 - INFO - Outer Fold 3/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 12:51:25,672 - INFO - LR | Fold 3: AUC=0.742, LogLoss=0.575, Brier=0.198, PearsonR=0.457
+2025-09-30 12:51:43,586 - INFO - RF | Fold 3: AUC=0.706, LogLoss=0.613, Brier=0.215, PearsonR=0.374
+2025-09-30 12:55:25,008 - INFO - GB | Fold 3: AUC=0.791, LogLoss=0.535, Brier=0.178, PearsonR=0.537
+2025-09-30 12:55:25,030 - INFO - Outer Fold 4/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 13:19:23,594 - INFO - LR | Fold 4: AUC=0.693, LogLoss=0.625, Brier=0.219, PearsonR=0.364
+2025-09-30 13:19:41,692 - INFO - RF | Fold 4: AUC=0.624, LogLoss=0.650, Brier=0.232, PearsonR=0.270
+2025-09-30 13:23:27,487 - INFO - GB | Fold 4: AUC=0.714, LogLoss=0.606, Brier=0.210, PearsonR=0.404
+2025-09-30 13:23:27,509 - INFO - Outer Fold 5/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 13:47:29,134 - INFO - LR | Fold 5: AUC=0.789, LogLoss=0.541, Brier=0.185, PearsonR=0.513
+2025-09-30 13:47:47,151 - INFO - RF | Fold 5: AUC=0.728, LogLoss=0.584, Brier=0.204, PearsonR=0.429
+2025-09-30 13:51:30,126 - INFO - GB | Fold 5: AUC=0.794, LogLoss=0.544, Brier=0.186, PearsonR=0.507
+2025-09-30 13:51:30,158 - INFO - Outer Fold 6/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 14:15:57,130 - INFO - LR | Fold 6: AUC=0.729, LogLoss=0.609, Brier=0.211, PearsonR=0.405
+2025-09-30 14:16:14,697 - INFO - RF | Fold 6: AUC=0.701, LogLoss=0.618, Brier=0.217, PearsonR=0.364
+2025-09-30 14:20:06,822 - INFO - GB | Fold 6: AUC=0.717, LogLoss=0.628, Brier=0.220, PearsonR=0.370
+2025-09-30 14:20:06,936 - INFO - Outer Fold 7/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 14:44:08,862 - INFO - LR | Fold 7: AUC=0.792, LogLoss=0.556, Brier=0.187, PearsonR=0.502
+2025-09-30 14:44:26,306 - INFO - RF | Fold 7: AUC=0.732, LogLoss=0.585, Brier=0.204, PearsonR=0.431
+2025-09-30 14:48:12,406 - INFO - GB | Fold 7: AUC=0.782, LogLoss=0.566, Brier=0.193, PearsonR=0.477
+2025-09-30 14:48:12,540 - INFO - Outer Fold 8/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 15:12:14,790 - INFO - LR | Fold 8: AUC=0.768, LogLoss=0.575, Brier=0.197, PearsonR=0.462
+2025-09-30 15:12:32,174 - INFO - RF | Fold 8: AUC=0.686, LogLoss=0.628, Brier=0.221, PearsonR=0.342
+2025-09-30 15:16:20,384 - INFO - GB | Fold 8: AUC=0.804, LogLoss=0.540, Brier=0.180, PearsonR=0.539
+2025-09-30 15:16:20,443 - INFO - Outer Fold 9/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 15:40:23,902 - INFO - LR | Fold 9: AUC=0.746, LogLoss=0.578, Brier=0.200, PearsonR=0.447
+2025-09-30 15:40:41,068 - INFO - RF | Fold 9: AUC=0.710, LogLoss=0.606, Brier=0.212, PearsonR=0.388
+2025-09-30 15:44:27,076 - INFO - GB | Fold 9: AUC=0.794, LogLoss=0.562, Brier=0.192, PearsonR=0.481
+2025-09-30 15:44:27,106 - INFO - Outer Fold 10/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 16:08:26,885 - INFO - LR | Fold 10: AUC=0.771, LogLoss=0.560, Brier=0.191, PearsonR=0.487
+2025-09-30 16:08:43,957 - INFO - RF | Fold 10: AUC=0.700, LogLoss=0.622, Brier=0.218, PearsonR=0.359
+2025-09-30 16:12:32,687 - INFO - GB | Fold 10: AUC=0.747, LogLoss=0.586, Brier=0.204, PearsonR=0.436
+2025-09-30 16:12:32,735 - INFO - === Repetition 4/5 ===
+2025-09-30 16:12:32,736 - INFO - Outer Fold 1/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 16:36:40,361 - INFO - LR | Fold 1: AUC=0.696, LogLoss=0.622, Brier=0.219, PearsonR=0.355
+2025-09-30 16:36:59,361 - INFO - RF | Fold 1: AUC=0.644, LogLoss=0.644, Brier=0.230, PearsonR=0.294
+2025-09-30 16:41:08,053 - INFO - GB | Fold 1: AUC=0.748, LogLoss=0.591, Brier=0.204, PearsonR=0.436
+2025-09-30 16:41:08,158 - INFO - Outer Fold 2/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 17:05:36,094 - INFO - LR | Fold 2: AUC=0.713, LogLoss=0.596, Brier=0.209, PearsonR=0.406
+2025-09-30 17:05:53,475 - INFO - RF | Fold 2: AUC=0.686, LogLoss=0.619, Brier=0.218, PearsonR=0.357
+2025-09-30 17:09:39,950 - INFO - GB | Fold 2: AUC=0.729, LogLoss=0.589, Brier=0.204, PearsonR=0.431
+2025-09-30 17:09:40,043 - INFO - Outer Fold 3/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 17:33:45,424 - INFO - LR | Fold 3: AUC=0.759, LogLoss=0.583, Brier=0.198, PearsonR=0.454
+2025-09-30 17:34:02,372 - INFO - RF | Fold 3: AUC=0.722, LogLoss=0.610, Brier=0.213, PearsonR=0.386
+2025-09-30 17:37:48,945 - INFO - GB | Fold 3: AUC=0.751, LogLoss=0.579, Brier=0.197, PearsonR=0.460
+2025-09-30 17:37:48,987 - INFO - Outer Fold 4/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 18:01:51,277 - INFO - LR | Fold 4: AUC=0.767, LogLoss=0.553, Brier=0.191, PearsonR=0.487
+2025-09-30 18:02:08,127 - INFO - RF | Fold 4: AUC=0.712, LogLoss=0.596, Brier=0.209, PearsonR=0.404
+2025-09-30 18:05:53,348 - INFO - GB | Fold 4: AUC=0.774, LogLoss=0.555, Brier=0.188, PearsonR=0.496
+2025-09-30 18:05:53,404 - INFO - Outer Fold 5/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 18:29:58,152 - INFO - LR | Fold 5: AUC=0.738, LogLoss=0.591, Brier=0.203, PearsonR=0.431
+2025-09-30 18:30:15,763 - INFO - RF | Fold 5: AUC=0.675, LogLoss=0.627, Brier=0.222, PearsonR=0.337
+2025-09-30 18:33:58,339 - INFO - GB | Fold 5: AUC=0.760, LogLoss=0.585, Brier=0.201, PearsonR=0.442
+2025-09-30 18:33:58,368 - INFO - Outer Fold 6/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 18:58:01,977 - INFO - LR | Fold 6: AUC=0.752, LogLoss=0.575, Brier=0.198, PearsonR=0.457
+2025-09-30 18:58:19,432 - INFO - RF | Fold 6: AUC=0.656, LogLoss=0.636, Brier=0.226, PearsonR=0.311
+2025-09-30 19:02:02,619 - INFO - GB | Fold 6: AUC=0.764, LogLoss=0.572, Brier=0.196, PearsonR=0.467
+2025-09-30 19:02:02,645 - INFO - Outer Fold 7/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 19:26:11,311 - INFO - LR | Fold 7: AUC=0.729, LogLoss=0.609, Brier=0.211, PearsonR=0.400
+2025-09-30 19:26:28,995 - INFO - RF | Fold 7: AUC=0.637, LogLoss=0.668, Brier=0.238, PearsonR=0.247
+2025-09-30 19:30:14,418 - INFO - GB | Fold 7: AUC=0.760, LogLoss=0.583, Brier=0.198, PearsonR=0.459
+2025-09-30 19:30:14,464 - INFO - Outer Fold 8/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 19:54:17,590 - INFO - LR | Fold 8: AUC=0.797, LogLoss=0.556, Brier=0.188, PearsonR=0.509
+2025-09-30 19:54:35,057 - INFO - RF | Fold 8: AUC=0.712, LogLoss=0.612, Brier=0.214, PearsonR=0.381
+2025-09-30 19:58:16,211 - INFO - GB | Fold 8: AUC=0.802, LogLoss=0.554, Brier=0.185, PearsonR=0.523
+2025-09-30 19:58:16,232 - INFO - Outer Fold 9/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 20:22:22,007 - INFO - LR | Fold 9: AUC=0.798, LogLoss=0.528, Brier=0.178, PearsonR=0.538
+2025-09-30 20:22:39,901 - INFO - RF | Fold 9: AUC=0.757, LogLoss=0.580, Brier=0.200, PearsonR=0.451
+2025-09-30 20:26:22,255 - INFO - GB | Fold 9: AUC=0.782, LogLoss=0.553, Brier=0.188, PearsonR=0.498
+2025-09-30 20:26:22,286 - INFO - Outer Fold 10/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 20:50:20,708 - INFO - LR | Fold 10: AUC=0.744, LogLoss=0.576, Brier=0.198, PearsonR=0.455
+2025-09-30 20:50:37,957 - INFO - RF | Fold 10: AUC=0.728, LogLoss=0.603, Brier=0.210, PearsonR=0.402
+2025-09-30 20:54:23,549 - INFO - GB | Fold 10: AUC=0.768, LogLoss=0.576, Brier=0.198, PearsonR=0.458
+2025-09-30 20:54:23,584 - INFO - === Repetition 5/5 ===
+2025-09-30 20:54:23,586 - INFO - Outer Fold 1/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 21:18:29,063 - INFO - LR | Fold 1: AUC=0.705, LogLoss=0.597, Brier=0.208, PearsonR=0.411
+2025-09-30 21:18:46,743 - INFO - RF | Fold 1: AUC=0.684, LogLoss=0.628, Brier=0.221, PearsonR=0.342
+2025-09-30 21:22:27,402 - INFO - GB | Fold 1: AUC=0.729, LogLoss=0.600, Brier=0.208, PearsonR=0.412
+2025-09-30 21:22:27,424 - INFO - Outer Fold 2/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 21:46:35,230 - INFO - LR | Fold 2: AUC=0.792, LogLoss=0.561, Brier=0.189, PearsonR=0.497
+2025-09-30 21:46:52,711 - INFO - RF | Fold 2: AUC=0.726, LogLoss=0.592, Brier=0.206, PearsonR=0.417
+2025-09-30 21:50:33,032 - INFO - GB | Fold 2: AUC=0.785, LogLoss=0.566, Brier=0.192, PearsonR=0.486
+2025-09-30 21:50:33,057 - INFO - Outer Fold 3/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 22:14:48,247 - INFO - LR | Fold 3: AUC=0.757, LogLoss=0.557, Brier=0.192, PearsonR=0.483
+2025-09-30 22:15:05,562 - INFO - RF | Fold 3: AUC=0.736, LogLoss=0.591, Brier=0.206, PearsonR=0.422
+2025-09-30 22:18:48,534 - INFO - GB | Fold 3: AUC=0.804, LogLoss=0.531, Brier=0.177, PearsonR=0.545
+2025-09-30 22:18:48,567 - INFO - Outer Fold 4/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 22:42:57,484 - INFO - LR | Fold 4: AUC=0.757, LogLoss=0.576, Brier=0.199, PearsonR=0.451
+2025-09-30 22:43:14,767 - INFO - RF | Fold 4: AUC=0.746, LogLoss=0.585, Brier=0.203, PearsonR=0.439
+2025-09-30 22:47:01,395 - INFO - GB | Fold 4: AUC=0.770, LogLoss=0.572, Brier=0.194, PearsonR=0.472
+2025-09-30 22:47:01,418 - INFO - Outer Fold 5/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 23:11:07,786 - INFO - LR | Fold 5: AUC=0.751, LogLoss=0.578, Brier=0.200, PearsonR=0.448
+2025-09-30 23:11:24,832 - INFO - RF | Fold 5: AUC=0.668, LogLoss=0.634, Brier=0.225, PearsonR=0.321
+2025-09-30 23:15:09,060 - INFO - GB | Fold 5: AUC=0.747, LogLoss=0.605, Brier=0.210, PearsonR=0.409
+2025-09-30 23:15:09,083 - INFO - Outer Fold 6/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-09-30 23:39:39,947 - INFO - LR | Fold 6: AUC=0.757, LogLoss=0.584, Brier=0.201, PearsonR=0.442
+2025-09-30 23:39:57,061 - INFO - RF | Fold 6: AUC=0.701, LogLoss=0.606, Brier=0.213, PearsonR=0.382
+2025-09-30 23:43:43,004 - INFO - GB | Fold 6: AUC=0.801, LogLoss=0.542, Brier=0.182, PearsonR=0.524
+2025-09-30 23:43:43,047 - INFO - Outer Fold 7/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 00:07:45,823 - INFO - LR | Fold 7: AUC=0.705, LogLoss=0.622, Brier=0.215, PearsonR=0.382
+2025-10-01 00:08:03,151 - INFO - RF | Fold 7: AUC=0.667, LogLoss=0.637, Brier=0.226, PearsonR=0.321
+2025-10-01 00:11:49,091 - INFO - GB | Fold 7: AUC=0.741, LogLoss=0.610, Brier=0.212, PearsonR=0.405
+2025-10-01 00:11:49,132 - INFO - Outer Fold 8/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 00:35:52,648 - INFO - LR | Fold 8: AUC=0.754, LogLoss=0.569, Brier=0.195, PearsonR=0.466
+2025-10-01 00:36:09,763 - INFO - RF | Fold 8: AUC=0.678, LogLoss=0.629, Brier=0.222, PearsonR=0.338
+2025-10-01 00:39:51,833 - INFO - GB | Fold 8: AUC=0.763, LogLoss=0.583, Brier=0.201, PearsonR=0.448
+2025-10-01 00:39:51,864 - INFO - Outer Fold 9/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 01:04:09,348 - INFO - LR | Fold 9: AUC=0.781, LogLoss=0.564, Brier=0.191, PearsonR=0.492
+2025-10-01 01:04:26,641 - INFO - RF | Fold 9: AUC=0.738, LogLoss=0.611, Brier=0.211, PearsonR=0.398
+2025-10-01 01:08:17,382 - INFO - GB | Fold 9: AUC=0.778, LogLoss=0.561, Brier=0.190, PearsonR=0.495
+2025-10-01 01:08:17,424 - INFO - Outer Fold 10/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 01:33:35,520 - INFO - LR | Fold 10: AUC=0.781, LogLoss=0.544, Brier=0.186, PearsonR=0.509
+2025-10-01 01:33:52,891 - INFO - RF | Fold 10: AUC=0.734, LogLoss=0.587, Brier=0.204, PearsonR=0.430
+2025-10-01 01:37:42,504 - INFO - GB | Fold 10: AUC=0.808, LogLoss=0.542, Brier=0.183, PearsonR=0.521
+2025-10-01 01:37:44,167 - INFO - Saved predicted breeding values
+2025-10-01 01:37:44,167 - INFO - Prediction file shape: (2423, 8)
+2025-10-01 01:37:44,167 - INFO - Prediction dataframe preview:
+2025-10-01 01:37:44,207 - INFO - 
+       ID  Status        LR     LR_SD        RF     RF_SD        GB     GB_SD
+0     B-1     1.0  0.614306  0.051670  0.460843  0.032921  0.645627  0.030867
+1  B-1000     0.0  0.000935  0.000628  0.015418  0.010902  0.067307  0.032754
+2  B-1002     0.0  0.263064  0.028905  0.358285  0.031520  0.151323  0.009991
+3  B-1003     0.0  0.594997  0.029474  0.495620  0.026750  0.682397  0.035148
+4  B-1005     0.0  0.151756  0.025149  0.405589  0.023196  0.173462  0.033440
+2025-10-01 01:37:44,214 - INFO - Saved fold metrics
+2025-10-01 01:37:51,268 - INFO - Loading data from noQC/MeanImputedScaledData.csv...
+2025-10-01 01:41:03,728 - INFO - Loaded best hyperparameters
+2025-10-01 01:41:03,729 - INFO - Running 5x repeated 10-fold CV with calibration for NOQC + F2 GENERATION
+2025-10-01 01:41:03,729 - INFO - === Repetition 1/5 ===
+2025-10-01 01:41:03,731 - INFO - Outer Fold 1/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 01:51:53,664 - INFO - LR | Fold 1: AUC=0.686, LogLoss=0.625, Brier=0.220, PearsonR=0.350
+2025-10-01 01:52:02,834 - INFO - RF | Fold 1: AUC=0.678, LogLoss=0.634, Brier=0.223, PearsonR=0.328
+2025-10-01 02:00:12,308 - INFO - GB | Fold 1: AUC=0.773, LogLoss=0.571, Brier=0.195, PearsonR=0.475
+2025-10-01 02:00:12,343 - INFO - Outer Fold 2/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 02:11:11,488 - INFO - LR | Fold 2: AUC=0.737, LogLoss=0.613, Brier=0.212, PearsonR=0.396
+2025-10-01 02:11:20,947 - INFO - RF | Fold 2: AUC=0.705, LogLoss=0.628, Brier=0.219, PearsonR=0.359
+2025-10-01 02:19:26,221 - INFO - GB | Fold 2: AUC=0.758, LogLoss=0.587, Brier=0.200, PearsonR=0.461
+2025-10-01 02:19:26,233 - INFO - Outer Fold 3/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 02:30:20,854 - INFO - LR | Fold 3: AUC=0.718, LogLoss=0.607, Brier=0.213, PearsonR=0.388
+2025-10-01 02:30:29,940 - INFO - RF | Fold 3: AUC=0.673, LogLoss=0.645, Brier=0.229, PearsonR=0.307
+2025-10-01 02:38:35,626 - INFO - GB | Fold 3: AUC=0.726, LogLoss=0.611, Brier=0.213, PearsonR=0.399
+2025-10-01 02:38:35,660 - INFO - Outer Fold 4/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 02:49:20,417 - INFO - LR | Fold 4: AUC=0.736, LogLoss=0.595, Brier=0.206, PearsonR=0.421
+2025-10-01 02:49:29,559 - INFO - RF | Fold 4: AUC=0.730, LogLoss=0.609, Brier=0.211, PearsonR=0.401
+2025-10-01 02:57:31,101 - INFO - GB | Fold 4: AUC=0.771, LogLoss=0.577, Brier=0.198, PearsonR=0.463
+2025-10-01 02:57:31,119 - INFO - Outer Fold 5/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 03:08:27,253 - INFO - LR | Fold 5: AUC=0.765, LogLoss=0.578, Brier=0.198, PearsonR=0.461
+2025-10-01 03:08:36,477 - INFO - RF | Fold 5: AUC=0.655, LogLoss=0.651, Brier=0.230, PearsonR=0.283
+2025-10-01 03:16:34,911 - INFO - GB | Fold 5: AUC=0.770, LogLoss=0.563, Brier=0.193, PearsonR=0.480
+2025-10-01 03:16:34,924 - INFO - Outer Fold 6/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 03:27:20,988 - INFO - LR | Fold 6: AUC=0.642, LogLoss=0.663, Brier=0.235, PearsonR=0.256
+2025-10-01 03:27:30,335 - INFO - RF | Fold 6: AUC=0.627, LogLoss=0.662, Brier=0.236, PearsonR=0.248
+2025-10-01 03:35:28,279 - INFO - GB | Fold 6: AUC=0.689, LogLoss=0.635, Brier=0.222, PearsonR=0.343
+2025-10-01 03:35:28,293 - INFO - Outer Fold 7/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 03:46:27,869 - INFO - LR | Fold 7: AUC=0.743, LogLoss=0.612, Brier=0.212, PearsonR=0.415
+2025-10-01 03:46:36,992 - INFO - RF | Fold 7: AUC=0.667, LogLoss=0.646, Brier=0.227, PearsonR=0.305
+2025-10-01 03:54:40,262 - INFO - GB | Fold 7: AUC=0.772, LogLoss=0.577, Brier=0.196, PearsonR=0.476
+2025-10-01 03:54:40,275 - INFO - Outer Fold 8/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 04:05:33,872 - INFO - LR | Fold 8: AUC=0.665, LogLoss=0.669, Brier=0.235, PearsonR=0.292
+2025-10-01 04:05:43,166 - INFO - RF | Fold 8: AUC=0.663, LogLoss=0.663, Brier=0.233, PearsonR=0.275
+2025-10-01 04:13:52,238 - INFO - GB | Fold 8: AUC=0.757, LogLoss=0.606, Brier=0.208, PearsonR=0.424
+2025-10-01 04:13:52,253 - INFO - Outer Fold 9/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 04:24:55,510 - INFO - LR | Fold 9: AUC=0.736, LogLoss=0.601, Brier=0.209, PearsonR=0.406
+2025-10-01 04:25:04,789 - INFO - RF | Fold 9: AUC=0.706, LogLoss=0.617, Brier=0.215, PearsonR=0.375
+2025-10-01 04:33:11,281 - INFO - GB | Fold 9: AUC=0.741, LogLoss=0.597, Brier=0.205, PearsonR=0.424
+2025-10-01 04:33:11,295 - INFO - Outer Fold 10/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 04:44:06,161 - INFO - LR | Fold 10: AUC=0.707, LogLoss=0.616, Brier=0.215, PearsonR=0.382
+2025-10-01 04:44:15,525 - INFO - RF | Fold 10: AUC=0.673, LogLoss=0.651, Brier=0.230, PearsonR=0.293
+2025-10-01 04:52:13,909 - INFO - GB | Fold 10: AUC=0.719, LogLoss=0.615, Brier=0.214, PearsonR=0.387
+2025-10-01 04:52:13,928 - INFO - === Repetition 2/5 ===
+2025-10-01 04:52:13,929 - INFO - Outer Fold 1/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 05:03:06,344 - INFO - LR | Fold 1: AUC=0.708, LogLoss=0.638, Brier=0.223, PearsonR=0.340
+2025-10-01 05:03:15,433 - INFO - RF | Fold 1: AUC=0.695, LogLoss=0.653, Brier=0.230, PearsonR=0.298
+2025-10-01 05:11:15,395 - INFO - GB | Fold 1: AUC=0.764, LogLoss=0.596, Brier=0.204, PearsonR=0.449
+2025-10-01 05:11:15,421 - INFO - Outer Fold 2/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 05:22:01,121 - INFO - LR | Fold 2: AUC=0.693, LogLoss=0.612, Brier=0.215, PearsonR=0.375
+2025-10-01 05:22:10,263 - INFO - RF | Fold 2: AUC=0.694, LogLoss=0.620, Brier=0.218, PearsonR=0.364
+2025-10-01 05:30:11,300 - INFO - GB | Fold 2: AUC=0.780, LogLoss=0.566, Brier=0.192, PearsonR=0.495
+2025-10-01 05:30:11,316 - INFO - Outer Fold 3/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 05:40:44,471 - INFO - LR | Fold 3: AUC=0.766, LogLoss=0.563, Brier=0.191, PearsonR=0.498
+2025-10-01 05:40:53,650 - INFO - RF | Fold 3: AUC=0.788, LogLoss=0.583, Brier=0.198, PearsonR=0.487
+2025-10-01 05:49:04,534 - INFO - GB | Fold 3: AUC=0.835, LogLoss=0.516, Brier=0.169, PearsonR=0.594
+2025-10-01 05:49:04,551 - INFO - Outer Fold 4/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 05:59:38,827 - INFO - LR | Fold 4: AUC=0.748, LogLoss=0.598, Brier=0.206, PearsonR=0.444
+2025-10-01 05:59:47,628 - INFO - RF | Fold 4: AUC=0.671, LogLoss=0.633, Brier=0.222, PearsonR=0.346
+2025-10-01 06:07:48,319 - INFO - GB | Fold 4: AUC=0.769, LogLoss=0.577, Brier=0.197, PearsonR=0.479
+2025-10-01 06:07:48,333 - INFO - Outer Fold 5/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 06:18:19,531 - INFO - LR | Fold 5: AUC=0.657, LogLoss=0.645, Brier=0.231, PearsonR=0.304
+2025-10-01 06:18:28,407 - INFO - RF | Fold 5: AUC=0.647, LogLoss=0.649, Brier=0.231, PearsonR=0.285
+2025-10-01 06:26:26,808 - INFO - GB | Fold 5: AUC=0.728, LogLoss=0.617, Brier=0.216, PearsonR=0.387
+2025-10-01 06:26:26,823 - INFO - Outer Fold 6/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 06:36:59,548 - INFO - LR | Fold 6: AUC=0.745, LogLoss=0.581, Brier=0.203, PearsonR=0.435
+2025-10-01 06:37:08,461 - INFO - RF | Fold 6: AUC=0.667, LogLoss=0.639, Brier=0.226, PearsonR=0.312
+2025-10-01 06:45:09,781 - INFO - GB | Fold 6: AUC=0.771, LogLoss=0.566, Brier=0.195, PearsonR=0.470
+2025-10-01 06:45:09,795 - INFO - Outer Fold 7/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 06:55:46,324 - INFO - LR | Fold 7: AUC=0.611, LogLoss=0.686, Brier=0.244, PearsonR=0.220
+2025-10-01 06:55:55,176 - INFO - RF | Fold 7: AUC=0.580, LogLoss=0.689, Brier=0.248, PearsonR=0.150
+2025-10-01 07:03:49,913 - INFO - GB | Fold 7: AUC=0.650, LogLoss=0.676, Brier=0.238, PearsonR=0.277
+2025-10-01 07:03:49,929 - INFO - Outer Fold 8/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 07:14:13,310 - INFO - LR | Fold 8: AUC=0.696, LogLoss=0.629, Brier=0.221, PearsonR=0.352
+2025-10-01 07:14:22,225 - INFO - RF | Fold 8: AUC=0.686, LogLoss=0.639, Brier=0.225, PearsonR=0.318
+2025-10-01 07:22:22,608 - INFO - GB | Fold 8: AUC=0.722, LogLoss=0.616, Brier=0.214, PearsonR=0.392
+2025-10-01 07:22:22,632 - INFO - Outer Fold 9/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 07:32:57,403 - INFO - LR | Fold 9: AUC=0.691, LogLoss=0.640, Brier=0.225, PearsonR=0.326
+2025-10-01 07:33:06,258 - INFO - RF | Fold 9: AUC=0.680, LogLoss=0.647, Brier=0.228, PearsonR=0.304
+2025-10-01 07:40:58,821 - INFO - GB | Fold 9: AUC=0.684, LogLoss=0.648, Brier=0.227, PearsonR=0.323
+2025-10-01 07:40:58,834 - INFO - Outer Fold 10/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 07:51:27,284 - INFO - LR | Fold 10: AUC=0.669, LogLoss=0.663, Brier=0.235, PearsonR=0.299
+2025-10-01 07:51:36,001 - INFO - RF | Fold 10: AUC=0.631, LogLoss=0.675, Brier=0.241, PearsonR=0.226
+2025-10-01 07:59:22,239 - INFO - GB | Fold 10: AUC=0.700, LogLoss=0.661, Brier=0.228, PearsonR=0.354
+2025-10-01 07:59:22,261 - INFO - === Repetition 3/5 ===
+2025-10-01 07:59:22,263 - INFO - Outer Fold 1/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 08:09:51,083 - INFO - LR | Fold 1: AUC=0.619, LogLoss=0.686, Brier=0.245, PearsonR=0.209
+2025-10-01 08:09:59,803 - INFO - RF | Fold 1: AUC=0.599, LogLoss=0.673, Brier=0.241, PearsonR=0.205
+2025-10-01 08:18:02,488 - INFO - GB | Fold 1: AUC=0.647, LogLoss=0.692, Brier=0.245, PearsonR=0.261
+2025-10-01 08:18:02,508 - INFO - Outer Fold 2/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 08:28:39,722 - INFO - LR | Fold 2: AUC=0.624, LogLoss=0.664, Brier=0.236, PearsonR=0.239
+2025-10-01 08:28:49,141 - INFO - RF | Fold 2: AUC=0.626, LogLoss=0.662, Brier=0.235, PearsonR=0.243
+2025-10-01 08:36:44,037 - INFO - GB | Fold 2: AUC=0.656, LogLoss=0.656, Brier=0.232, PearsonR=0.283
+2025-10-01 08:36:44,052 - INFO - Outer Fold 3/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 08:47:14,025 - INFO - LR | Fold 3: AUC=0.793, LogLoss=0.547, Brier=0.186, PearsonR=0.517
+2025-10-01 08:47:22,958 - INFO - RF | Fold 3: AUC=0.782, LogLoss=0.570, Brier=0.194, PearsonR=0.492
+2025-10-01 08:55:24,538 - INFO - GB | Fold 3: AUC=0.846, LogLoss=0.494, Brier=0.164, PearsonR=0.596
+2025-10-01 08:55:24,551 - INFO - Outer Fold 4/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 09:05:48,645 - INFO - LR | Fold 4: AUC=0.727, LogLoss=0.618, Brier=0.215, PearsonR=0.379
+2025-10-01 09:05:57,538 - INFO - RF | Fold 4: AUC=0.695, LogLoss=0.644, Brier=0.226, PearsonR=0.321
+2025-10-01 09:14:05,888 - INFO - GB | Fold 4: AUC=0.746, LogLoss=0.595, Brier=0.204, PearsonR=0.429
+2025-10-01 09:14:05,906 - INFO - Outer Fold 5/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 09:24:39,453 - INFO - LR | Fold 5: AUC=0.688, LogLoss=0.621, Brier=0.220, PearsonR=0.367
+2025-10-01 09:24:48,374 - INFO - RF | Fold 5: AUC=0.657, LogLoss=0.650, Brier=0.230, PearsonR=0.300
+2025-10-01 09:32:46,642 - INFO - GB | Fold 5: AUC=0.761, LogLoss=0.584, Brier=0.200, PearsonR=0.460
+2025-10-01 09:32:46,654 - INFO - Outer Fold 6/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 09:43:20,605 - INFO - LR | Fold 6: AUC=0.680, LogLoss=0.630, Brier=0.221, PearsonR=0.347
+2025-10-01 09:43:29,473 - INFO - RF | Fold 6: AUC=0.676, LogLoss=0.642, Brier=0.226, PearsonR=0.324
+2025-10-01 09:51:35,577 - INFO - GB | Fold 6: AUC=0.721, LogLoss=0.606, Brier=0.210, PearsonR=0.401
+2025-10-01 09:51:35,600 - INFO - Outer Fold 7/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 10:02:08,499 - INFO - LR | Fold 7: AUC=0.749, LogLoss=0.585, Brier=0.202, PearsonR=0.453
+2025-10-01 10:02:17,597 - INFO - RF | Fold 7: AUC=0.699, LogLoss=0.607, Brier=0.212, PearsonR=0.397
+2025-10-01 10:10:10,644 - INFO - GB | Fold 7: AUC=0.851, LogLoss=0.515, Brier=0.169, PearsonR=0.610
+2025-10-01 10:10:10,656 - INFO - Outer Fold 8/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 10:20:43,416 - INFO - LR | Fold 8: AUC=0.737, LogLoss=0.610, Brier=0.211, PearsonR=0.404
+2025-10-01 10:20:52,439 - INFO - RF | Fold 8: AUC=0.735, LogLoss=0.614, Brier=0.212, PearsonR=0.405
+2025-10-01 10:28:43,340 - INFO - GB | Fold 8: AUC=0.793, LogLoss=0.560, Brier=0.188, PearsonR=0.514
+2025-10-01 10:28:43,353 - INFO - Outer Fold 9/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 10:39:16,195 - INFO - LR | Fold 9: AUC=0.649, LogLoss=0.651, Brier=0.232, PearsonR=0.282
+2025-10-01 10:39:25,034 - INFO - RF | Fold 9: AUC=0.611, LogLoss=0.680, Brier=0.244, PearsonR=0.201
+2025-10-01 10:47:16,300 - INFO - GB | Fold 9: AUC=0.690, LogLoss=0.642, Brier=0.229, PearsonR=0.327
+2025-10-01 10:47:16,312 - INFO - Outer Fold 10/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 10:57:49,715 - INFO - LR | Fold 10: AUC=0.652, LogLoss=0.672, Brier=0.237, PearsonR=0.261
+2025-10-01 10:57:58,720 - INFO - RF | Fold 10: AUC=0.654, LogLoss=0.664, Brier=0.235, PearsonR=0.249
+2025-10-01 11:05:48,606 - INFO - GB | Fold 10: AUC=0.729, LogLoss=0.602, Brier=0.207, PearsonR=0.416
+2025-10-01 11:05:48,618 - INFO - === Repetition 4/5 ===
+2025-10-01 11:05:48,619 - INFO - Outer Fold 1/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 11:16:19,924 - INFO - LR | Fold 1: AUC=0.679, LogLoss=0.630, Brier=0.223, PearsonR=0.334
+2025-10-01 11:16:28,906 - INFO - RF | Fold 1: AUC=0.696, LogLoss=0.624, Brier=0.218, PearsonR=0.361
+2025-10-01 11:24:26,658 - INFO - GB | Fold 1: AUC=0.742, LogLoss=0.600, Brier=0.208, PearsonR=0.415
+2025-10-01 11:24:26,671 - INFO - Outer Fold 2/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 11:35:15,760 - INFO - LR | Fold 2: AUC=0.680, LogLoss=0.661, Brier=0.230, PearsonR=0.303
+2025-10-01 11:35:25,071 - INFO - RF | Fold 2: AUC=0.573, LogLoss=0.711, Brier=0.256, PearsonR=0.127
+2025-10-01 11:43:37,998 - INFO - GB | Fold 2: AUC=0.653, LogLoss=0.696, Brier=0.244, PearsonR=0.264
+2025-10-01 11:43:38,012 - INFO - Outer Fold 3/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 11:54:57,247 - INFO - LR | Fold 3: AUC=0.707, LogLoss=0.613, Brier=0.214, PearsonR=0.379
+2025-10-01 11:55:06,771 - INFO - RF | Fold 3: AUC=0.640, LogLoss=0.643, Brier=0.228, PearsonR=0.301
+2025-10-01 12:03:24,078 - INFO - GB | Fold 3: AUC=0.753, LogLoss=0.586, Brier=0.202, PearsonR=0.441
+2025-10-01 12:03:24,103 - INFO - Outer Fold 4/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 12:14:19,180 - INFO - LR | Fold 4: AUC=0.623, LogLoss=0.675, Brier=0.244, PearsonR=0.248
+2025-10-01 12:14:28,260 - INFO - RF | Fold 4: AUC=0.636, LogLoss=0.656, Brier=0.232, PearsonR=0.268
+2025-10-01 12:22:40,168 - INFO - GB | Fold 4: AUC=0.699, LogLoss=0.644, Brier=0.225, PearsonR=0.336
+2025-10-01 12:22:40,180 - INFO - Outer Fold 5/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 12:33:29,766 - INFO - LR | Fold 5: AUC=0.727, LogLoss=0.601, Brier=0.210, PearsonR=0.405
+2025-10-01 12:33:39,145 - INFO - RF | Fold 5: AUC=0.695, LogLoss=0.628, Brier=0.220, PearsonR=0.346
+2025-10-01 12:41:58,635 - INFO - GB | Fold 5: AUC=0.740, LogLoss=0.590, Brier=0.205, PearsonR=0.430
+2025-10-01 12:41:58,652 - INFO - Outer Fold 6/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 12:52:57,141 - INFO - LR | Fold 6: AUC=0.751, LogLoss=0.588, Brier=0.200, PearsonR=0.451
+2025-10-01 12:53:06,471 - INFO - RF | Fold 6: AUC=0.707, LogLoss=0.623, Brier=0.216, PearsonR=0.374
+2025-10-01 13:01:21,491 - INFO - GB | Fold 6: AUC=0.790, LogLoss=0.545, Brier=0.183, PearsonR=0.519
+2025-10-01 13:01:21,504 - INFO - Outer Fold 7/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 13:12:05,213 - INFO - LR | Fold 7: AUC=0.720, LogLoss=0.621, Brier=0.216, PearsonR=0.390
+2025-10-01 13:12:14,255 - INFO - RF | Fold 7: AUC=0.700, LogLoss=0.628, Brier=0.219, PearsonR=0.382
+2025-10-01 13:20:23,294 - INFO - GB | Fold 7: AUC=0.775, LogLoss=0.577, Brier=0.196, PearsonR=0.489
+2025-10-01 13:20:23,306 - INFO - Outer Fold 8/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 13:31:14,016 - INFO - LR | Fold 8: AUC=0.770, LogLoss=0.577, Brier=0.196, PearsonR=0.474
+2025-10-01 13:31:23,171 - INFO - RF | Fold 8: AUC=0.782, LogLoss=0.600, Brier=0.205, PearsonR=0.472
+2025-10-01 13:39:24,498 - INFO - GB | Fold 8: AUC=0.780, LogLoss=0.558, Brier=0.189, PearsonR=0.497
+2025-10-01 13:39:24,511 - INFO - Outer Fold 9/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 13:49:48,908 - INFO - LR | Fold 9: AUC=0.686, LogLoss=0.640, Brier=0.224, PearsonR=0.324
+2025-10-01 13:49:57,800 - INFO - RF | Fold 9: AUC=0.660, LogLoss=0.656, Brier=0.231, PearsonR=0.274
+2025-10-01 13:57:51,882 - INFO - GB | Fold 9: AUC=0.758, LogLoss=0.589, Brier=0.201, PearsonR=0.453
+2025-10-01 13:57:51,910 - INFO - Outer Fold 10/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 14:08:23,559 - INFO - LR | Fold 10: AUC=0.608, LogLoss=0.692, Brier=0.249, PearsonR=0.198
+2025-10-01 14:08:32,520 - INFO - RF | Fold 10: AUC=0.582, LogLoss=0.693, Brier=0.250, PearsonR=0.151
+2025-10-01 14:16:26,351 - INFO - GB | Fold 10: AUC=0.649, LogLoss=0.672, Brier=0.239, PearsonR=0.264
+2025-10-01 14:16:26,363 - INFO - === Repetition 5/5 ===
+2025-10-01 14:16:26,377 - INFO - Outer Fold 1/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 14:26:59,545 - INFO - LR | Fold 1: AUC=0.720, LogLoss=0.601, Brier=0.209, PearsonR=0.408
+2025-10-01 14:27:08,633 - INFO - RF | Fold 1: AUC=0.701, LogLoss=0.618, Brier=0.217, PearsonR=0.366
+2025-10-01 14:35:06,892 - INFO - GB | Fold 1: AUC=0.729, LogLoss=0.597, Brier=0.208, PearsonR=0.418
+2025-10-01 14:35:06,906 - INFO - Outer Fold 2/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 14:45:40,689 - INFO - LR | Fold 2: AUC=0.682, LogLoss=0.628, Brier=0.224, PearsonR=0.344
+2025-10-01 14:45:49,676 - INFO - RF | Fold 2: AUC=0.634, LogLoss=0.662, Brier=0.236, PearsonR=0.252
+2025-10-01 14:53:53,140 - INFO - GB | Fold 2: AUC=0.716, LogLoss=0.615, Brier=0.217, PearsonR=0.383
+2025-10-01 14:53:53,155 - INFO - Outer Fold 3/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 15:04:33,992 - INFO - LR | Fold 3: AUC=0.709, LogLoss=0.620, Brier=0.217, PearsonR=0.367
+2025-10-01 15:04:43,193 - INFO - RF | Fold 3: AUC=0.659, LogLoss=0.656, Brier=0.231, PearsonR=0.283
+2025-10-01 15:12:44,722 - INFO - GB | Fold 3: AUC=0.703, LogLoss=0.633, Brier=0.221, PearsonR=0.375
+2025-10-01 15:12:44,734 - INFO - Outer Fold 4/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 15:23:44,441 - INFO - LR | Fold 4: AUC=0.664, LogLoss=0.656, Brier=0.233, PearsonR=0.289
+2025-10-01 15:23:53,983 - INFO - RF | Fold 4: AUC=0.611, LogLoss=0.667, Brier=0.240, PearsonR=0.243
+2025-10-01 15:32:12,405 - INFO - GB | Fold 4: AUC=0.728, LogLoss=0.605, Brier=0.211, PearsonR=0.400
+2025-10-01 15:32:12,418 - INFO - Outer Fold 5/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 15:43:30,387 - INFO - LR | Fold 5: AUC=0.704, LogLoss=0.619, Brier=0.217, PearsonR=0.369
+2025-10-01 15:43:39,721 - INFO - RF | Fold 5: AUC=0.651, LogLoss=0.654, Brier=0.232, PearsonR=0.273
+2025-10-01 15:51:58,758 - INFO - GB | Fold 5: AUC=0.733, LogLoss=0.613, Brier=0.214, PearsonR=0.403
+2025-10-01 15:51:58,770 - INFO - Outer Fold 6/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 16:03:05,626 - INFO - LR | Fold 6: AUC=0.746, LogLoss=0.588, Brier=0.204, PearsonR=0.442
+2025-10-01 16:03:14,783 - INFO - RF | Fold 6: AUC=0.738, LogLoss=0.597, Brier=0.206, PearsonR=0.455
+2025-10-01 16:11:12,422 - INFO - GB | Fold 6: AUC=0.755, LogLoss=0.566, Brier=0.194, PearsonR=0.482
+2025-10-01 16:11:12,447 - INFO - Outer Fold 7/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 16:22:10,487 - INFO - LR | Fold 7: AUC=0.797, LogLoss=0.570, Brier=0.192, PearsonR=0.516
+2025-10-01 16:22:19,675 - INFO - RF | Fold 7: AUC=0.718, LogLoss=0.635, Brier=0.222, PearsonR=0.382
+2025-10-01 16:30:18,134 - INFO - GB | Fold 7: AUC=0.823, LogLoss=0.538, Brier=0.178, PearsonR=0.558
+2025-10-01 16:30:18,148 - INFO - Outer Fold 8/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 16:41:03,267 - INFO - LR | Fold 8: AUC=0.658, LogLoss=0.658, Brier=0.233, PearsonR=0.263
+2025-10-01 16:41:12,244 - INFO - RF | Fold 8: AUC=0.582, LogLoss=0.683, Brier=0.245, PearsonR=0.165
+2025-10-01 16:49:19,495 - INFO - GB | Fold 8: AUC=0.741, LogLoss=0.606, Brier=0.208, PearsonR=0.410
+2025-10-01 16:49:19,519 - INFO - Outer Fold 9/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 17:00:19,500 - INFO - LR | Fold 9: AUC=0.704, LogLoss=0.628, Brier=0.219, PearsonR=0.360
+2025-10-01 17:00:28,716 - INFO - RF | Fold 9: AUC=0.668, LogLoss=0.645, Brier=0.227, PearsonR=0.300
+2025-10-01 17:08:46,488 - INFO - GB | Fold 9: AUC=0.715, LogLoss=0.625, Brier=0.218, PearsonR=0.379
+2025-10-01 17:08:46,511 - INFO - Outer Fold 10/10
+/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/lib/python3.12/site-packages/sklearn/linear_model/_sag.py:348: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  warnings.warn(
+2025-10-01 17:19:41,339 - INFO - LR | Fold 10: AUC=0.752, LogLoss=0.593, Brier=0.203, PearsonR=0.441
+2025-10-01 17:19:50,795 - INFO - RF | Fold 10: AUC=0.736, LogLoss=0.609, Brier=0.211, PearsonR=0.409
+2025-10-01 17:28:10,115 - INFO - GB | Fold 10: AUC=0.801, LogLoss=0.547, Brier=0.183, PearsonR=0.531
+2025-10-01 17:28:10,819 - INFO - Saved predicted breeding values
+2025-10-01 17:28:10,819 - INFO - Prediction file shape: (978, 8)
+2025-10-01 17:28:10,819 - INFO - Prediction dataframe preview:
+2025-10-01 17:28:10,832 - INFO - 
+       ID  Status        LR     LR_SD        RF     RF_SD        GB     GB_SD
+0  O_1000     0.0  0.745654  0.074644  0.763675  0.058401  0.804799  0.054526
+1  O_1002     1.0  0.519087  0.048924  0.420784  0.035611  0.492555  0.134602
+2  O_1003     0.0  0.174806  0.073648  0.313853  0.053542  0.127682  0.052188
+3  O_1005     0.0  0.504604  0.036136  0.497866  0.053772  0.506552  0.040420
+4  O_1010     0.0  0.519721  0.041347  0.502179  0.034235  0.573071  0.042193
+2025-10-01 17:28:10,841 - INFO - Saved fold metrics

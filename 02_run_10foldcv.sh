@@ -3,6 +3,7 @@
 #SBATCH --output=02_cv.out
 #SBATCH --error=02_cv.err
 #SBATCH --partition=common 
+#SBATCH --time=4-00:00:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
@@ -29,9 +30,6 @@ conda activate gsAI
 # python 02_10foldcv.py
 
 ## extra runs
-python 02a_10foldcv.py
-echo "Finished NO QC F0 gen"
-
 python 02c_10foldcv.py
 echo "Finished NO QC ALL gen"
 
