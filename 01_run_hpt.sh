@@ -31,6 +31,3 @@ conda activate gsAI
 
 echo "Running script"
 python 01_hpt.py
-
-echo "Processing F2 without QC"
-python 01c_F2hpt_noqc.py

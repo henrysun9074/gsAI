@@ -96,8 +96,8 @@ def main():
     chunksize = 100
     list_of_dataframes = []
 
-    filename = "DarpaQCGenoPheno.csv"
-    # filename = "DarpaNoQCGenoPheno.csv"
+    ## new QC file
+    filename = "39kDarpaQCFiltered.csv"
     logger.info(f"Loading data from {filename}...")
     for df in pd.read_csv(filename, chunksize=chunksize, index_col=0):
         list_of_dataframes.append(df)
@@ -122,8 +122,7 @@ def main():
         tuned_params[model_name] = best_params
 
     ## Change to save new
-    # today_str = datetime.now().strftime("%b%d").lower() 
-    today_str = "sep22_F2QC"
+    today_str = datetime.now().strftime("%b%d").lower() 
 
     run_dir = os.path.join("models", today_str)
     os.makedirs(run_dir, exist_ok=True)

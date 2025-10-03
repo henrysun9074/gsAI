@@ -2,7 +2,7 @@
 #SBATCH --job-name=genomic-selection
 #SBATCH --output=Rmodels.out
 #SBATCH --error=Rmodels.err
-#SBATCH --partition=common
+#SBATCH --partition=schultzlab
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=12

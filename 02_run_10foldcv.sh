@@ -30,7 +30,3 @@ conda activate gsAI
 echo "Running script"
 python 02_10foldcv.py
 
-## extra runs
-# python 02c_10foldcv.py
-# echo "Finished NO QC ALL gen"
-

@@ -30,13 +30,12 @@ train_base <- train_base[train_base$Generation == "F2", ]
 phenTrain <- phenTrain[phenTrain$Generation == "F2", ]
 
 ## Comment this out if not working with just 1 generation
-train_base2 <- train_base[rownames(train_base) %in% phenTrain$ID, ]
+train_base <- train_base[train_base$ID %in% phenTrain$ID, ]
 
 ## Comment this if using whole dataset
-# train_base <- column_to_rownames(train_base, var = "ID")
+# train_base <- column_to_rownames(train_base, var = colnames(train_base)[1])
+train_base <- column_to_rownames(train_base, var = "ID")
 train_base <- train_base[, grepl("^AX", colnames(train_base))]
-
-
 
 n_samples <- nrow(train_base)
 set.seed(123)
