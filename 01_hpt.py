@@ -99,7 +99,7 @@ def main():
     ## new QC file
     filename = "39kDarpaQCFiltered.csv"
     logger.info(f"Loading data from {filename}...")
-    for df in pd.read_csv(filename, chunksize=chunksize, index_col=0):
+    for df in pd.read_csv(filename, chunksize=chunksize):
         list_of_dataframes.append(df)
     df = pd.concat(list_of_dataframes)
 

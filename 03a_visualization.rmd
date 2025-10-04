@@ -21,13 +21,13 @@ to make nicer figures with results.
 setwd("/work/tfs3/gsAI/")
 
 ## Update paths for current runs! ###########################################
-load("/work/tfs3/gsAI/4paul/out/Oct01_CV_noQCAllGens.RData")
+load("/work/tfs3/gsAI/4paul/gebvs/Oct01_CV_noQCAllGens.RData")
 # these correlations are for run done on 10/1. w/o QC, all gens.
 
-ml_models_path <- "/work/tfs3/gsAI/gebvs/sep22_F2hpt_noqc_GEBVs_10foldCV.csv"
-r_models_path <- "/work/tfs3/gsAI/4paul/out/Oct01_CrossValDarpaGebv_noQC.xlsx"
-ml_metrics_path <- "/work/tfs3/gsAI/gebvs/sep22_F2hpt_noqc_fold_metrics.csv"
-r_metrics_path <- "/work/tfs3/gsAI/4paul/out/Oct01_CrossValDarpaFoldMetrics.csv"
+ml_models_path <- "/work/tfs3/gsAI/gebvs/oct04_GEBVs_10foldCV.csv"
+r_models_path <- "/work/tfs3/gsAI/4paul/gebvs/Oct01_CrossValDarpaGebv_noQC.xlsx"
+ml_metrics_path <- "/work/tfs3/gsAI/gebvs/oct04_fold_metrics.csv"
+r_metrics_path <- "/work/tfs3/gsAI/4paul/gebvs/Oct01_CrossValDarpaFoldMetrics.csv"
 
 DARPAGEBV <- read.csv(ml_models_path) 
 DARPAGEBV2 <- read_xlsx(r_models_path) 
@@ -35,6 +35,7 @@ df <- merge(DARPAGEBV, DARPAGEBV2)
 
 MLMETRICS <- read.csv(ml_metrics_path) 
 RMETRICS <- read.csv(r_metrics_path)
+# stats_df <- merge(MLMETRICS, RMETRICS)
 
 ## Turn on to overwrite ML GEBV CSV and add R MODEL VALUES
 # write.csv(df, file = ml_models_path, row.names = FALSE)
@@ -117,27 +118,99 @@ corrplot(cor_matrix,
 
 ```
 
+
 ```{r}
-metrics_summary <- MLMETRICS %>%
-  group_by(model) %>%
+if (!"iteration" %in% names(MLMETRICS)) {
+  MLMETRICS <- MLMETRICS %>%
+    group_by(model) %>%
+    mutate(iteration = rep(1:ceiling(n() / 10), each = 10, length.out = n())) %>%
+    ungroup()
+}
+
+# Compute per-iteration means for the metrics of interest
+per_iter <- MLMETRICS %>%
+  group_by(model, iteration) %>%
   summarise(
-    mean_PearsonR = mean(PearsonR, na.rm = TRUE),
-    sd_PearsonR   = sd(PearsonR, na.rm = TRUE),
+    auc_iter = mean(AUC, na.rm = TRUE),
+    corr_iter = mean(PearsonR, na.rm = TRUE),
     .groups = "drop"
   )
 
-# Plot
-ggplot(metrics_summary, aes(x = model, y = mean_PearsonR)) +
-  geom_point() +
-  geom_errorbar(aes(
-    ymin = mean_PearsonR - sd_PearsonR,
-    ymax = mean_PearsonR + sd_PearsonR
-  ), width = 0.2) +
-  theme_minimal(base_size = 14) +
-  labs(
-    x = "Model",
-    y = "Correlation"
+# From the per-iteration means compute overall mean (mean of the iteration means)
+# and SD across iteration means (this SD will be used for the error bars)
+summary_by_model <- per_iter %>%
+  pivot_longer(cols = c(auc_iter, corr_iter), names_to = "metric", values_to = "iter_mean") %>%
+  group_by(model, metric) %>%
+  summarise(
+    mean_of_iters = mean(iter_mean, na.rm = TRUE),   # single point to plot
+    sd_of_iters   = sd(iter_mean, na.rm = TRUE),     # used for error bars
+    n_iters       = n(),
+    .groups = "drop"
   )
 
+# Print table so you can inspect numbers
+print(summary_by_model)
+
+ggplot(summary_by_model, aes(x = model, y = mean_of_iters, color = model)) +
+  geom_point(size = 4) +
+  geom_errorbar(aes(ymin = mean_of_iters - sd_of_iters, ymax = mean_of_iters + sd_of_iters),
+                width = 0.2, size = 0.8) +
+  facet_wrap(~ metric, scales = "free_y", labeller = as_labeller(c(auc_iter = "AUC", corr_iter = "Correlation"))) +
+  labs(
+    x = "Model",
+    y = "Metric value"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
 ```
+
+```{r}
+
+RMETRICS <- RMETRICS %>%
+  group_by(Model) %>%
+  mutate(iteration = rep(1:ceiling(n() / 10), each = 10, length.out = n())) %>%
+  ungroup()
+
+# Compute per-iteration means for the metrics of interest
+per_iter <- RMETRICS %>%
+  group_by(Model, Iteration) %>%
+  summarise(
+    auc_iter = mean(AUC, na.rm = TRUE),
+    corr_iter = mean(Correlation, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# From the per-iteration means compute overall mean (mean of the iteration means)
+# and SD across iteration means (this SD will be used for the error bars)
+summary_by_model <- per_iter %>%
+  pivot_longer(cols = c(auc_iter, corr_iter), names_to = "metric", values_to = "iter_mean") %>%
+  group_by(Model, metric) %>%
+  summarise(
+    mean_of_iters = mean(iter_mean, na.rm = TRUE),   # single point to plot
+    sd_of_iters   = sd(iter_mean, na.rm = TRUE),     # used for error bars
+    n_iters       = n(),
+    .groups = "drop"
+  )
+
+# Print table so you can inspect numbers
+print(summary_by_model)
+
+ggplot(summary_by_model, aes(x = Model, y = mean_of_iters, color = Model)) +
+  geom_point(size = 4) +
+  geom_errorbar(aes(ymin = mean_of_iters - sd_of_iters, ymax = mean_of_iters + sd_of_iters),
+                width = 0.2, size = 0.8) +
+  facet_wrap(~ metric, scales = "free_y", labeller = as_labeller(c(auc_iter = "AUC", corr_iter = "Correlation"))) +
+  labs(
+    title = "Mean across all folds & iterations (point) with SD across iterations (error bar)",
+    x = "Model",
+    y = "Metric value"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+```
+
+Todo:
+- plot SD of repetitions
 

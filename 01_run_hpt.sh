@@ -29,5 +29,5 @@ echo "Number of CPUs: $SLURM_CPUS_PER_TASK"
 source /hpc/group/schultzlab/hs325/miniconda3/etc/profile.d/conda.sh
 conda activate gsAI
 
-echo "Running script"
+echo "Running script for full QC all gens. Redux"
 python 01_hpt.py

@@ -92,14 +92,13 @@ def run_outer_fold(fold, train_val_idx, test_idx, X, y, ids, best_params, seed=4
 
 
 # ------------------- Main -------------------
-filename = "DarpaQCGenoPheno.csv"
-# filename = "noQC/MeanImputedScaledData.csv"
+filename = "39kDarpaQCFiltered.csv"
 logger.info(f"Loading data from {filename}...")
 
 def main():
     chunksize = 100
     list_of_dataframes = []
-    for df in pd.read_csv(filename, chunksize=chunksize, index_col=0):
+    for df in pd.read_csv(filename, chunksize=chunksize):
         list_of_dataframes.append(df)
     df = pd.concat(list_of_dataframes)
 
