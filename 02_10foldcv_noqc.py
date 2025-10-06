@@ -92,13 +92,13 @@ def run_outer_fold(fold, train_val_idx, test_idx, X, y, ids, best_params, seed=4
 
 
 # ------------------- Main -------------------
-filename = "39kDarpaQCFiltered.csv"
+filename = "DarpaNoQCGenoPheno.csv"
 logger.info(f"Loading data from {filename}...")
 
 def main():
     chunksize = 100
     list_of_dataframes = []
-    for df in pd.read_csv(filename, chunksize=chunksize):
+    for df in pd.read_csv(filename, chunksize=chunksize, index_col=None):
         list_of_dataframes.append(df)
     df = pd.concat(list_of_dataframes)
 
@@ -113,10 +113,9 @@ def main():
     X = scaler.fit_transform(X)
 
     ## Edit for each run
-    # today_str = datetime.now().strftime("%b%d").lower()
-    today_str = "oct04"
-    save_str = "oct06_QC"
-
+    # today_str = datetime.now().strftime("%b%d").lower() 
+    today_str "Sep22_allhpt_noqc"
+    save_str = "oct06_noQC"
 
     # ---- Load hyperparameters from Script 1 ----
     with open(f"models/{today_str}/best_hyperparams.json", "r") as f:

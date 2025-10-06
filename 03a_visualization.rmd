@@ -21,13 +21,13 @@ to make nicer figures with results.
 setwd("/work/tfs3/gsAI/")
 
 ## Update paths for current runs! ###########################################
-load("/work/tfs3/gsAI/4paul/gebvs/Oct01_CV_noQCAllGens.RData")
+# load("/work/tfs3/gsAI/4paul/gebvs/Oct01_CV_noQCAllGens.RData")
 # these correlations are for run done on 10/1. w/o QC, all gens.
 
 ml_models_path <- "/work/tfs3/gsAI/gebvs/oct04_GEBVs_10foldCV.csv"
-r_models_path <- "/work/tfs3/gsAI/4paul/gebvs/Oct01_CrossValDarpaGebv_noQC.xlsx"
+r_models_path <- "/work/tfs3/gsAI/4paul/gebvs/Oct04_CrossValDarpaGebv_F2noQC.xlsx"
 ml_metrics_path <- "/work/tfs3/gsAI/gebvs/oct04_fold_metrics.csv"
-r_metrics_path <- "/work/tfs3/gsAI/4paul/gebvs/Oct01_CrossValDarpaFoldMetrics.csv"
+r_metrics_path <- "/work/tfs3/gsAI/4paul/gebvs/Oct04_CrossValFoldMetrics_F2noQC.csv"
 
 DARPAGEBV <- read.csv(ml_models_path) 
 DARPAGEBV2 <- read_xlsx(r_models_path) 
@@ -48,6 +48,10 @@ RMETRICS <- read.csv(r_metrics_path)
 DARPAGEBV2_filtered <- DARPAGEBV2 %>%
   semi_join(DARPAGEBV, by = "ID")
 DARPAGEBV2 <- DARPAGEBV2_filtered
+
+DARPAGEBV_filtered <- DARPAGEBV %>%
+  semi_join(DARPAGEBV2, by = "ID")
+DARPAGEBV <- DARPAGEBV_filtered
 ```
 
 ```{r}
@@ -187,8 +191,8 @@ summary_by_model <- per_iter %>%
   pivot_longer(cols = c(auc_iter, corr_iter), names_to = "metric", values_to = "iter_mean") %>%
   group_by(Model, metric) %>%
   summarise(
-    mean_of_iters = mean(iter_mean, na.rm = TRUE),   # single point to plot
-    sd_of_iters   = sd(iter_mean, na.rm = TRUE),     # used for error bars
+    mean_of_iters = mean(iter_mean, na.rm = TRUE),  
+    sd_of_iters   = sd(iter_mean, na.rm = TRUE),  
     n_iters       = n(),
     .groups = "drop"
   )
@@ -209,6 +213,7 @@ ggplot(summary_by_model, aes(x = Model, y = mean_of_iters, color = Model)) +
   theme_minimal() +
   theme(legend.position = "none")
 
+## TODO fix error bars not showing up
 ```
 
 Todo:

@@ -27,6 +27,10 @@ echo "Number of CPUs: $SLURM_CPUS_PER_TASK"
 source /hpc/group/schultzlab/hs325/miniconda3/etc/profile.d/conda.sh
 conda activate gsAI
 
-echo "Running script"
+echo "Running 5 fold CV 10 iterations with QC dataset"
 python 02_10foldcv.py
 
+echo "==============================================================="
+
+echo "Running 5 fold CV 10 iterations without QC dataset"
+python 02_10foldcv_noqc.py
