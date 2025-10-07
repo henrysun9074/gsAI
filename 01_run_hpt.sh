@@ -20,14 +20,10 @@ echo "Job ID: $SLURM_JOB_ID"
 echo "Running on node: $(hostname)"
 echo "Number of CPUs: $SLURM_CPUS_PER_TASK"
 
-# PYTHON_EXEC=/hpc/group/schultzlab/hs325/miniconda3/envs/gsAI/bin/python
-# # sanity check
-# echo "Using Python: $($PYTHON_EXEC --version)"
-# $PYTHON_EXEC -m pip list | grep -E "numpy|scikit-learn|xgboost"
-# $PYTHON_EXEC genomic_selection_pipeline.py
-
 source /hpc/group/schultzlab/hs325/miniconda3/etc/profile.d/conda.sh
 conda activate gsAI
 
-echo "Running script for full QC all gens. Redux"
-python 01_hpt.py
+python3 01_hpt.py \
+    -o "Oct07_F0noqc" \
+    -f "DarpaNoQCGenoPheno.csv" \
+    -g "F0" 

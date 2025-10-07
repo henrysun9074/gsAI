@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import joblib, os
 import json
+import argparse
 
 from sklearn.metrics import make_scorer, brier_score_loss, roc_auc_score
 from scipy.stats import pearsonr
@@ -14,6 +15,28 @@ from sklearn.preprocessing import StandardScaler
 
 from skopt import BayesSearchCV
 from skopt.space import Real, Integer, Categorical
+
+# ---------------- CLI Variables --------------------
+
+parser = argparse.ArgumentParser(description="Train model with selectable inputs")
+parser.add_argument("--outdir", "-o", type=str, required=True,
+                    help="Directory to save model outputs (will be created if missing)")
+parser.add_argument("--filename", "-f", type=str, required=True,
+                    help="CSV filename to load (path relative to current dir)")
+parser.add_argument("--generation", "-g", type=str, default="all",
+                    help='Generation filter: "F0", "F1", "F2", or "all" (default "all")')
+parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose logging")
+args = parser.parse_args()
+
+outdir = args.outdir
+filename = args.filename
+generation = args.generation
+
+logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO,
+                    format="%(asctime)s %(levelname)s:%(message)s")
+logger = logging.getLogger(__name__)
+logger.info("Running with outdir=%s filename=%s generation=%s", outdir, filename, generation)
+
 
 # ------------------- Logging Setup -------------------
 logging.basicConfig(
@@ -97,11 +120,12 @@ def main():
     list_of_dataframes = []
 
     ## new QC file
-    filename = "39kDarpaQCFiltered.csv"
     logger.info(f"Loading data from {filename}...")
     for df in pd.read_csv(filename, chunksize=chunksize):
         list_of_dataframes.append(df)
     df = pd.concat(list_of_dataframes)
+    if generation != "all":
+    	df = df[df["Generation"] == generation]
 
     ids = df["ID"].values
     ax_columns = [col for col in df.columns if col.startswith("AX")]
@@ -121,10 +145,7 @@ def main():
         tuned_models[model_name] = best_model
         tuned_params[model_name] = best_params
 
-    ## Change to save new
-    today_str = datetime.now().strftime("%b%d").lower() 
-
-    run_dir = os.path.join("models", today_str)
+    run_dir = os.path.join("models", outdir)
     os.makedirs(run_dir, exist_ok=True)
 
     # ---- Save hyperparameters ----

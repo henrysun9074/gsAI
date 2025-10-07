@@ -2,6 +2,7 @@ import logging
 import numpy as np
 import pandas as pd
 import joblib, os, json
+import argparse
 
 from datetime import datetime
 from sklearn.model_selection import StratifiedKFold, train_test_split
@@ -15,6 +16,31 @@ from sklearn.preprocessing import StandardScaler
 from xgboost import XGBClassifier
 from scipy.stats import pearsonr
 from collections import defaultdict
+
+
+# ---------------- CLI Variables ---------------------
+
+parser = argparse.ArgumentParser(description="Train model with selectable inputs")
+parser.add_argument("--indir", "-i", type=str, required=True,
+                    help="Directory to load hyperparameters from (searches inside /models/)")
+parser.add_argument("--outdir", "-o", type=str, required=True,
+                    help="Directory to save model outputs and fold metrics to inside /gebvs/")
+parser.add_argument("--filename", "-f", type=str, required=True,
+                    help="CSV filename to load, must be in main/top-level directory")
+parser.add_argument("--generation", "-g", type=str, default="all",
+                    help='Generation filter: "F0", "F1", "F2", or "all" (default "all")')
+parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose logging")
+args = parser.parse_args()
+
+outdir = args.outdir
+filename = args.filename
+generation = args.generation
+
+logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO,
+                    format="%(asctime)s %(levelname)s:%(message)s")
+logger = logging.getLogger(__name__)
+logger.info("Running with outdir=%s filename=%s generation=%s", outdir, filename, generation)
+
 
 # ------------------- Logging Setup -------------------
 logging.basicConfig(
@@ -92,15 +118,16 @@ def run_outer_fold(fold, train_val_idx, test_idx, X, y, ids, best_params, seed=4
 
 
 # ------------------- Main -------------------
-filename = "39kDarpaQCFiltered.csv"
 logger.info(f"Loading data from {filename}...")
 
 def main():
     chunksize = 100
     list_of_dataframes = []
-    for df in pd.read_csv(filename, chunksize=chunksize):
+    for df in pd.read_csv(filename, chunksize=chunksize, index_col=None):
         list_of_dataframes.append(df)
     df = pd.concat(list_of_dataframes)
+    if generation != "all":
+    	df = df[df["Generation"] == generation]
 
     ids = df["ID"].values
     ax_columns = [col for col in df.columns if col.startswith("AX")]
@@ -112,14 +139,9 @@ def main():
     scaler = StandardScaler()
     X = scaler.fit_transform(X)
 
-    ## Edit for each run
-    # today_str = datetime.now().strftime("%b%d").lower()
-    today_str = "oct04"
-    save_str = "oct06_QC"
-
 
     # ---- Load hyperparameters from Script 1 ----
-    with open(f"models/{today_str}/best_hyperparams.json", "r") as f:
+    with open(f"models/{indir}/best_hyperparams.json", "r") as f:
         best_params = json.load(f)
         logger.info("Loaded best hyperparameters")
 
@@ -160,14 +182,14 @@ def main():
 
     # Save predictions and fold metrics
     os.makedirs("gebvs", exist_ok=True)
-    prob_df.to_csv(os.path.join("gebvs", f"{save_str}_GEBVs_10foldCV.csv"), index=False)
+    prob_df.to_csv(os.path.join("gebvs", f"{outdir}_GEBVs_10foldCV.csv"), index=False)
     logger.info("Saved predicted breeding values")
     logger.info(f"Prediction file shape: {prob_df.shape}")
     logger.info("Prediction dataframe preview:")
     logger.info("\n" + str(prob_df.head()))
 
     metrics_df = pd.concat(all_metrics, axis=0)
-    metrics_df.to_csv(os.path.join("gebvs", f"{today_str}_fold_metrics.csv"), index=False)
+    metrics_df.to_csv(os.path.join("gebvs", f"{indir}_fold_metrics.csv"), index=False)
     logger.info("Saved fold metrics")
 
 
