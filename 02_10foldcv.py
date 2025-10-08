@@ -190,6 +190,7 @@ def main():
     logger.info("\n" + str(prob_df.head()))
 
     metrics_df = pd.concat(all_metrics, axis=0)
+    logger.info(f"Metrics file shape: {metrics_df.shape}")
     metrics_df.to_csv(os.path.join("gebvs", f"{outdir}_fold_metrics.csv"), index=False)
     logger.info("Saved fold metrics")
 

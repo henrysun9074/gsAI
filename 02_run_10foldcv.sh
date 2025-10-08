@@ -26,9 +26,10 @@ python3 02_10foldcv.py \
     -f "DarpaNoQCGenoPheno.csv" \
     -g "F2" 
 
-## extra runs
 python3 02_10foldcv.py \
-    -i "sep22_F0hpt_noqc" \
-    -o "Oct07_F0noqc" \
+    -i "sep22_allhpt_noqc" \
+    -o "Oct08_allnoqc" \
     -f "DarpaNoQCGenoPheno.csv" \
-    -g "F0" 
+    -g "all" 
+
+python3 /work/tfs3/gsAI/misc/02_10foldcv_noqc.py
