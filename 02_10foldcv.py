@@ -32,6 +32,7 @@ parser.add_argument("--generation", "-g", type=str, default="all",
 parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose logging")
 args = parser.parse_args()
 
+indir = args.indir
 outdir = args.outdir
 filename = args.filename
 generation = args.generation
@@ -189,7 +190,7 @@ def main():
     logger.info("\n" + str(prob_df.head()))
 
     metrics_df = pd.concat(all_metrics, axis=0)
-    metrics_df.to_csv(os.path.join("gebvs", f"{indir}_fold_metrics.csv"), index=False)
+    metrics_df.to_csv(os.path.join("gebvs", f"{outdir}_fold_metrics.csv"), index=False)
     logger.info("Saved fold metrics")
 
 
