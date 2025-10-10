@@ -16,17 +16,16 @@ from collections import defaultdict
 
 
 #  CLI Variables 
-
 parser = argparse.ArgumentParser(description="Train model with selectable inputs")
-parser.add_argument("indir", "i", type=str, required=True,
+parser.add_argument("--indir", "-i", type=str, required=True,
                     help="Directory to load hyperparameters from (searches inside /models/)")
-parser.add_argument("outdir", "o", type=str, required=True,
+parser.add_argument("--outdir", "-o", type=str, required=True,
                     help="Directory to save model outputs and fold metrics to inside /gebvs/")
-parser.add_argument("filename", "f", type=str, required=True,
-                    help="CSV filename to load, must be in main/toplevel directory")
-parser.add_argument("generation", "g", type=str, default="all",
+parser.add_argument("--filename", "-f", type=str, required=True,
+                    help="CSV filename to load, must be in main/top-level directory")
+parser.add_argument("--generation", "-g", type=str, default="all",
                     help='Generation filter: "F0", "F1", "F2", or "all" (default "all")')
-parser.add_argument("verbose", "v", action="store_true", help="Enable verbose logging")
+parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose logging")
 args = parser.parse_args()
 
 indir = args.indir
@@ -39,13 +38,12 @@ logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO,
 logger = logging.getLogger(__name__)
 logger.info("Running with outdir=%s filename=%s generation=%s", outdir, filename, generation)
 
-
 #  Build model from params 
 def build_model(name, params):
     if name == "LR":
         return LogisticRegression(max_iter=1000, solver="saga", **params)
     elif name == "RF":
-        return RandomForestClassifier(n_jobs=1, **params)
+        return RandomForestClassifier(n_jobs=-1, **params)
     elif name == "GB":
         return XGBClassifier(tree_method="hist", eval_metric="logloss", **params)
     else:
@@ -68,7 +66,7 @@ def run_outer_fold(fold, train_idx, test_idx, X, y, ids, best_params, seed=42):
         tuned_model = build_model(name, params)
         tuned_model.fit(X_train, y_train)
 
-        # Predict on test set (no calibration)
+        # Predict on test set
         probs = tuned_model.predict_proba(X_test)[:, 1]
         fold_results[name] = probs
 
@@ -121,7 +119,7 @@ def main():
         logger.info("Loaded best hyperparameters")
 
     #  Nested CV 
-    logger.info("Running 10x repeated 5fold CV (no calibration)")
+    logger.info("Running 10x repeated 5-fold CV without calibration")
     all_predictions = defaultdict(list)
     all_metrics = []
 

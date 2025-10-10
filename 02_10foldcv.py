@@ -18,18 +18,18 @@ from scipy.stats import pearsonr
 from collections import defaultdict
 
 
-#  CLI Variables 
+# ---------------- CLI Variables ---------------------
 
 parser = argparse.ArgumentParser(description="Train model with selectable inputs")
-parser.add_argument("indir", "i", type=str, required=True,
+parser.add_argument("--indir", "-i", type=str, required=True,
                     help="Directory to load hyperparameters from (searches inside /models/)")
-parser.add_argument("outdir", "o", type=str, required=True,
+parser.add_argument("--outdir", "-o", type=str, required=True,
                     help="Directory to save model outputs and fold metrics to inside /gebvs/")
-parser.add_argument("filename", "f", type=str, required=True,
-                    help="CSV filename to load, must be in main/toplevel directory")
-parser.add_argument("generation", "g", type=str, default="all",
+parser.add_argument("--filename", "-f", type=str, required=True,
+                    help="CSV filename to load, must be in main/top-level directory")
+parser.add_argument("--generation", "-g", type=str, default="all",
                     help='Generation filter: "F0", "F1", "F2", or "all" (default "all")')
-parser.add_argument("verbose", "v", action="store_true", help="Enable verbose logging")
+parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose logging")
 args = parser.parse_args()
 
 indir = args.indir
@@ -43,21 +43,21 @@ logger = logging.getLogger(__name__)
 logger.info("Running with outdir=%s filename=%s generation=%s", outdir, filename, generation)
 
 
-#  Logging Setup 
+# ------------------- Logging Setup -------------------
 logging.basicConfig(
-    format="%(asctime)s  %(levelname)s  %(message)s",
+    format="%(asctime)s - %(levelname)s - %(message)s",
     level=logging.INFO,
     force=True
 )
 logger = logging.getLogger(__name__)
 
 
-#  Build model from params 
+# ------------------- Build model from params -------------------
 def build_model(name, params):
     if name == "LR":
         return LogisticRegression(max_iter=1000, solver="saga", **params)
     elif name == "RF":
-        return RandomForestClassifier(n_jobs=1, **params)
+        return RandomForestClassifier(n_jobs=-1, **params)
     elif name == "GB":
         return XGBClassifier(tree_method="hist", eval_metric="logloss", **params)
     # elif name == "MLP":
@@ -66,7 +66,7 @@ def build_model(name, params):
         raise ValueError(f"Unknown model name: {name}")
 
 
-#  Outer Fold Run 
+# ------------------- Outer Fold Run -------------------
 def run_outer_fold(fold, train_val_idx, test_idx, X, y, ids, best_params, seed=42):
     logger.info(f"Outer Fold {fold+1}/5")
 
@@ -118,7 +118,7 @@ def run_outer_fold(fold, train_val_idx, test_idx, X, y, ids, best_params, seed=4
     return fold_results, pd.DataFrame(fold_metrics)
 
 
-#  Main 
+# ------------------- Main -------------------
 logger.info(f"Loading data from {filename}...")
 
 def main():
@@ -141,13 +141,13 @@ def main():
     X = scaler.fit_transform(X)
 
 
-    #  Load hyperparameters from Script 1 
+    # ---- Load hyperparameters from Script 1 ----
     with open(f"models/{indir}/best_hyperparams.json", "r") as f:
         best_params = json.load(f)
         logger.info("Loaded best hyperparameters")
 
-    #  Nested CV with calibration 
-    logger.info("Running 10x repeated 5fold CV with calibration")
+    # ---- Nested CV with calibration ----
+    logger.info("Running 10x repeated 5-fold CV with calibration")
     all_predictions = defaultdict(list) 
     all_metrics = []
 
@@ -166,7 +166,7 @@ def main():
                     if col not in ["ID", "Status"]:
                         all_predictions[(ID, col)].append(row[col])
 
-    #  Aggregate predictions (mean and SD per model per animal) 
+    # ---- Aggregate predictions (mean and SD per model per animal) ----
     final_records = []
     unique_ids = np.unique(ids)
 
