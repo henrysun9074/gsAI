@@ -20,21 +20,26 @@ echo "Number of CPUs: $SLURM_CPUS_PER_TASK"
 source /hpc/group/schultzlab/hs325/miniconda3/etc/profile.d/conda.sh
 conda activate gsAI
 
-python3 02_10foldcv.py \
+python3 02_10foldcv_nocal.py \
     -i "oct04" \
-    -o "Oct09_allnewQC" \
+    -o "nocal/Oct10_allnewQC" \
     -f "39kDarpaQCFiltered.csv" \
     -g "all" 
 
-python3 02_10foldcv.py \
-    -i "sep22" \
-    -o "Oct09_F0newQC" \
-    -f "39kDarpaQCFiltered.csv" \
-    -g "F0" 
-
-python3 02_10foldcv.py \
+python3 02_10foldcv_nocal.py \
     -i "sep22_F2QC" \
-    -o "Oct09_F2newQC" \
+    -o "nocal/Oct10_F2newQC" \
     -f "39kDarpaQCFiltered.csv" \
     -g "F2" 
 
+python3 02_10foldcv_nocal.py \
+    -i "sep22_allhpt_noqc" \
+    -o "nocal/Oct09_allnoQC" \
+    -f "DarpaNoQCGenoPheno.csv" \
+    -g "all" 
+
+python3 02_10foldcv_nocal.py \
+    -i "sep22_F2hpt_noqc" \
+    -o "nocal/Oct10_allnoQC" \
+    -f "DarpaNoQCGenoPheno.csv" \
+    -g "F2" 

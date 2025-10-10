@@ -1,6 +1,6 @@
 # Import all packages 
 
-```{r warning=FALSE}
+```{r warning=FALSE echo=FALSE}
 library(pryr)
 library(tidyverse)
 library(rrBLUP)
@@ -24,9 +24,9 @@ setwd("/work/tfs3/gsAI/")
 # load("/work/tfs3/gsAI/4paul/gebvs/Oct01_CV_noQCAllGens.RData")
 # these correlations are for run done on 10/1. w/o QC, all gens.
 
-ml_models_path <- "/work/tfs3/gsAI/gebvs/Oct07_F0noqc_GEBVs_10foldCV.csv"
+ml_models_path <- "/work/tfs3/gsAI/gebvs/Oct09_allnewQC_GEBVs_10foldCV.csv"
 r_models_path <- "/work/tfs3/gsAI/4paul/gebvs/Oct01_CrossValDarpaGebv_noQC.xlsx"
-ml_metrics_path <- "/work/tfs3/gsAI/gebvs/Oct07_F0noqc_fold_metrics.csv"
+ml_metrics_path <- "/work/tfs3/gsAI/gebvs/Oct09_allnewQC_fold_metrics.csv"
 r_metrics_path <- "/work/tfs3/gsAI/4paul/gebvs/Oct01_CrossValDarpaFoldMetrics.csv"
 
 DARPAGEBV <- read.csv(ml_models_path) 
