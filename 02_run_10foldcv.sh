@@ -2,7 +2,7 @@
 #SBATCH --job-name=10foldCV_genomic_selection
 #SBATCH --output=02_cv.out
 #SBATCH --error=02_cv.err
-#SBATCH --partition=common 
+#SBATCH --partition=schultzlab 
 #SBATCH --time=4-00:00:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
@@ -21,15 +21,20 @@ source /hpc/group/schultzlab/hs325/miniconda3/etc/profile.d/conda.sh
 conda activate gsAI
 
 python3 02_10foldcv.py \
-    -i "sep22_F2hpt_noqc" \
-    -o "Oct07_F2noqc" \
-    -f "DarpaNoQCGenoPheno.csv" \
-    -g "F2" 
-
-python3 02_10foldcv.py \
-    -i "sep22_allhpt_noqc" \
-    -o "Oct08_allnoqc" \
-    -f "DarpaNoQCGenoPheno.csv" \
+    -i "oct04" \
+    -o "Oct09_allnewQC" \
+    -f "39kDarpaQCFiltered.csv" \
     -g "all" 
 
-python3 /work/tfs3/gsAI/misc/02_10foldcv_noqc.py
+python3 02_10foldcv.py \
+    -i "sep22" \
+    -o "Oct09_F0newQC" \
+    -f "39kDarpaQCFiltered.csv" \
+    -g "F0" 
+
+python3 02_10foldcv.py \
+    -i "sep22_F2QC" \
+    -o "Oct09_F2newQC" \
+    -f "39kDarpaQCFiltered.csv" \
+    -g "F2" 
+
