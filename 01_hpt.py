@@ -19,13 +19,13 @@ from skopt.space import Real, Integer, Categorical
 #  CLI Variables 
 
 parser = argparse.ArgumentParser(description="Train model with selectable inputs")
-parser.add_argument("outdir", "o", type=str, required=True,
+parser.add_argument("--outdir", "-o", type=str, required=True,
                     help="Directory to save model outputs (will be created if missing)")
-parser.add_argument("filename", "f", type=str, required=True,
+parser.add_argument("--filename", "-f", type=str, required=True,
                     help="CSV filename to load (path relative to current dir)")
-parser.add_argument("generation", "g", type=str, default="all",
+parser.add_argument("--generation", "-g", type=str, default="all",
                     help='Generation filter: "F0", "F1", "F2", or "all" (default "all")')
-parser.add_argument("verbose", "v", action="store_true", help="Enable verbose logging")
+parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose logging")
 args = parser.parse_args()
 
 outdir = args.outdir
@@ -51,12 +51,12 @@ def get_search_spaces():
         "LR": (
             LogisticRegression(max_iter=1000, solver="saga"),
             {
-                "C": Real(1e5, 10, prior="loguniform"),
+                "C": Real(1e-5, 10, prior="loguniform"),
                 "penalty": Categorical(["l1", "l2"]),
             },
         ),
         "RF": (
-            RandomForestClassifier(n_jobs=1),
+            RandomForestClassifier(n_jobs=-1),
             {
                 "n_estimators": Integer(100, 2000),
                 "max_depth": Integer(3, 50),
@@ -72,7 +72,7 @@ def get_search_spaces():
             {
                 "n_estimators": Integer(100, 2000),
                 "max_depth": Integer(3, 15),
-                "learning_rate": Real(1e3, 0.3, prior="loguniform"),
+                "learning_rate": Real(1e-3, 0.3, prior="loguniform"),
                 "subsample": Real(0.5, 1.0),
                 "colsample_bytree": Real(0.5, 1.0),
                 "min_child_weight": Integer(1, 10),
@@ -107,7 +107,7 @@ def tune_model(X, y, model_name, n_iter=100):
         n_iter=n_iter,
         cv=5,
         scoring=pearson_scorer,
-        n_jobs=1,
+        n_jobs=-1,
         verbose=0,
     )
     opt.fit(X, y)
