@@ -24,9 +24,9 @@ setwd("/work/tfs3/gsAI/")
 # load("/work/tfs3/gsAI/4paul/gebvs/Oct01_CV_noQCAllGens.RData")
 # these correlations are for run done on 10/1. w/o QC, all gens.
 
-ml_models_path <- "/work/tfs3/gsAI/gebvs/Oct09_allnewQC_GEBVs_10foldCV.csv"
+ml_models_path <- "/work/tfs3/gsAI/gebvs/Oct08_allnoqc_GEBVs_10foldCV.csv"
 r_models_path <- "/work/tfs3/gsAI/4paul/gebvs/Oct01_CrossValDarpaGebv_noQC.xlsx"
-ml_metrics_path <- "/work/tfs3/gsAI/gebvs/Oct09_allnewQC_fold_metrics.csv"
+ml_metrics_path <- "/work/tfs3/gsAI/gebvs/Oct08_allnoqc_fold_metrics.csv"
 r_metrics_path <- "/work/tfs3/gsAI/4paul/gebvs/Oct01_CrossValDarpaFoldMetrics.csv"
 
 DARPAGEBV <- read.csv(ml_models_path) 
@@ -35,7 +35,20 @@ df <- merge(DARPAGEBV, DARPAGEBV2)
 
 MLMETRICS <- read.csv(ml_metrics_path) 
 RMETRICS <- read.csv(r_metrics_path)
-# stats_df <- merge(MLMETRICS, RMETRICS)
+names(RMETRICS) <- tolower(names(RMETRICS))
+names(MLMETRICS) <- tolower(names(MLMETRICS))
+MLMETRICS <- MLMETRICS %>%
+  rename(correlation = pearsonr)
+RMETRICS <- RMETRICS %>%
+  mutate(model=recode(model, "BL" = "LASSO"))
+
+if (!"iteration" %in% names(MLMETRICS)) {
+  MLMETRICS <- MLMETRICS %>%
+    group_by(model) %>%
+    mutate(iteration = rep(1:10, each = 5, length.out = n())) %>%
+    ungroup()
+}
+allMetrics <- rbind(MLMETRICS, RMETRICS)
 
 ## Turn on to overwrite ML GEBV CSV and add R MODEL VALUES
 # write.csv(df, file = ml_models_path, row.names = FALSE)
@@ -124,6 +137,48 @@ corrplot(cor_matrix,
 
 
 ```{r}
+library(RColorBrewer)
+
+per_iter <- allMetrics %>%
+  group_by(model, iteration) %>%
+  summarise(
+    auc_iter = mean(auc, na.rm = TRUE),
+    corr_iter = mean(correlation, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# From the per-iteration means compute overall mean (mean of the iteration means)
+# and SD across iteration means (this SD will be used for the error bars)
+summary_by_model <- per_iter %>%
+  pivot_longer(cols = c(auc_iter, corr_iter), names_to = "metric", values_to = "iter_mean") %>%
+  group_by(model, metric) %>%
+  summarise(
+    mean_of_iters = mean(iter_mean, na.rm = TRUE),   # single point to plot
+    sd_of_iters   = sd(iter_mean, na.rm = TRUE),     # used for error bars
+    n_iters       = n(),
+    .groups = "drop"
+  )
+
+# Print table so you can inspect numbers
+print(summary_by_model)
+
+ggplot(summary_by_model, aes(x = model, y = mean_of_iters, color = model)) +
+  geom_point(size = 4) +
+  geom_errorbar(aes(ymin = mean_of_iters - sd_of_iters, ymax = mean_of_iters + sd_of_iters),
+                width = 0.8, size = 0.5) +
+  facet_wrap(~ metric, scales = "free_y", labeller = as_labeller(c(auc_iter = "AUC", corr_iter = "Correlation"))) +
+  # scale_color_brewer(palette = "Dark2") +
+  # labs(
+  #   x = "Model",
+  #   y = "Metric value") +
+  theme_classic() +
+  theme(axis.text.x = element_blank()) +
+  theme(axis.title = element_blank())
+  theme(panel.grid.major.x = element_blank())
+```
+
+```{r}
+
 if (!"iteration" %in% names(MLMETRICS)) {
   MLMETRICS <- MLMETRICS %>%
     group_by(model) %>%
@@ -135,8 +190,8 @@ if (!"iteration" %in% names(MLMETRICS)) {
 per_iter <- MLMETRICS %>%
   group_by(model, iteration) %>%
   summarise(
-    auc_iter = mean(AUC, na.rm = TRUE),
-    corr_iter = mean(PearsonR, na.rm = TRUE),
+    auc_iter = mean(auc, na.rm = TRUE),
+    corr_iter = mean(correlation, na.rm = TRUE),
     .groups = "drop"
   )
 
@@ -158,7 +213,7 @@ print(summary_by_model)
 ggplot(summary_by_model, aes(x = model, y = mean_of_iters, color = model)) +
   geom_point(size = 2) +
   geom_errorbar(aes(ymin = mean_of_iters - sd_of_iters, ymax = mean_of_iters + sd_of_iters),
-                width = 0.2, size = 0.8) +
+                width = 0.2, size = 0.5) +
   facet_wrap(~ metric, scales = "free_y", labeller = as_labeller(c(auc_iter = "AUC", corr_iter = "Correlation"))) +
   labs(
     x = "Model",
@@ -167,20 +222,18 @@ ggplot(summary_by_model, aes(x = model, y = mean_of_iters, color = model)) +
   theme_minimal() +
   theme(legend.position = "none")
 
-```
 
-```{r}
 RMETRICS <- RMETRICS %>%
-  group_by(Model) %>%
+  group_by(model) %>%
   mutate(iteration = rep(1:10, each = 5, length.out = n())) %>%
   ungroup()
 
 # Compute per-iteration means for the metrics of interest
 per_iter <- RMETRICS %>%
-  group_by(Model, Iteration) %>%
+  group_by(model, iteration) %>%
   summarise(
-    auc_iter = mean(AUC, na.rm = TRUE),
-    corr_iter = mean(Correlation, na.rm = TRUE),
+    auc_iter = mean(auc, na.rm = TRUE),
+    corr_iter = mean(correlation, na.rm = TRUE),
     .groups = "drop"
   )
 
@@ -188,7 +241,7 @@ per_iter <- RMETRICS %>%
 # and SD across iteration means (this SD will be used for the error bars)
 summary_by_model <- per_iter %>%
   pivot_longer(cols = c(auc_iter, corr_iter), names_to = "metric", values_to = "iter_mean") %>%
-  group_by(Model, metric) %>%
+  group_by(model, metric) %>%
   summarise(
     mean_of_iters = mean(iter_mean, na.rm = TRUE),  
     sd_of_iters   = sd(iter_mean, na.rm = TRUE),  
@@ -199,10 +252,10 @@ summary_by_model <- per_iter %>%
 # Print table so you can inspect numbers
 print(summary_by_model)
 
-ggplot(summary_by_model, aes(x = Model, y = mean_of_iters, color = Model)) +
+ggplot(summary_by_model, aes(x = model, y = mean_of_iters, color = model)) +
   geom_point(size = 2) +
   geom_errorbar(aes(ymin = mean_of_iters - sd_of_iters, ymax = mean_of_iters + sd_of_iters),
-                width = 0.2, size = 0.8) +
+                width = 0.2, size = 0.5) +
   facet_wrap(~ metric, scales = "free_y", labeller = as_labeller(c(auc_iter = "AUC", corr_iter = "Correlation"))) +
   labs(
     x = "Model",
@@ -210,6 +263,33 @@ ggplot(summary_by_model, aes(x = Model, y = mean_of_iters, color = Model)) +
   ) +
   theme_minimal() +
   theme(legend.position = "none")
+
+```
+
+## GEBV Visualization
+
+```{r}
+# gebv_cols <- c("GBLUP_Mean", "EGBLUP_Mean", "BRR_Mean", "BayesB_Mean",
+#                "LASSO_Mean", "RKHS_Mean", "LR", "RF", "GB")
+gebv_cols <- c("GBLUP_Mean", "EGBLUP_Mean", "BRR_Mean", "BayesB_Mean",
+                "LASSO_Mean", "RKHS_Mean")
+
+df_long <- df %>%
+  dplyr::select(gebv_cols) %>%
+  tidyr::pivot_longer(cols = everything(),
+                      names_to = "Model",
+                      values_to = "Value") %>%
+  dplyr::mutate(Value = as.numeric(Value))
+
+p_overlay <- ggplot(df_long, aes(x = Value, fill = Model, color = Model)) +
+  geom_density(alpha = 0.2) +
+  labs(
+       x = "GEBV",
+       y = "Density") +
+  theme_classic(base_size = 14) +
+  theme(legend.position = "right")
+
+print(p_overlay)
 
 ```
 
