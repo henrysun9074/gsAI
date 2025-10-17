@@ -40,7 +40,7 @@ names(MLMETRICS) <- tolower(names(MLMETRICS))
 MLMETRICS <- MLMETRICS %>%
   rename(correlation = pearsonr)
 RMETRICS <- RMETRICS %>%
-  mutate(model=recode(model, "BL" = "LASSO"))
+  mutate(model=dplyr::recode(model, "BL" = "LASSO"))
 
 if (!"iteration" %in% names(MLMETRICS)) {
   MLMETRICS <- MLMETRICS %>%

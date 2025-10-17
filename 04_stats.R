@@ -170,30 +170,24 @@ ggplot(per_iter, aes(x = model, y = corr_iter, fill = model)) +
   theme_classic(base_size = 14) +
   theme(legend.position = "none")
 
-#### ANOVA
-anova_res <- aov(corr_iter ~ model, data = per_iter)
-anova_posthoc <- TukeyHSD(anova_res)
-print(anova_posthoc)
-emmeans(anova_res, pairwise ~ model)
+compare_models <- function(model_prefix) {
+  f2  <- per_iter$corr_iter[per_iter$model == paste0(model_prefix, "_F2")]
+  all <- per_iter$corr_iter[per_iter$model == paste0(model_prefix, "_all")]
+  tibble(
+    model = model_prefix,
+    t_p = t.test(f2, all, paired = TRUE)$p.value,
+    wilcox_p = wilcox.test(f2, all, paired = TRUE)$p.value,
+    mean_diff = mean(f2 - all)
+  )
+}
 
-tukey_df <- as.data.frame(anova_posthoc$model)
-tukey_df$comparison <- rownames(tukey_df)
-rownames(tukey_df) <- NULL
-nonsig_tukey <- tukey_df %>%
-  dplyr::filter(`p adj` > 0.05)
+results <- bind_rows(
+  compare_models("RF"),
+  compare_models("GB"),
+  compare_models("LR")
+)
 
-print(nonsig_tukey)
-
-#### KW tests
-kruskal_res <- kruskal.test(corr_iter ~ model, data = per_iter)
-print(kruskal_res)
-dunn_res <- dunnTest(corr_iter ~ model, data = per_iter, method = "holm")
-print(dunn_res)
-
-dunn_table <- dunn_res$res
-nonsig <- dunn_table %>%
-  dplyr::filter(P.adj > 0.05)
-print(nonsig)
+results
 
 
 ###############################################################################
@@ -270,28 +264,27 @@ ggplot(per_iter, aes(x = model, y = corr_iter, fill = model)) +
   theme(axis.text.x = element_blank()) +
   theme(legend.position = "top")
 
-#### ANOVA
-anova_res <- aov(corr_iter ~ model, data = per_iter)
-anova_posthoc <- TukeyHSD(anova_res)
-print(anova_posthoc)
-emmeans(anova_res, pairwise ~ model)
+compare_models <- function(model_prefix) {
+  f2  <- per_iter$corr_iter[per_iter$model == paste0(model_prefix, "_F2")]
+  all <- per_iter$corr_iter[per_iter$model == paste0(model_prefix, "_all")]
+  
+  tibble(
+    model = model_prefix,
+    mean_F2 = mean(f2, na.rm = TRUE),
+    mean_all = mean(all, na.rm = TRUE),
+    mean_diff = mean(f2 - all, na.rm = TRUE),
+    t_p = t.test(f2, all, paired = TRUE)$p.value,
+    wilcox_p = wilcox.test(f2, all, paired = TRUE)$p.value
+  )
+}
 
-tukey_df <- as.data.frame(anova_posthoc$model)
-tukey_df$comparison <- rownames(tukey_df)
-rownames(tukey_df) <- NULL
-nonsig_tukey <- tukey_df %>%
-  dplyr::filter(`p adj` > 0.05)
+# List of model prefixes
+models <- c("BB", "BRR","EGBLUP", "RKHS", "LASSO")
+# remove GBLUP throws error
 
-print(nonsig_tukey)
+# Run all comparisons and bind into a single dataframe
+results <- bind_rows(lapply(models, compare_models))
 
-#### KW tests
-kruskal_res <- kruskal.test(corr_iter ~ model, data = per_iter)
-print(kruskal_res)
-dunn_res <- dunnTest(corr_iter ~ model, data = per_iter, method = "holm")
-print(dunn_res)
-
-dunn_table <- dunn_res$res
-nonsig <- dunn_table %>%
-  dplyr::filter(P.adj > 0.05)
-print(nonsig)
+# View neatly formatted results
+print(results)
 
