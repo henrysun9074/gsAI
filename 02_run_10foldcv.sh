@@ -21,25 +21,13 @@ source /hpc/group/schultzlab/hs325/miniconda3/etc/profile.d/conda.sh
 conda activate gsAI
 
 python3 02_10foldcv_nocal.py \
-    -i "oct04" \
-    -o "nocal/Oct10_allnewQC" \
-    -f "39kDarpaQCFiltered.csv" \
+    -i "Oct22_MAF01" \
+    -o "nocal/Oct22_MAF01" \
+    -f "MAF01_DarpaQCFiltered.csv" \
     -g "all" 
 
 python3 02_10foldcv_nocal.py \
-    -i "sep22_F2QC" \
-    -o "nocal/Oct10_F2newQC" \
-    -f "39kDarpaQCFiltered.csv" \
-    -g "F2" 
-
-python3 02_10foldcv_nocal.py \
-    -i "sep22_allhpt_noqc" \
-    -o "nocal/Oct09_allnoQC" \
-    -f "DarpaNoQCGenoPheno.csv" \
+    -i "Oct22_MAF02" \
+    -o "nocal/Oct22_MAF02" \
+    -f "MAF02_DarpaQCFiltered.csv" \
     -g "all" 
-
-python3 02_10foldcv_nocal.py \
-    -i "sep22_F2hpt_noqc" \
-    -o "nocal/Oct10_allnoQC" \
-    -f "DarpaNoQCGenoPheno.csv" \
-    -g "F2" 

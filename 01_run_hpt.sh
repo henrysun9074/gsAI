@@ -24,6 +24,12 @@ source /hpc/group/schultzlab/hs325/miniconda3/etc/profile.d/conda.sh
 conda activate gsAI
 
 python3 01_hpt.py \
-    -o "Oct07_F0noqc" \
-    -f "DarpaNoQCGenoPheno.csv" \
-    -g "F0" 
+    -o "Oct22_MAF01" \
+    -f "MAF01_DarpaQCFiltered.csv" \
+    -g "all" 
+
+python3 01_hpt.py \
+    -o "Oct22_MAF02" \
+    -f "MAF02_DarpaQCFiltered.csv" \
+    -g "all" 
+

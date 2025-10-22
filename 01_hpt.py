@@ -51,7 +51,7 @@ def get_search_spaces():
         "LR": (
             LogisticRegression(max_iter=1000, solver="saga"),
             {
-                "C": Real(1e-5, 10, prior="loguniform"),
+                "C": Real(1e-5, 10, prior="log-uniform"),
                 "penalty": Categorical(["l1", "l2"]),
             },
         ),
@@ -72,7 +72,7 @@ def get_search_spaces():
             {
                 "n_estimators": Integer(100, 2000),
                 "max_depth": Integer(3, 15),
-                "learning_rate": Real(1e-3, 0.3, prior="loguniform"),
+                "learning_rate": Real(1e-3, 0.3, prior="log-uniform"),
                 "subsample": Real(0.5, 1.0),
                 "colsample_bytree": Real(0.5, 1.0),
                 "min_child_weight": Integer(1, 10),
