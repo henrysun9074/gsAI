@@ -24,9 +24,9 @@ setwd("/work/tfs3/gsAI/")
 # load("/work/tfs3/gsAI/4paul/gebvs/Oct01_CV_noQCAllGens.RData")
 # these correlations are for run done on 10/1. w/o QC, all gens.
 
-ml_models_path <- "/work/tfs3/gsAI/gebvs/Oct08_allnoqc_GEBVs_10foldCV.csv"
+ml_models_path <- "/work/tfs3/gsAI/gebvs/nocal/Oct22_MAF02_GEBVs_10foldCV.csv"
 r_models_path <- "/work/tfs3/gsAI/4paul/gebvs/Oct01_CrossValDarpaGebv_noQC.xlsx"
-ml_metrics_path <- "/work/tfs3/gsAI/gebvs/Oct08_allnoqc_fold_metrics.csv"
+ml_metrics_path <- "/work/tfs3/gsAI/gebvs/nocal/Oct22_MAF02_fold_metrics.csv"
 r_metrics_path <- "/work/tfs3/gsAI/4paul/gebvs/Oct01_CrossValDarpaFoldMetrics.csv"
 
 DARPAGEBV <- read.csv(ml_models_path) 
@@ -76,9 +76,9 @@ cat("RKHS: ",  cor(DARPAGEBV2$RKHS_Mean, DARPAGEBV2$Status, use = "complete.obs"
 cat("EGBLUP:", cor(DARPAGEBV2$EGBLUP_Mean, DARPAGEBV2$Status, use = "complete.obs"), "\n")
 cat("BRR:   ", cor(DARPAGEBV2$BRR_Mean, DARPAGEBV2$Status, use = "complete.obs"), "\n")
 cat("BayesB:", cor(DARPAGEBV2$BayesB_Mean, DARPAGEBV2$Status, use = "complete.obs"), "\n")
-cat("LR:", cor(DARPAGEBV$LR, DARPAGEBV2$Status, use = "complete.obs"), "\n")
-cat("RF:   ", cor(DARPAGEBV$RF, DARPAGEBV2$Status, use = "complete.obs"), "\n")
-cat("GB:", cor(DARPAGEBV$GB, DARPAGEBV2$Status, use = "complete.obs"), "\n")
+cat("LR:", cor(DARPAGEBV$LR, DARPAGEBV$Status, use = "complete.obs"), "\n")
+cat("RF:   ", cor(DARPAGEBV$RF, DARPAGEBV$Status, use = "complete.obs"), "\n")
+cat("GB:", cor(DARPAGEBV$GB, DARPAGEBV$Status, use = "complete.obs"), "\n")
 
 cor_df <- data.frame(
   Model = c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB", "LR", "RF", "GB"),

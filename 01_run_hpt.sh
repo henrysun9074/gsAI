@@ -24,12 +24,12 @@ source /hpc/group/schultzlab/hs325/miniconda3/etc/profile.d/conda.sh
 conda activate gsAI
 
 python3 01_hpt.py \
-    -o "Oct22_MAF01" \
+    -o "Oct27_MAF01_F2" \
     -f "MAF01_DarpaQCFiltered.csv" \
-    -g "all" 
+    -g "F2" 
 
 python3 01_hpt.py \
-    -o "Oct22_MAF02" \
+    -o "Oct27_MAF02_F2" \
     -f "MAF02_DarpaQCFiltered.csv" \
-    -g "all" 
+    -g "F2" 
 
