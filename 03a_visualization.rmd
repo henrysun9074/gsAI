@@ -24,10 +24,10 @@ setwd("/work/tfs3/gsAI/")
 # load("/work/tfs3/gsAI/4paul/gebvs/Oct01_CV_noQCAllGens.RData")
 # these correlations are for run done on 10/1. w/o QC, all gens.
 
-ml_models_path <- "/work/tfs3/gsAI/gebvs/nocal/Oct22_MAF02_GEBVs_10foldCV.csv"
-r_models_path <- "/work/tfs3/gsAI/4paul/gebvs/Oct01_CrossValDarpaGebv_noQC.xlsx"
-ml_metrics_path <- "/work/tfs3/gsAI/gebvs/nocal/Oct22_MAF02_fold_metrics.csv"
-r_metrics_path <- "/work/tfs3/gsAI/4paul/gebvs/Oct01_CrossValDarpaFoldMetrics.csv"
+ml_models_path <- "/work/tfs3/gsAI/gebvs/nocal/Oct27_MAF02_F2_GEBVs_10foldCV.csv"
+r_models_path <- "/work/tfs3/gsAI/4paul/gebvs/Oct04_CrossValDarpaGebv_F2noQC.xlsx"
+ml_metrics_path <- "/work/tfs3/gsAI/gebvs/nocal/Oct27_MAF02_F2_fold_metrics.csv"
+r_metrics_path <- "/work/tfs3/gsAI/4paul/gebvs/Oct04_CrossValFoldMetrics_F2noQC.csv"
 
 DARPAGEBV <- read.csv(ml_models_path) 
 DARPAGEBV2 <- read_xlsx(r_models_path) 
@@ -271,8 +271,9 @@ ggplot(summary_by_model, aes(x = model, y = mean_of_iters, color = model)) +
 ```{r}
 # gebv_cols <- c("GBLUP_Mean", "EGBLUP_Mean", "BRR_Mean", "BayesB_Mean",
 #                "LASSO_Mean", "RKHS_Mean", "LR", "RF", "GB")
-gebv_cols <- c("GBLUP_Mean", "EGBLUP_Mean", "BRR_Mean", "BayesB_Mean",
-                "LASSO_Mean", "RKHS_Mean")
+# gebv_cols <- c("GBLUP_Mean", "EGBLUP_Mean", "BRR_Mean", "BayesB_Mean",
+#                 "LASSO_Mean", "RKHS_Mean")
+gebv_cols <- c("LR", "RF", "GB")
 
 df_long <- df %>%
   dplyr::select(gebv_cols) %>%
