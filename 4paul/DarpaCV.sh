@@ -2,7 +2,8 @@
 #SBATCH --job-name=genomic-selection
 #SBATCH --output=Rmodels.out
 #SBATCH --error=Rmodels.err
-#SBATCH --partition=schultzlab
+#SBATCH --partition=common 
+#SBATCH --time=4-00:00:00
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=12
@@ -21,7 +22,31 @@ echo "Running on node: $(hostname)"
 echo "Number of CPUs: $SLURM_CPUS_PER_TASK"
 echo "Starting R script at: $(date)"
 
-Rscript DarpaCV.R
+Rscript DarpaCV.R \
+    "phenTrainDarpa.xlsx" \
+    "/work/tfs3/gsAI/MAF01_DarpaQCFiltered.csv" \
+    "allMAF01QC" \
+    0.2
+
+Rscript DarpaCV_filtergen.R \
+    "phenTrainDarpa.xlsx" \
+    "/work/tfs3/gsAI/MAF01_DarpaQCFiltered.csv" \
+    "F2" \
+    "F2MAF01QC" \
+    0.2
+
+Rscript DarpaCV.R \
+    "phenTrainDarpa.xlsx" \
+    "/work/tfs3/gsAI/MAF02_DarpaQCFiltered.csv" \
+    "allMAF02QC" \
+    0.2
+
+Rscript DarpaCV_filtergen.R \
+    "phenTrainDarpa.xlsx" \
+    "/work/tfs3/gsAI/MAF02_DarpaQCFiltered.csv" \
+    "F2" \
+    "F2MAF02QC" \
+    0.2
 
 echo "R script finished at: $(date)"
 
