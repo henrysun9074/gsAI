@@ -110,8 +110,8 @@ print(nonsig)
 
 ## load data for F2 vs all comparison for AI models
 
-f2_ai <- "/work/tfs3/gsAI/gebvs/Oct07_F2noqc_fold_metrics.csv"
-all_ai <- "/work/tfs3/gsAI/gebvs/Oct08_allnoqc_fold_metrics.csv"
+f2_ai <- "/work/tfs3/gsAI/gebvs/nocal/x"
+all_ai <- "/work/tfs3/gsAI/gebvs/nocal/x"
 
 f2_ai <- read.csv(f2_ai) 
 all_ai <- read.csv(all_ai)
@@ -194,8 +194,8 @@ results
 
 ## load data for F2 vs all comparison for R models
 
-all_r <- "/work/tfs3/gsAI/4paul/gebvs/Oct01_CrossValDarpaFoldMetrics.csv"
-f2_r <- "/work/tfs3/gsAI/4paul/gebvs/Oct04_CrossValFoldMetrics_F2noQC.csv"
+f2_r <- "/work/tfs3/gsAI/4paul/gebvs/Nov16_CrossValFoldMetrics_F2MAF02QC.csv"
+all_r <- "/work/tfs3/gsAI/4paul/gebvs/Nov14_CrossValFoldMetrics_allMAF02QC.csv"
 
 f2_r <- read.csv(f2_r) 
 all_r <- read.csv(all_r)
