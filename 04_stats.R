@@ -11,16 +11,18 @@ library(broom)
 library(car)
 library(rstatix)
 library(FSA)
+library(viridis)
 library(emmeans)
 
 ###############################################################################
 
 ## load data for AI vs R comparison
 
-ml_models_path <- "/work/tfs3/gsAI/gebvs/Oct08_allnoqc_GEBVs_10foldCV.csv"
-r_models_path <- "/work/tfs3/gsAI/4paul/gebvs/Oct01_CrossValDarpaGebv_noQC.xlsx"
-ml_metrics_path <- "/work/tfs3/gsAI/gebvs/Oct08_allnoqc_fold_metrics.csv"
-r_metrics_path <- "/work/tfs3/gsAI/4paul/gebvs/Oct01_CrossValDarpaFoldMetrics.csv"
+ml_models_path <- "/work/tfs3/gsAI/gebvs/nocal/Oct22_MAF01_GEBVs_10foldCV.csv"
+ml_metrics_path <- "/work/tfs3/gsAI/gebvs/nocal/Oct22_MAF01_fold_metrics.csv"
+
+r_models_path <- "/work/tfs3/gsAI/4paul/gebvs/Nov08_CrossValDarpaGebv_allMAF01QC.xlsx"
+r_metrics_path <- "/work/tfs3/gsAI/4paul/gebvs/Nov08_CrossValFoldMetrics_allMAF01QC.csv"
 
 DARPAGEBV <- read.csv(ml_models_path) 
 DARPAGEBV2 <- read_xlsx(r_models_path) 
@@ -33,7 +35,7 @@ names(MLMETRICS) <- tolower(names(MLMETRICS))
 MLMETRICS <- MLMETRICS %>%
   rename(correlation = pearsonr)
 RMETRICS <- RMETRICS %>%
-  mutate(model=recode(model, "BL" = "LASSO"))
+  mutate(model=dplyr::recode(model, "BL" = "LASSO"))
 
 MLMETRICS <- MLMETRICS %>%
   group_by(model) %>%
@@ -67,7 +69,6 @@ for (m in models) {
 # Variance
 levene_res <- car::leveneTest(corr_iter ~ model, data = per_iter)
 print(levene_res)
-# for no QC: p < 0.001 ***, not ok!
 
 
 ############# Hypothesis Testing
@@ -76,10 +77,13 @@ models <- unique(per_iter$model)
 
 ## Visualize results
 ggplot(per_iter, aes(x = model, y = corr_iter, fill = model)) +
-  geom_boxplot(alpha = 1) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA) + 
+  scale_fill_viridis(discrete = TRUE, alpha=0.6) + 
+  geom_jitter(color = "black", alpha = 0.7, size = 2) +  
   labs(x = "Model", y = "Correlation") +
   theme_classic(base_size = 14) +
   theme(legend.position = "none")
+
 
 #### ANOVA
 anova_res <- aov(corr_iter ~ model, data = per_iter)
@@ -88,30 +92,34 @@ print(anova_posthoc)
 emmeans(anova_res, pairwise ~ model)
 
 tukey_df <- as.data.frame(anova_posthoc$model)
+tukey_df <- tukey_df %>%
+  dplyr::mutate(across(where(is.numeric), ~ round(., 4)))
 tukey_df$comparison <- rownames(tukey_df)
 rownames(tukey_df) <- NULL
 nonsig_tukey <- tukey_df %>%
   dplyr::filter(`p adj` > 0.05)
-
 print(nonsig_tukey)
 
 #### KW tests
 kruskal_res <- kruskal.test(corr_iter ~ model, data = per_iter)
 print(kruskal_res)
-dunn_res <- dunnTest(corr_iter ~ model, data = per_iter, method = "holm")
+dunn_res <- dunnTest(corr_iter ~ model, data = per_iter, method="none")
 print(dunn_res)
 
 dunn_table <- dunn_res$res
+dunn_table <- dunn_table %>%
+  dplyr::mutate(across(where(is.numeric), ~ round(., 4)))
 nonsig <- dunn_table %>%
   dplyr::filter(P.adj > 0.05)
 print(nonsig)
+
 
 ###############################################################################
 
 ## load data for F2 vs all comparison for AI models
 
-f2_ai <- "/work/tfs3/gsAI/gebvs/nocal/x"
-all_ai <- "/work/tfs3/gsAI/gebvs/nocal/x"
+f2_ai <- "/work/tfs3/gsAI/gebvs/nocal/Oct27_MAF01_F2_fold_metrics.csv"
+all_ai <- "/work/tfs3/gsAI/gebvs/nocal/Oct22_MAF01_fold_metrics.csv"
 
 f2_ai <- read.csv(f2_ai) 
 all_ai <- read.csv(all_ai)
@@ -165,7 +173,9 @@ print(levene_res)
 
 ## Visualize results
 ggplot(per_iter, aes(x = model, y = corr_iter, fill = model)) +
-  geom_boxplot(alpha = 1) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA) + 
+  scale_fill_viridis(discrete = TRUE, alpha=0.6) + 
+  geom_jitter(color = "black", alpha = 0.7, size = 2) +  
   labs(x = "Model", y = "Correlation") +
   theme_classic(base_size = 14) +
   theme(legend.position = "none")
@@ -189,13 +199,97 @@ results <- bind_rows(
 
 results
 
+###############################################################################
+
+## load data for MAF 0.01 vs MAF 0.05 comparison for AI models
+
+MAF01_ai <- "/work/tfs3/gsAI/gebvs/nocal/Oct22_MAF01_fold_metrics.csv"
+MAF05_ai <- "/work/tfs3/gsAI/gebvs/nocal/Oct10_allnewQC_fold_metrics.csv"
+
+MAF01_ai <- read.csv(MAF01_ai) 
+MAF05_ai <- read.csv(MAF05_ai)
+names(MAF01_ai) <- tolower(names(MAF01_ai))
+names(MAF05_ai) <- tolower(names(MAF05_ai))
+
+MAF01_ai <- MAF01_ai %>%
+  mutate(model = dplyr::recode(model,
+                               "LR" = "LR_MAF01",
+                               "RF" = "RF_MAF01",
+                               "GB" = "GB_MAF01"))
+
+MAF05_ai <- MAF05_ai %>%
+  mutate(model = dplyr::recode(model,
+                               "LR" = "LR_MAF05",
+                               "RF" = "RF_MAF05",
+                               "GB" = "GB_MAF05"))
+
+allMetrics <- rbind(MAF01_ai, MAF05_ai)
+allMetrics <- allMetrics %>%
+  rename(correlation = pearsonr)
+
+allMetrics <- allMetrics %>%
+  group_by(model) %>%
+  mutate(iteration = rep(1:10, each = 5, length.out = n())) %>%
+  ungroup()
+
+per_iter <- allMetrics %>%
+  group_by(model, iteration) %>%
+  summarise(
+    auc_iter = mean(auc, na.rm = TRUE),
+    corr_iter = mean(correlation, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+######### Assumption checks
+models <- unique(per_iter$model)
+for (m in models) {
+  cat("Model:", m)
+  data_m <- per_iter %>% filter(model == m)
+  qqPlot(data_m$corr_iter, main = paste("QQ Plot -", m))
+  shapiro_res <- shapiro.test(data_m$corr_iter)
+  print(shapiro_res)
+}
+# all pass
+
+# Variance
+levene_res <- car::leveneTest(corr_iter ~ model, data = per_iter)
+print(levene_res)
+#pass
+
+## Visualize results
+ggplot(per_iter, aes(x = model, y = corr_iter, fill = model)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA) + 
+  scale_fill_viridis(discrete = TRUE, alpha=0.6) + 
+  geom_jitter(color = "black", alpha = 0.7, size = 2) +  
+  labs(x = "Model", y = "Correlation") +
+  theme_classic(base_size = 14) +
+  theme(legend.position = "none")
+
+compare_models <- function(model_prefix) {
+  maf01  <- per_iter$corr_iter[per_iter$model == paste0(model_prefix, "_MAF01")]
+  maf05 <- per_iter$corr_iter[per_iter$model == paste0(model_prefix, "_MAF05")]
+  tibble(
+    model = model_prefix,
+    t_p = t.test(maf01, maf05, paired = TRUE)$p.value,
+    wilcox_p = wilcox.test(maf01, maf05, paired = TRUE)$p.value,
+    mean_diff = mean(maf01 - maf05)
+  )
+}
+
+results <- bind_rows(
+  compare_models("RF"),
+  compare_models("GB"),
+  compare_models("LR")
+)
+
+results
 
 ###############################################################################
 
 ## load data for F2 vs all comparison for R models
 
-f2_r <- "/work/tfs3/gsAI/4paul/gebvs/Nov16_CrossValFoldMetrics_F2MAF02QC.csv"
-all_r <- "/work/tfs3/gsAI/4paul/gebvs/Nov14_CrossValFoldMetrics_allMAF02QC.csv"
+f2_r <- "/work/tfs3/gsAI/4paul/gebvs/Nov10_CrossValFoldMetrics_F2MAF01QC.csv"
+all_r <- "/work/tfs3/gsAI/4paul/gebvs/Nov08_CrossValFoldMetrics_allMAF01QC.csv"
 
 f2_r <- read.csv(f2_r) 
 all_r <- read.csv(all_r)
@@ -258,11 +352,13 @@ print(levene_res)
 
 ## Visualize results
 ggplot(per_iter, aes(x = model, y = corr_iter, fill = model)) +
-  geom_boxplot(alpha = 1) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA) + 
+  scale_fill_viridis(discrete = TRUE, alpha=0.6) + 
+  geom_jitter(color = "black", alpha = 0.7, size = 2) +  
   labs(x = "Model", y = "Correlation") +
-  theme_classic(base_size = 14) +
-  theme(axis.text.x = element_blank()) +
-  theme(legend.position = "top")
+  theme_classic(base_size = 10) + 
+  theme(axis.text.x = element_text(size = 6)) +
+  theme(legend.position = "none")
 
 compare_models <- function(model_prefix) {
   f2  <- per_iter$corr_iter[per_iter$model == paste0(model_prefix, "_F2")]
@@ -279,7 +375,7 @@ compare_models <- function(model_prefix) {
 }
 
 # List of model prefixes
-models <- c("BB", "BRR","EGBLUP", "RKHS", "LASSO")
+models <- c("BB", "BRR","EGBLUP", "RKHS", "LASSO", "GBLUP")
 # remove GBLUP throws error
 
 # Run all comparisons and bind into a single dataframe

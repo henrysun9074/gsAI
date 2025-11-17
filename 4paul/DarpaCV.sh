@@ -21,10 +21,17 @@ echo "Running on node: $(hostname)"
 echo "Number of CPUs: $SLURM_CPUS_PER_TASK"
 echo "Starting R script at: $(date)"
 
-Rscript DarpaCV.R \
+# Rscript DarpaCV.R \
+#     "phenTrainDarpa.xlsx" \
+#     "/work/tfs3/gsAI/39kDarpaQCFiltered.csv" \
+#     "allMAF05QC" \
+#     0.2
+
+Rscript DarpaCV_filtergen.R \
     "phenTrainDarpa.xlsx" \
     "/work/tfs3/gsAI/39kDarpaQCFiltered.csv" \
-    "allMAF05QC" \
+    "F2" \
+    "F2MAF05QC" \
     0.2
 
 echo "R script finished at: $(date)"
