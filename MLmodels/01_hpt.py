@@ -67,7 +67,7 @@ def get_search_spaces():
         ),
         "GB": (
             XGBClassifier(
-                tree_method="hist", device="cuda", eval_metric="logloss"
+                tree_method="hist", device="cpu", eval_metric="logloss"
             ),
             {
                 "n_estimators": Integer(100, 2000),
@@ -120,7 +120,8 @@ def main():
     list_of_dataframes = []
 
     logger.info(f"Loading data from {filename}...")
-    for df in pd.read_csv(filename, chunksize=chunksize):
+    path_to_file = os.path.join("data", filename)
+    for df in pd.read_csv(path_to_file, chunksize=chunksize):
         list_of_dataframes.append(df)
     df = pd.concat(list_of_dataframes)
     if generation != "all":

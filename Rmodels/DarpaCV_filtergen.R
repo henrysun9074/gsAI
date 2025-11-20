@@ -58,28 +58,21 @@ phenTrain  <- phenTrain[phenTrain$Generation == generation, ]
 
 # Keep only individuals present in both
 train_base <- train_base[train_base$ID %in% phenTrain$ID, ]
-
-# Convert to matrix form for BWGS
 train_base <- column_to_rownames(train_base, var = "ID")
 train_base <- train_base[, grepl("^AX", colnames(train_base))]
 
-# ---------------------------
-# 4. Split data
-# ---------------------------
 n_samples <- nrow(train_base)
+folds <- 5
 set.seed(123)
 all_indices <- 1:n_samples
 shuffled_indices <- sample(all_indices)
-test_size <- ceiling(split_fraction * n_samples)
-split_indices <- split(shuffled_indices, ceiling(seq_along(shuffled_indices) / test_size))
+split_indices <- split(shuffled_indices, rep(1:folds, length.out = n_samples))
 length(split_indices)
 
 pheno_train_vec1 <- phenTrain$Status
 names(pheno_train_vec1) <- phenTrain$ID
 
-# ---------------------------
-# 5. Cross-validation loop
-# ---------------------------
+# 10 iterations CV
 cat("==> Entering main prediction loop...\n")
 results <- list()
 

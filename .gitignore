@@ -3,6 +3,7 @@
 *.csv
 *.dat
 /misc
+/data/
 /Rmodels/rlib
 /Rmodels/logs
 /Rmodels/old

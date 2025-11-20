@@ -7,7 +7,7 @@ if (length(args) < 4) {
 # Rscript DarpaCV.R "phenTrainDarpa.xlsx" "/work/tfs3/gsAI/MAF01_DarpaQCFiltered.csv" "allMAF01QC" 0.2
 
 phenTrain_path <- args[1]      # e.g., "phenTrainDarpa.xlsx"
-geno_path      <- args[2]      # e.g., "/work/tfs3/gsAI/MAF01_DarpaQCFiltered.csv"
+geno_path      <- args[2]      # e.g., "/work/tfs3/gsAI/data/MAF0.01.csv"
 output_prefix  <- args[3]      # e.g., "allMAF01QC"
 split_fraction <- as.numeric(args[4]) # e.g., 0.2 for 20% test size
 
@@ -46,11 +46,11 @@ train_base <- column_to_rownames(train_base, var = "ID")
 train_base <- train_base[, grepl("^AX", colnames(train_base))]
 
 n_samples <- nrow(train_base)
+folds <- 5
 set.seed(123)
 all_indices <- 1:n_samples
 shuffled_indices <- sample(all_indices)
-test_size <- ceiling(split_fraction * n_samples)
-split_indices <- split(shuffled_indices, ceiling(seq_along(shuffled_indices) / test_size))
+split_indices <- split(shuffled_indices, rep(1:folds, length.out = n_samples))
 length(split_indices)
 
 pheno_train_vec1 <- phenTrain$Status
