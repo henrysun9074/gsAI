@@ -1,3 +1,0 @@
-mice: mice.A mice.pheno mice.X mice.map
-simulated3t: simulated3t.pheno simulated3t.X
-wheat: wheat.A wheat.sets wheat.X wheat.Y

@@ -1,6 +1,0 @@
-export (bplot,calibrate,canocor,circle,dlines,origin,ones,PrinCoor,rad2degree,rda,shiftvector,textxy)
-import (MASS)
-importFrom("graphics", "abline", "arrows", "lines", "par", "points", "text", "title")
-importFrom("stats", "cor", "dist", "princomp", "var")
-
-

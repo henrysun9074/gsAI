@@ -23,12 +23,12 @@ echo "Number of CPUs: $SLURM_CPUS_PER_TASK"
 source /hpc/group/schultzlab/hs325/miniconda3/etc/profile.d/conda.sh
 conda activate gsAI
 
-python3 01_hpt.py \
+python3 MLmodels/01_hpt.py \
     -o "Oct27_MAF01_F2" \
-    -f "MAF01_DarpaQCFiltered.csv" \
-    -g "F2" 
+    -f "data/filename.csv" \
+    -g "all" 
 
-python3 01_hpt.py \
+python3 MLmodels/01_hpt.py \
     -o "Oct27_MAF02_F2" \
     -f "MAF02_DarpaQCFiltered.csv" \
     -g "F2" 

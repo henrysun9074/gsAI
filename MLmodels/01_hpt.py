@@ -144,7 +144,7 @@ def main():
         tuned_models[model_name] = best_model
         tuned_params[model_name] = best_params
 
-    run_dir = os.path.join("models", outdir)
+    run_dir = os.path.join("MLmodels/models", outdir)
     os.makedirs(run_dir, exist_ok=True)
 
     #  Save hyperparameters 

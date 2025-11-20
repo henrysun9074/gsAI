@@ -20,14 +20,16 @@ echo "Number of CPUs: $SLURM_CPUS_PER_TASK"
 source /hpc/group/schultzlab/hs325/miniconda3/etc/profile.d/conda.sh
 conda activate gsAI
 
-python3 02_10foldcv_nocal.py \
-    -i "Oct27_MAF01_F2" \
-    -o "nocal/Oct27_MAF01_F2" \
-    -f "MAF01_DarpaQCFiltered.csv" \
-    -g "F2" 
+## for -i searches within /MLmodels/models, -o saves within /MLmodels/gebvs, -f looks within /data
 
-python3 02_10foldcv_nocal.py \
-    -i "Oct27_MAF02_F2" \
-    -o "nocal/Oct27_MAF02_F2" \
-    -f "MAF02_DarpaQCFiltered.csv" \
+python3 MLmodels/02_crossval.py \
+    -i "ModelDirName" \
+    -o "OutDirName" \
+    -f "TBA.csv" \
+    -g "all" 
+
+python3 MLmodels/02_crossval.py \
+    -i "ModelDirName" \
+    -o "OutDirName" \
+    -f "TBA.csv" \
     -g "F2" 

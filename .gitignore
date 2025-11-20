@@ -3,11 +3,12 @@
 *.csv
 *.dat
 /misc
-/4paul/rlib
-/4paul/logs
-/4paul/old
-/4paul/raw
-/models
+/Rmodels/rlib
+/Rmodels/logs
+/Rmodels/old
+/Rmodels/raw
+/MLmodels/models
+/MLmodels/gebvs
 *.RData
 *.rdscd 
 *.joblib
