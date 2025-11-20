@@ -1,0 +1,4 @@
+gwasResults             Simulated GWAS results
+manhattan               Creates a manhattan plot
+qq                      Creates a Q-Q plot
+snpsOfInterest          snpsOfInterest

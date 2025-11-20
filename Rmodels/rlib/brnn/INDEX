@@ -1,0 +1,21 @@
+D                       Genomic dominant relationship matrix for the
+                        Jersey dataset.
+G                       Genomic additive relationship matrix for the
+                        Jersey dataset.
+GOrd                    Genomic additive relationship matrix for the
+                        GLS dataset.
+brnn                    brnn
+brnn_extended           brnn_extended
+brnn_ordinal            brnn_ordinal
+estimate.trace          estimate.trace
+initnw                  Initialize networks weights and biases
+jacobian                Jacobian
+normalize               normalize
+partitions              Partitions for cross validation (CV)
+pheno                   Phenotypic information for Jersey
+phenoOrd                Phenotypic information for GLS (ordinal trait)
+predict.brnn            predict.brnn
+predict.brnn_extended   predict.brnn_extended
+predict.brnn_ordinal    predict.brnn_ordinal
+twoinput                2 Inputs and 1 output.
+un_normalize            un_normalize
