@@ -19,10 +19,10 @@ conda activate gsAI
 
 
 ## MAF 0.05
-python3 MLmodels/01_hpt.py \
-    -o "MAF0.05All" \
-    -f "MAF0.05.csv" \
-    -g "all" 
+# python3 MLmodels/01_hpt.py \
+#     -o "MAF0.05All" \
+#     -f "MAF0.05.csv" \
+#     -g "all" 
 
 python3 MLmodels/01_hpt.py \
     -o "MAF0.05F2" \
@@ -30,10 +30,10 @@ python3 MLmodels/01_hpt.py \
     -g "F2" 
 
 ## MAF 0.01
-python3 MLmodels/01_hpt.py \
-    -o "MAF0.01All" \
-    -f "MAF0.01.csv" \
-    -g "all" 
+# python3 MLmodels/01_hpt.py \
+#     -o "MAF0.01All" \
+#     -f "MAF0.01.csv" \
+#     -g "all" 
 
 python3 MLmodels/01_hpt.py \
     -o "MAF0.01F2" \
@@ -41,10 +41,10 @@ python3 MLmodels/01_hpt.py \
     -g "F2" 
 
 ## MAF 0.005
-python3 MLmodels/01_hpt.py \
-    -o "MAF0.005All" \
-    -f "MAF0.005.csv" \
-    -g "all" 
+# python3 MLmodels/01_hpt.py \
+#     -o "MAF0.005All" \
+#     -f "MAF0.005.csv" \
+#     -g "all" 
 
 python3 MLmodels/01_hpt.py \
     -o "MAF0.005F2" \

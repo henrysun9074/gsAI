@@ -99,7 +99,7 @@ def main():
     chunksize = 100
     list_of_dataframes = []
     path_to_file = os.path.join("data", filename)
-    for df_chunk in pd.read_csv(path_to_file, chunksize=chunksize, index_col=None):
+    for df_chunk in pd.read_csv(path_to_file, chunksize=chunksize):
         list_of_dataframes.append(df_chunk)
     df = pd.concat(list_of_dataframes)
 

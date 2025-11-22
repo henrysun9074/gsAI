@@ -18,7 +18,7 @@ cd /work/tfs3/gsAI
 conda activate gsAI
 
 ## for -i searches within /MLmodels/models, -o saves within /MLmodels/gebvs, -f looks within /data
-## sbatch --dependency=afterok:<HPTJOBID> 02_run_10foldcv.sh
+## sbatch --dependency=afterok:<HPTJOBID> 02_run_crossval.sh
 
 ## MAF 0.05
 python3 MLmodels/02_crossval.py \

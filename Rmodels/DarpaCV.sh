@@ -2,7 +2,8 @@
 #SBATCH --job-name=genomic-selection
 #SBATCH --output=Rmodels.out
 #SBATCH --error=Rmodels.err
-#SBATCH --partition=schultzlab 
+#SBATCH --partition=common 
+#SBATCH --time=4-00:00:00
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=12
@@ -21,17 +22,46 @@ echo "Running on node: $(hostname)"
 echo "Number of CPUs: $SLURM_CPUS_PER_TASK"
 echo "Starting R script at: $(date)"
 
+## MAF 0.05
 # Rscript DarpaCV.R \
 #     "/work/tfs3/gsAI/data/phenTrainDarpa.xlsx" \
-#     "/work/tfs3/gsAI/data39kDarpaQCFiltered.csv" \
+#     "/work/tfs3/gsAI/data/MAF0.05.csv" \
 #     "allMAF05QC" \
 #     0.2
 
 Rscript DarpaCV_filtergen.R \
     "/work/tfs3/gsAI/data/phenTrainDarpa.xlsx" \
-    "/work/tfs3/gsAI/39kDarpaQCFiltered.csv" \
+    "/work/tfs3/gsAI/MAF0.05.csv" \
     "F2" \
     "F2MAF05QC" \
+    0.2
+
+## MAF 0.01
+# Rscript DarpaCV.R \
+#     "/work/tfs3/gsAI/data/phenTrainDarpa.xlsx" \
+#     "/work/tfs3/gsAI/data/MAF0.01.csv" \
+#     "allMAF05QC" \
+#     0.2
+
+Rscript DarpaCV_filtergen.R \
+    "/work/tfs3/gsAI/data/phenTrainDarpa.xlsx" \
+    "/work/tfs3/gsAI/MAF0.01.csv" \
+    "F2" \
+    "F2MAF01QC" \
+    0.2
+
+## MAF 0.01
+# Rscript DarpaCV.R \
+#     "/work/tfs3/gsAI/data/phenTrainDarpa.xlsx" \
+#     "/work/tfs3/gsAI/data/MAF0.005.csv" \
+#     "allMAF005QC" \
+#     0.2
+
+Rscript DarpaCV_filtergen.R \
+    "/work/tfs3/gsAI/data/phenTrainDarpa.xlsx" \
+    "/work/tfs3/gsAI/MAF0.005.csv" \
+    "F2" \
+    "F2MAF005QC" \
     0.2
 
 echo "R script finished at: $(date)"

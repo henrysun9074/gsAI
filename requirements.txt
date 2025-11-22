@@ -8,8 +8,6 @@ scipy==1.16.0
 seaborn==0.13.2
 xgboost==3.0.4
 
-## ==used for neural network testing==
-# torchvision==0.23.0cu129
-# torchaudio==2.3.1
+## ==used for initial neural network testing, not in final scripts==
 # torch==2.8.0cu129
 # bayesian-optimization==3.1.0
