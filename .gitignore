@@ -1,5 +1,6 @@
 # git rm -r --cached for removing files which are already committed
 00_debug.ipynb
+*.sh
 *.csv
 *.dat
 /misc
