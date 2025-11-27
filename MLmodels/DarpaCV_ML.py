@@ -42,7 +42,7 @@ logger.info("Running with outdir=%s filename=%s hyperparams_file=%s generation=%
 
 # custom pearson correlation scorer
 def pearson_corr_func(y_true, y_pred):
-    """Return Pearson correlation between predicted probs and true labels"""
+    """Returns Pearson correlation between predicted probs and true labels"""
     if y_pred.ndim == 2:
         y_pred = y_pred[:, 1]
     if np.allclose(y_pred, y_pred[0]):
@@ -77,7 +77,7 @@ def get_search_spaces():
         ),
         "GB": (
             XGBClassifier(
-                tree_method="hist", device="cpu", eval_metric="logloss", random_state=88
+                tree_method="hist", device="cuda", eval_metric="logloss", random_state=88
             ),
             {
                 "n_estimators": Integer(100, 2000),
@@ -91,30 +91,27 @@ def get_search_spaces():
         ),
     }
 
-# --- Hyperparameter Tuning ---
-
-def tune_model(X_train, y_train, model_name, n_iter=100):
+# hyperparameter tuning
+def tune_model(X_tune_cv, y_tune_cv, model_name, n_iter=100):
     base_model, search_space = get_search_spaces()[model_name]
-    logger.info(f"Starting Bayesian optimization for {model_name} on training data...")
+    logger.info(f"Starting Bayesian optimization for {model_name} on 80% combined Training+Validation data...")
 
     opt = BayesSearchCV(
         estimator=base_model,
         search_spaces=search_space,
-        n_iter=n_iter,
-        cv=5, # 5-fold CV within the training set for tuning
+        n_iter=n_iter, # can increase to maybe find more optimal value
+        cv=5, 
         scoring=pearson_scorer,
         n_jobs=-1,
         verbose=0,
         random_state=88
     )
-    opt.fit(X_train, y_train)
+    opt.fit(X_tune_cv, y_tune_cv)
     logger.info(f"Best {model_name} params: {opt.best_params_}")
     
-    # Extract the best model's estimator and parameters
     best_estimator = opt.best_estimator_
     best_params = opt.best_params_
     
-    # Clean up non-serializable objects from best_params if necessary
     final_params = {k: v for k, v in best_params.items()}
 
     return final_params, best_estimator
@@ -126,13 +123,11 @@ def build_model(name, params):
     elif name == "RF":
         return RandomForestClassifier(n_jobs=-1, random_state=88, **params)
     elif name == "GB":
-        return XGBClassifier(tree_method="hist", eval_metric="logloss", random_state=88, **params)
+        return XGBClassifier(tree_method="hist", device = "cuda", eval_metric="logloss", random_state=88, **params)
     else:
         raise ValueError(f"Unknown model name: {name}")
 
-
 def run_outer_fold(fold, train_idx, test_idx, X, y, ids, best_params_all, seed=88):
-    """Runs a single fold of the final evaluation CV (Training + Validation data)."""
     logger.info(f"Outer Fold {fold+1}/5")
 
     X_train, X_test = X[train_idx], X[test_idx]
@@ -143,15 +138,12 @@ def run_outer_fold(fold, train_idx, test_idx, X, y, ids, best_params_all, seed=8
     fold_metrics = []
 
     for name, params in best_params_all.items():
-        # Build model with saved hyperparameters
+
+        # Build model with saved hyperparameters and evaluate
         tuned_model = build_model(name, params)
         tuned_model.fit(X_train, y_train)
-
-        # Predict on test set
         probs = tuned_model.predict_proba(X_test)[:, 1]
         fold_results[name] = probs
-
-        # Evaluate
         auc = roc_auc_score(y_test, probs)
         logloss_val = log_loss(y_test, probs)
         brier_val = brier_score_loss(y_test, probs)
@@ -197,35 +189,24 @@ def main():
     scaler = StandardScaler()
     X_full = scaler.fit_transform(X_full)
     
-    X_tune_cv, _, y_tune_cv, _, ids_tune_cv, _ = train_test_split(
+    X_tune_cv, _, y_tune_cv, _, ids_cv, _ = train_test_split(
         X_full, y_full, ids_full, test_size=0.20, stratify=y_full, random_state=88
     )
-    
-    X_train, X_val, y_train, y_val = train_test_split(
-        X_tune_cv, y_tune_cv, test_size=0.20, stratify=y_tune_cv, random_state=88
-    )
-
-    logger.info(f"Data Split: Train={X_train.shape[0]} (64%), Validation={X_val.shape[0]} (16%), Test={X_full.shape[0] - X_tune_cv.shape[0]} (20%)")
-    
-    X_cv, y_cv, ids_cv = X_tune_cv, y_tune_cv, ids_tune_cv
+    X_cv, y_cv = X_tune_cv, y_tune_cv
         
     tuned_params_all = {}
-    validation_scores = {}
+    tuned_estimators = {} 
     
+    # calls bayesian optimization
     for model_name in get_search_spaces().keys():
-        best_params, _ = tune_model(X_train, y_train, model_name, n_iter=100)
+        best_params, best_estimator = tune_model(X_tune_cv, y_tune_cv, model_name, n_iter=100)
         tuned_params_all[model_name] = best_params
+        tuned_estimators[model_name] = best_estimator 
         
-        final_model = build_model(model_name, best_params)
-        final_model.fit(X_train, y_train)
-        
-        val_probs = final_model.predict_proba(X_val)[:, 1]
-        val_score = pearson_corr_func(y_val, val_probs)
-        validation_scores[model_name] = val_score
-        
-        logger.info(f"{model_name} Validation PearsonR: {val_score:.4f}")
-
-    #save hyperparams    
+    logger.info(f"Data Split: Train/Val Set={X_cv.shape[0]} (80%), Test Set={X_full.shape[0] - X_cv.shape[0]} (20%)")
+    logger.info(f"Successfully tuned all models using 5-fold CV on the 80% combined set.")
+    
+    # save hyperparams and model
     hyperparams_dir = os.path.join("MLmodels", "models")
     os.makedirs(hyperparams_dir, exist_ok=True)
 
@@ -234,19 +215,22 @@ def main():
         json.dump(tuned_params_all, f, indent=4)
     logger.info(f"Saved all best hyperparameters to {hyperparams_path}")
 
-    #determine the overall best model based on Validation score
-    best_model_name = max(validation_scores, key=validation_scores.get)
-    logger.info(f"\nOverall best model from validation set: **{best_model_name}** (PearsonR: {validation_scores[best_model_name]:.4f})\n")
-        
-    logger.info("Starting final evaluation: 10x repeated 5-fold CV on Training+Validation Data (80% of total data)")
+    for model_name, estimator in tuned_estimators.items():
+        model_path = os.path.join(hyperparams_dir, f"{model_name}_tuned_model.joblib")
+        joblib.dump(estimator, model_path)
+        logger.info(f"Saved tuned {model_name} model to {model_path}")
+
+    logger.info("Starting final evaluation 10 iterations of 5 fold CV")
     all_predictions = defaultdict(list)
     all_metrics = []
 
     for repeat in range(10):
         logger.info(f"=== Repetition {repeat+1}/10 ===")
+        # Use the combined 80% data for the final CV
         skf_outer = StratifiedKFold(n_splits=5, shuffle=True, random_state=88 + repeat)
 
         for fold, (train_idx, test_idx) in enumerate(skf_outer.split(X_cv, y_cv)):
+            # The tuned parameters are used directly in the run_outer_fold function
             fold_results, fold_metrics = run_outer_fold(fold, train_idx, test_idx, X_cv, y_cv, ids_cv, tuned_params_all)
             all_metrics.append(fold_metrics)
 
@@ -276,11 +260,10 @@ def main():
 
     prob_df = pd.DataFrame(final_records).sort_values("ID")
     
-    # Save predictions and fold metrics
     gebvs_dir = os.path.join("MLmodels", "gebvs", outdir)
     os.makedirs(gebvs_dir, exist_ok=True)
     
-    prob_df.to_csv(os.path.join(gebvs_dir, f"{outdir}_GEBVs_10foldCV.csv"), index=False)
+    prob_df.to_csv(os.path.join(gebvs_dir, f"{outdir}_GEBVs.csv"), index=False)
     logger.info("Saved predicted breeding values")
     logger.info(f"Prediction file shape: {prob_df.shape}")
 
