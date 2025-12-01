@@ -24,13 +24,15 @@ setwd("/work/tfs3/gsAI/")
 # load("/work/tfs3/gsAI/4paul/gebvs/Oct01_CV_noQCAllGens.RData")
 # these correlations are for run done on 10/1. w/o QC, all gens.
 
-ml_models_path <- "/work/tfs3/gsAI/gebvs/nocal/Oct22_MAF02_GEBVs_10foldCV.csv"
-r_models_path <- "/work/tfs3/gsAI/4paul/gebvs/Nov14_CrossValDarpaGebv_allMAF02QC.xlsx"
-ml_metrics_path <- "/work/tfs3/gsAI/gebvs/nocal/Oct22_MAF02_fold_metrics.csv"
-r_metrics_path <- "/work/tfs3/gsAI/4paul/gebvs/Nov14_CrossValFoldMetrics_allMAF02QC.csv"
+ml_models_path <- "/work/tfs3/gsAI/MLmodels/gebvs/MAF0.05AllOld_GEBVs_10foldCV.csv"
+r_models_path <- "/work/tfs3/gsAI/Rmodels/gebvs/Nov30_CrossValDarpaGebv_allMAF05QC.xlsx"
+ml_metrics_path <- "/work/tfs3/gsAI/MLmodels/gebvs/MAF0.05AllOld_fold_metrics.csv"
+r_metrics_path <- "/work/tfs3/gsAI/Rmodels/gebvs/Nov30_CrossValFoldMetrics_allMAF05QC.csv"
 
 DARPAGEBV <- read.csv(ml_models_path) 
 DARPAGEBV2 <- read_xlsx(r_models_path) 
+DARPAGEBV2 <- DARPAGEBV2 %>%
+  rename_with(~ str_remove(., "_Mean$"), ends_with("_Mean"))
 df <- merge(DARPAGEBV, DARPAGEBV2)
 
 MLMETRICS <- read.csv(ml_metrics_path) 
@@ -41,6 +43,7 @@ MLMETRICS <- MLMETRICS %>%
   rename(correlation = pearsonr)
 RMETRICS <- RMETRICS %>%
   mutate(model=dplyr::recode(model, "BL" = "LASSO"))
+
 
 if (!"iteration" %in% names(MLMETRICS)) {
   MLMETRICS <- MLMETRICS %>%
@@ -272,10 +275,10 @@ ggplot(summary_by_model, aes(x = model, y = mean_of_iters, color = model)) +
 ## GEBV Visualization
 
 ```{r}
-gebv_cols <- c("GBLUP_Mean", "EGBLUP_Mean", "BRR_Mean", "BayesB_Mean",
-               "LASSO_Mean", "RKHS_Mean", "LR", "RF", "GB")
-# gebv_cols <- c("GBLUP_Mean", "EGBLUP_Mean", "BRR_Mean", "BayesB_Mean",
-#                 "LASSO_Mean", "RKHS_Mean")
+gebv_cols <- c("GBLUP", "EGBLUP", "BRR", "BayesB",
+               "LASSO", "RKHS", "LR", "RF", "GB")
+# gebv_cols <- c("GBLUP", "EGBLUP", "BRR", "BayesB",
+#                "LASSO", "RKHS")
 # gebv_cols <- c("LR", "RF", "GB")
 
 df_long <- df %>%

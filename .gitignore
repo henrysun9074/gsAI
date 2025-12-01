@@ -10,6 +10,7 @@
 /Rmodels/old
 /Rmodels/raw
 /MLmodels/models
+/MLmodels/misc
 /MLmodels/gebvs
 *.RData
 *.rdscd 
