@@ -53,23 +53,23 @@ pearson_scorer = make_scorer(
 # search spaces
 def get_search_spaces():
     return {
-        "LR": (
-            LogisticRegression(max_iter=1000, solver="saga", random_state=88),
-            {
-                "C": Real(1e-5, 10, prior="log-uniform"),
-                "penalty": Categorical(["l1", "l2"]),
-            },
-        ),
-        "RF": (
-            RandomForestClassifier(n_jobs=-1, random_state=88),
-            {
-                "n_estimators": Integer(100, 2000),
-                "max_depth": Integer(3, 50),
-                "max_features": Categorical(["sqrt", "log2"]),
-                "min_samples_split": Integer(2, 20),
-                "min_samples_leaf": Integer(1, 10),
-            },
-        ),
+        # "LR": (
+        #     LogisticRegression(max_iter=1000, solver="saga", random_state=88),
+        #     {
+        #         "C": Real(1e-5, 10, prior="log-uniform"),
+        #         "penalty": Categorical(["l1", "l2"]),
+        #     },
+        # ),
+        # "RF": (
+        #     RandomForestClassifier(n_jobs=-1, random_state=88),
+        #     {
+        #         "n_estimators": Integer(100, 2000),
+        #         "max_depth": Integer(3, 50),
+        #         "max_features": Categorical(["sqrt", "log2"]),
+        #         "min_samples_split": Integer(2, 20),
+        #         "min_samples_leaf": Integer(1, 10),
+        #     },
+        # ),
         "GB": (
             XGBClassifier(
                 tree_method="hist", device="cuda", eval_metric="logloss", random_state=88
@@ -149,7 +149,7 @@ def main():
             fold_results = pd.DataFrame({"ID": ids_test, "Status": y_test})
             
             for model_name in get_search_spaces().keys():
-                best_model, best_params = tune_and_train_model(X_train, y_train, model_name, n_iter=5)
+                best_model, best_params = tune_and_train_model(X_train, y_train, model_name, n_iter=50)
                 
                 # Save params for record
                 all_best_params.append({

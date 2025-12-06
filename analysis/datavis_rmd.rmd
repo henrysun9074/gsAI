@@ -11,6 +11,8 @@ library(readxl)
 library(genetics)
 library(corrplot)
 library(writexl)
+library(viridis)
+library(ggridges)
 ```
 
 Very rudimentary visualizations of model performance. Will make new R file eventually 
@@ -51,6 +53,7 @@ if (!"iteration" %in% names(MLMETRICS)) {
     mutate(iteration = rep(1:10, each = 5, length.out = n())) %>%
     ungroup()
 }
+
 allMetrics <- rbind(MLMETRICS, RMETRICS)
 
 ## Turn on to overwrite ML GEBV CSV and add R MODEL VALUES
@@ -73,12 +76,12 @@ DARPAGEBV <- DARPAGEBV_filtered
 ```{r}
 
 cat("Correlations with Status:\n")
-cat("GBLUP: ", cor(DARPAGEBV2$GBLUP_Mean, DARPAGEBV2$Status, use = "complete.obs"), "\n")
-cat("LASSO: ", cor(DARPAGEBV2$LASSO_Mean, DARPAGEBV2$Status, use = "complete.obs"), "\n")
-cat("RKHS: ",  cor(DARPAGEBV2$RKHS_Mean, DARPAGEBV2$Status, use = "complete.obs"), "\n")
-cat("EGBLUP:", cor(DARPAGEBV2$EGBLUP_Mean, DARPAGEBV2$Status, use = "complete.obs"), "\n")
-cat("BRR:   ", cor(DARPAGEBV2$BRR_Mean, DARPAGEBV2$Status, use = "complete.obs"), "\n")
-cat("BayesB:", cor(DARPAGEBV2$BayesB_Mean, DARPAGEBV2$Status, use = "complete.obs"), "\n")
+cat("GBLUP: ", cor(DARPAGEBV2$GBLUP, DARPAGEBV2$Status, use = "complete.obs"), "\n")
+cat("LASSO: ", cor(DARPAGEBV2$LASSO, DARPAGEBV2$Status, use = "complete.obs"), "\n")
+cat("RKHS: ",  cor(DARPAGEBV2$RKHS, DARPAGEBV2$Status, use = "complete.obs"), "\n")
+cat("EGBLUP:", cor(DARPAGEBV2$EGBLUP, DARPAGEBV2$Status, use = "complete.obs"), "\n")
+cat("BRR:   ", cor(DARPAGEBV2$BRR, DARPAGEBV2$Status, use = "complete.obs"), "\n")
+cat("BayesB:", cor(DARPAGEBV2$BayesB, DARPAGEBV2$Status, use = "complete.obs"), "\n")
 cat("LR:", cor(DARPAGEBV$LR, DARPAGEBV$Status, use = "complete.obs"), "\n")
 cat("RF:   ", cor(DARPAGEBV$RF, DARPAGEBV$Status, use = "complete.obs"), "\n")
 cat("GB:", cor(DARPAGEBV$GB, DARPAGEBV$Status, use = "complete.obs"), "\n")
@@ -86,12 +89,12 @@ cat("GB:", cor(DARPAGEBV$GB, DARPAGEBV$Status, use = "complete.obs"), "\n")
 cor_df <- data.frame(
   Model = c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB", "LR", "RF", "GB"),
   Correlation = c(
-    cor(DARPAGEBV2$GBLUP_Mean,  DARPAGEBV2$Status, use = "complete.obs"),
-    cor(DARPAGEBV2$LASSO_Mean,  DARPAGEBV2$Status, use = "complete.obs"),
-    cor(DARPAGEBV2$RKHS_Mean,   DARPAGEBV2$Status, use = "complete.obs"),
-    cor(DARPAGEBV2$EGBLUP_Mean, DARPAGEBV2$Status, use = "complete.obs"),
-    cor(DARPAGEBV2$BRR_Mean,    DARPAGEBV2$Status, use = "complete.obs"),
-    cor(DARPAGEBV2$BayesB_Mean, DARPAGEBV2$Status, use = "complete.obs"),
+    cor(DARPAGEBV2$GBLUP,  DARPAGEBV2$Status, use = "complete.obs"),
+    cor(DARPAGEBV2$LASSO,  DARPAGEBV2$Status, use = "complete.obs"),
+    cor(DARPAGEBV2$RKHS,   DARPAGEBV2$Status, use = "complete.obs"),
+    cor(DARPAGEBV2$EGBLUP, DARPAGEBV2$Status, use = "complete.obs"),
+    cor(DARPAGEBV2$BRR,    DARPAGEBV2$Status, use = "complete.obs"),
+    cor(DARPAGEBV2$BayesB, DARPAGEBV2$Status, use = "complete.obs"),
     cor(DARPAGEBV$LR, DARPAGEBV2$Status, use = "complete.obs"),
     cor(DARPAGEBV$RF,    DARPAGEBV2$Status, use = "complete.obs"),
     cor(DARPAGEBV$GB, DARPAGEBV2$Status, use = "complete.obs")
@@ -118,8 +121,8 @@ ggplot(cor_df, aes(x = Model, y = Correlation)) +
 
 ```{r}
 # corrplot
-Pairwise <- df[, c("GBLUP_Mean", "LASSO_Mean", "RKHS_Mean", 
-                   "EGBLUP_Mean", "BRR_Mean", "BayesB_Mean",
+Pairwise <- df[, c("GBLUP", "LASSO", "RKHS", 
+                   "EGBLUP", "BRR", "BayesB",
                    "LR", "RF", "GB")]
 
 colnames(Pairwise) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
@@ -136,7 +139,7 @@ corrplot(cor_matrix,
          number.cex = 0.7,
          order = "hclust",        # hierarchical clustering
          addrect = 2,             # draw rectangles around clusters
-         title = "Comparison of Genomic Prediction Models for Status",
+         title = "Model Comparison Correlation Matrix",
          mar = c(0,0,2,0))
 
 ```
@@ -173,10 +176,7 @@ ggplot(summary_by_model, aes(x = model, y = mean_of_iters, color = model)) +
   geom_errorbar(aes(ymin = mean_of_iters - sd_of_iters, ymax = mean_of_iters + sd_of_iters),
                 width = 0.8, size = 0.5) +
   facet_wrap(~ metric, scales = "free_y", labeller = as_labeller(c(auc_iter = "AUC", corr_iter = "Correlation"))) +
-  # scale_color_brewer(palette = "Dark2") +
-  # labs(
-  #   x = "Model",
-  #   y = "Metric value") +
+  scale_color_viridis(discrete = TRUE, alpha=0.6) + 
   theme_classic() +
   theme(axis.text.x = element_blank()) +
   theme(axis.title = element_blank())
@@ -297,6 +297,49 @@ p_overlay <- ggplot(df_long, aes(x = Value, fill = Model, color = Model)) +
   theme(legend.position = "right")
 
 print(p_overlay)
+
+ggplot(df_long, aes(x = Value, y = Model, fill = Model)) +
+  geom_density_ridges() +
+  theme_ridges() + 
+  scale_fill_viridis(discrete = TRUE, alpha=0.6) +
+  theme(legend.position = "none") +
+  labs(
+       x = "Breeding Value",
+       y = "Model") +
+  theme(panel.grid.major = element_blank()) +
+  scale_x_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1)) 
+
+
+
+```
+```{r}
+gebv_cols <- c("GBLUP", "EGBLUP", "BRR", "BayesB",
+               "LASSO", "RKHS", "LR", "RF", "GB")
+
+
+df_long <- df %>%
+  dplyr::select(gebv_cols, "Status") %>% # Include 'Status'
+  tidyr::pivot_longer(cols = all_of(gebv_cols), 
+                      names_to = "Model",
+                      values_to = "Value") %>%
+  dplyr::mutate(
+    Value = as.numeric(Value),
+    Status_Label = factor(Status, levels = c(0, 1), labels = c("Dead", "Alive"))
+  )
+
+p_overlay_status <- ggplot(df_long, aes(x = Value, y = Model, fill = Status_Label)) +
+  geom_density_ridges() +
+  theme_ridges() + 
+  scale_fill_viridis(discrete = TRUE, alpha=0.8) +
+  theme(legend.position = "top") +
+  labs(
+       x = "Breeding Value",
+       y = "Model",
+       fill = "Status") +
+  theme(panel.grid.major = element_blank())+
+  scale_x_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1)) 
+print(p_overlay_status)
+
 
 ```
 
