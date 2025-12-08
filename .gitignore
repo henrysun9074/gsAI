@@ -5,6 +5,7 @@
 *.dat
 /misc
 /data/
+/analysis/misc
 /Rmodels/rlib
 /Rmodels/logs
 /Rmodels/old
