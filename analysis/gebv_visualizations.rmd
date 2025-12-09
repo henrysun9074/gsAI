@@ -26,13 +26,16 @@ setwd("/work/tfs3/gsAI/")
 # load("/work/tfs3/gsAI/4paul/gebvs/Oct01_CV_noQCAllGens.RData")
 # these correlations are for run done on 10/1. w/o QC, all gens.
 
-ml_models_path <- "/work/tfs3/gsAI/MLmodels/gebvs/MAF0.05AllOld_GEBVs_10foldCV.csv"
-r_models_path <- "/work/tfs3/gsAI/Rmodels/gebvs/Nov30_CrossValDarpaGebv_allMAF05QC.xlsx"
-ml_metrics_path <- "/work/tfs3/gsAI/MLmodels/gebvs/MAF0.05AllOld_fold_metrics.csv"
-r_metrics_path <- "/work/tfs3/gsAI/Rmodels/gebvs/Nov30_CrossValFoldMetrics_allMAF05QC.csv"
+ml_models_path <- "/work/tfs3/gsAI/MLmodels/gebvs/MAF0.01AllOld_GEBVs_10foldCV.csv"
+# r_models_path <- "//work/tfs3/gsAI/Rmodels/gebvs/Dec06_CrossValDarpaGebv_allMAF01QC.xlsx"
+r_models_path <- "//work/tfs3/gsAI/Rmodels/gebvs/PaulGEBV/0.01.csv"
+
+ml_metrics_path <- "/work/tfs3/gsAI/MLmodels/gebvs/MAF0.01AllOld_fold_metrics.csv"
+r_metrics_path <- "/work/tfs3/gsAI/Rmodels/gebvs/Dec06_CrossValFoldMetrics_allMAF01QC.csv"
 
 DARPAGEBV <- read.csv(ml_models_path) 
-DARPAGEBV2 <- read_xlsx(r_models_path) 
+# DARPAGEBV2 <- read_xlsx(r_models_path)
+DARPAGEBV2 <- read.csv(r_models_path)
 DARPAGEBV2 <- DARPAGEBV2 %>%
   rename_with(~ str_remove(., "_Mean$"), ends_with("_Mean"))
 df <- merge(DARPAGEBV, DARPAGEBV2)
@@ -95,9 +98,9 @@ cor_df <- data.frame(
     cor(DARPAGEBV2$EGBLUP, DARPAGEBV2$Status, use = "complete.obs"),
     cor(DARPAGEBV2$BRR,    DARPAGEBV2$Status, use = "complete.obs"),
     cor(DARPAGEBV2$BayesB, DARPAGEBV2$Status, use = "complete.obs"),
-    cor(DARPAGEBV$LR, DARPAGEBV2$Status, use = "complete.obs"),
-    cor(DARPAGEBV$RF,    DARPAGEBV2$Status, use = "complete.obs"),
-    cor(DARPAGEBV$GB, DARPAGEBV2$Status, use = "complete.obs")
+    cor(DARPAGEBV$LR, DARPAGEBV$Status, use = "complete.obs"),
+    cor(DARPAGEBV$RF,    DARPAGEBV$Status, use = "complete.obs"),
+    cor(DARPAGEBV$GB, DARPAGEBV$Status, use = "complete.obs")
   )
 )
 
@@ -337,7 +340,7 @@ p_overlay_status <- ggplot(df_long, aes(x = Value, y = Model, fill = Status_Labe
        y = "Model",
        fill = "Status") +
   theme(panel.grid.major = element_blank())+
-  scale_x_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1)) 
+  scale_x_continuous(breaks = c(0,0.25,0.5,0.75,1), limits = c(0, 1))
 print(p_overlay_status)
 
 
