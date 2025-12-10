@@ -27,15 +27,14 @@ setwd("/work/tfs3/gsAI/")
 # these correlations are for run done on 10/1. w/o QC, all gens.
 
 ml_models_path <- "/work/tfs3/gsAI/MLmodels/gebvs/MAF0.01AllOld_GEBVs_10foldCV.csv"
-# r_models_path <- "//work/tfs3/gsAI/Rmodels/gebvs/Dec06_CrossValDarpaGebv_allMAF01QC.xlsx"
-r_models_path <- "//work/tfs3/gsAI/Rmodels/gebvs/PaulGEBV/0.01.csv"
+r_models_path <- "//work/tfs3/gsAI/Rmodels/gebvs/Dec06_CrossValDarpaGebv_allMAF01QC.xlsx"
 
 ml_metrics_path <- "/work/tfs3/gsAI/MLmodels/gebvs/MAF0.01AllOld_fold_metrics.csv"
 r_metrics_path <- "/work/tfs3/gsAI/Rmodels/gebvs/Dec06_CrossValFoldMetrics_allMAF01QC.csv"
 
 DARPAGEBV <- read.csv(ml_models_path) 
-# DARPAGEBV2 <- read_xlsx(r_models_path)
-DARPAGEBV2 <- read.csv(r_models_path)
+DARPAGEBV2 <- read_xlsx(r_models_path)
+# DARPAGEBV2 <- read.csv(r_models_path)
 DARPAGEBV2 <- DARPAGEBV2 %>%
   rename_with(~ str_remove(., "_Mean$"), ends_with("_Mean"))
 df <- merge(DARPAGEBV, DARPAGEBV2)
@@ -315,6 +314,7 @@ ggplot(df_long, aes(x = Value, y = Model, fill = Model)) +
 
 
 ```
+
 ```{r}
 gebv_cols <- c("GBLUP", "EGBLUP", "BRR", "BayesB",
                "LASSO", "RKHS", "LR", "RF", "GB")
@@ -340,9 +340,13 @@ p_overlay_status <- ggplot(df_long, aes(x = Value, y = Model, fill = Status_Labe
        y = "Model",
        fill = "Status") +
   theme(panel.grid.major = element_blank())+
-  scale_x_continuous(breaks = c(0,0.25,0.5,0.75,1), limits = c(0, 1))
+  scale_x_continuous(breaks = c(0,0.25,0.5,0.75,1), limits = c(0, 1))+
+  # geom_vline(xintercept = 0.5, linetype = "dashed", color = "black") +
+  geom_vline(xintercept = 0.5328808, linetype = "dashed", color = "red", alpha = 0.8)
+
 print(p_overlay_status)
 
 
 ```
+
 

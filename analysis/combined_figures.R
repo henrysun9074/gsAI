@@ -22,17 +22,25 @@ library(multcompView)
 
 df <- read.csv("/work/tfs3/gsAI/data/combined_fold_metrics.csv")
 df$MAF <- factor(df$MAF, levels = unique(sort(df$MAF)))
-model_names <- c("BayesB", "BRR", "EGBLUP", "GB", "GBLUP", 
-                 "LASSO", "LR", "RF", "RKHS")
-hex_codes <- viridis(n = 9, alpha = 0.6)
+model_names <- c("GB", "LR", "RF", "BayesB", "BRR", "EGBLUP","GBLUP", 
+                 "LASSO","RKHS")
+# hex_codes <- turbo(n = 9, alpha = 0.8)
+hex_codes <-c("#5E81ACFF", "#8FA87AFF", "#BF616AFF", "#E7D202FF", "#7D5329FF", 
+              "#F49538FF", "#66CDAAFF", "#D070B9FF", "#98FB98FF", "#FCA3B7FF")
 model_color_palette <- setNames(hex_codes, model_names)
+
+priority_models <- c("GB", "LR", "RF")
+all_models <- unique(as.character(df$model))
+other_models <- setdiff(all_models, priority_models)
+new_model_order <- c(priority_models, other_models)
+df$model <- factor(df$model, levels = new_model_order)
 
 
 ################################################################################
 
 ##### plot boxplot all generations faceted by MAF
-my_plot<-ggplot(df[df$gen == 'all', ], aes(x = corr_iter, y = model, fill = model)) +
-    geom_boxplot(orientation = "y") +
+my_plot<-ggplot(df[df$gen == 'all', ], aes(x = model, y = corr_iter, fill = model)) +
+    geom_boxplot() +
     facet_wrap(~ MAF,ncol=1,scales = "free_y") + 
     scale_fill_manual(values = model_color_palette) +
     geom_jitter(color = "black", alpha = 0.3, size = 1) +
@@ -66,7 +74,7 @@ my_plot2<-ggplot(summary_by_model[summary_by_model$gen == 'all', ], aes(x = mode
   labs(y = "Correlation",color="Model") +
   theme(strip.text = element_text(size = 12)) + 
   theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
-ggsave("/work/tfs3/gsAI/analysis/misc/point.svg", my_plot2, width = 8, height = 5, units = "in")
+ggsave("/work/tfs3/gsAI/analysis/misc/point.png", my_plot2, width = 8, height = 5, units = "in")
 
 my_plot3<-ggplot(summary_by_model[summary_by_model$gen == 'all', ], aes(x = model, y = mean_of_iters, color = model)) +
   geom_point(size = 5) +
@@ -79,7 +87,7 @@ my_plot3<-ggplot(summary_by_model[summary_by_model$gen == 'all', ], aes(x = mode
   theme(strip.text = element_text(size = 12)) + 
   labs(y = "Correlation",color="Model") +
   theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
-ggsave("/work/tfs3/gsAI/analysis/misc/point2.svg", my_plot3, width = 8, height = 5, units = "in")
+ggsave("/work/tfs3/gsAI/analysis/misc/point2.png", my_plot3, width = 8, height = 5, units = "in")
 
 ###### point plot all generations MAF0.01
 MAF01df <- summary_by_model[summary_by_model$gen == 'all' & summary_by_model$MAF == 0.01,]
@@ -96,7 +104,7 @@ ggplot(MAF01df, aes(x = model, y = mean_of_iters, color = model)) +
 
 ##### plot all MAF facet by generation
 maf05bp <- ggplot(df[df$MAF == '0.05', ], aes(x = gen, y = corr_iter)) +
-  geom_boxplot(aes(fill = model),alpha = 0.5, outlier.shape = NA) + 
+  geom_boxplot(aes(fill = model),alpha = 0.7, outlier.shape = NA) + 
   scale_fill_manual(values = model_color_palette) +
   facet_wrap(~model, scale="free") +
   geom_jitter(color = "black", alpha = 0.7, size = 0.7) + 
@@ -113,7 +121,7 @@ maf05bp <- ggplot(df[df$MAF == '0.05', ], aes(x = gen, y = corr_iter)) +
 ggsave("/work/tfs3/gsAI/analysis/misc/MAF05boxplot.png", maf05bp, width = 7, height = 5, units = "in")
 
 maf01bp <- ggplot(df[df$MAF == '0.01', ], aes(x = gen, y = corr_iter)) +
-  geom_boxplot(aes(fill = model),alpha = 0.5, outlier.shape = NA) + 
+  geom_boxplot(aes(fill = model),alpha = 0.7, outlier.shape = NA) + 
   scale_fill_manual(values = model_color_palette) +
   facet_wrap(~model, scale="free") +
   geom_jitter(color = "black", alpha = 0.7, size = 0.7) + 
@@ -130,7 +138,7 @@ maf01bp <- ggplot(df[df$MAF == '0.01', ], aes(x = gen, y = corr_iter)) +
 ggsave("/work/tfs3/gsAI/analysis/misc/MAF01boxplot.png", maf01bp, width = 7, height = 5, units = "in")
 
 maf005bp <- ggplot(df[df$MAF == '0.005', ], aes(x = gen, y = corr_iter)) +
-  geom_boxplot(aes(fill = model),alpha = 0.5, outlier.shape = NA) + 
+  geom_boxplot(aes(fill = model),alpha = 0.7, outlier.shape = NA) + 
   scale_fill_manual(values = model_color_palette) +
   facet_wrap(~model, scale="free") +
   geom_jitter(color = "black", alpha = 0.7, size = 0.7) + 
@@ -147,12 +155,12 @@ maf005bp <- ggplot(df[df$MAF == '0.005', ], aes(x = gen, y = corr_iter)) +
 ggsave("/work/tfs3/gsAI/analysis/misc/MAF005boxplot.png", maf005bp, width = 7, height = 5, units = "in")
 
 
-##### plot all ML models facet by generation
+##### plot all ML models facet by MAF
 ML_models <- c("GB", "LR", "RF")
 ML_df <- df[df$gen == 'all' & df$model %in% ML_models, ]
 annotation_data <- ML_df %>% filter(model == "RF") %>% distinct(model)
 ggplot(ML_df, aes(x = MAF, y = corr_iter)) +
-  geom_boxplot(alpha = 0.5, aes(fill = model), outlier.shape = NA) + 
+  geom_boxplot(alpha = 0.7, aes(fill = model), outlier.shape = NA) + 
   scale_fill_manual(values = model_color_palette) +
   geom_jitter(color = "black", alpha = 0.7, size = 2) +
   geom_signif(
@@ -167,8 +175,8 @@ ggplot(ML_df, aes(x = MAF, y = corr_iter)) +
     data = annotation_data, 
     inherit.aes = FALSE,
     x = Inf, 
-    y = 0.23, 
-    label = "*** = p < 0.001\n** = p < 0.01\n* = p < 0.05", 
+    y = 0.225, 
+    label = "*** = p < 0.001\n** = p < 0.01\n* = p < 0.05\nt-test", 
     size = 3.5, 
     hjust = 1.05,
     vjust = -0.5
@@ -180,11 +188,12 @@ ggplot(ML_df, aes(x = MAF, y = corr_iter)) +
   theme(legend.position = "none") + 
   facet_wrap(~model,scale="free")
 
+##### plot all R models facet by MAF
 R_models <- c("GBLUP", "LASSO", "EGBLUP", "BayesB", "BRR", "RKHS")
 R_models <- df[df$gen == 'all' & df$model %in% R_models, ]
 annotation_data <- R_models %>% filter(model == "GBLUP") %>% distinct(model)
 ggplot(R_models, aes(x = MAF, y = corr_iter)) +
-  geom_boxplot(alpha = 0.5, aes(fill = model), outlier.shape = NA) + 
+  geom_boxplot(alpha = 0.7, aes(fill = model), outlier.shape = NA) + 
   scale_fill_manual(values = model_color_palette) +
   geom_jitter(color = "black", alpha = 0.7, size = 0.5) +
   geom_signif(
@@ -199,8 +208,8 @@ ggplot(R_models, aes(x = MAF, y = corr_iter)) +
     data = annotation_data, 
     inherit.aes = FALSE,
     x = 0.67, 
-    y = 0.235, 
-    label = "*** = p < 0.001\n** = p < 0.01\n* = p < 0.05", 
+    y = 0.2335, 
+    label = "*** = p < 0.001\n** = p < 0.01\n* = p < 0.05\nt-test", 
     size = 3, 
     hjust = 0,
     vjust = 0
@@ -218,7 +227,6 @@ ggplot(R_models, aes(x = MAF, y = corr_iter)) +
 MAF01df <- df[df$MAF == '0.01', ]
 MAF005df <- df[df$MAF == '0.005', ]
 MAF05df <- df[df$MAF == '0.05', ]
-
 
 kruskal <- kruskal.test(corr_iter ~ model, data = MAF005df)
 dunn_res <- dunnTest(corr_iter ~ model, data = MAF005df, method="bh")
