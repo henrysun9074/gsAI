@@ -26,10 +26,10 @@ setwd("/work/tfs3/gsAI/")
 # load("/work/tfs3/gsAI/4paul/gebvs/Oct01_CV_noQCAllGens.RData")
 # these correlations are for run done on 10/1. w/o QC, all gens.
 
-ml_models_path <- "/work/tfs3/gsAI/MLmodels/gebvs/MAF0.01AllOld_GEBVs_10foldCV.csv"
-r_models_path <- "//work/tfs3/gsAI/Rmodels/gebvs/Dec06_CrossValDarpaGebv_allMAF01QC.xlsx"
+ml_models_path <- "/work/tfs3/gsAI/MLmodels/gebvs/MAF0.05AllExtra_GEBVs_10foldCV.csv"
+r_models_path <- "/work/tfs3/gsAI/Rmodels/gebvs/Dec06_CrossValDarpaGebv_allMAF01QC.xlsx"
 
-ml_metrics_path <- "/work/tfs3/gsAI/MLmodels/gebvs/MAF0.01AllOld_fold_metrics.csv"
+ml_metrics_path <- "/work/tfs3/gsAI/MLmodels/gebvs/MAF0.05AllExtra_fold_metrics.csv"
 r_metrics_path <- "/work/tfs3/gsAI/Rmodels/gebvs/Dec06_CrossValFoldMetrics_allMAF01QC.csv"
 
 DARPAGEBV <- read.csv(ml_models_path) 

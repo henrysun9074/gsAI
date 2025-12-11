@@ -104,7 +104,7 @@ ggplot(MAF01df, aes(x = model, y = mean_of_iters, color = model)) +
 
 ##### plot all MAF facet by generation
 maf05bp <- ggplot(df[df$MAF == '0.05', ], aes(x = gen, y = corr_iter)) +
-  geom_boxplot(aes(fill = model),alpha = 0.7, outlier.shape = NA) + 
+  geom_boxplot(aes(fill = model),alpha = 1, outlier.shape = NA) + 
   scale_fill_manual(values = model_color_palette) +
   facet_wrap(~model, scale="free") +
   geom_jitter(color = "black", alpha = 0.7, size = 0.7) + 
@@ -121,7 +121,7 @@ maf05bp <- ggplot(df[df$MAF == '0.05', ], aes(x = gen, y = corr_iter)) +
 ggsave("/work/tfs3/gsAI/analysis/misc/MAF05boxplot.png", maf05bp, width = 7, height = 5, units = "in")
 
 maf01bp <- ggplot(df[df$MAF == '0.01', ], aes(x = gen, y = corr_iter)) +
-  geom_boxplot(aes(fill = model),alpha = 0.7, outlier.shape = NA) + 
+  geom_boxplot(aes(fill = model),alpha = 1, outlier.shape = NA) + 
   scale_fill_manual(values = model_color_palette) +
   facet_wrap(~model, scale="free") +
   geom_jitter(color = "black", alpha = 0.7, size = 0.7) + 
@@ -138,7 +138,7 @@ maf01bp <- ggplot(df[df$MAF == '0.01', ], aes(x = gen, y = corr_iter)) +
 ggsave("/work/tfs3/gsAI/analysis/misc/MAF01boxplot.png", maf01bp, width = 7, height = 5, units = "in")
 
 maf005bp <- ggplot(df[df$MAF == '0.005', ], aes(x = gen, y = corr_iter)) +
-  geom_boxplot(aes(fill = model),alpha = 0.7, outlier.shape = NA) + 
+  geom_boxplot(aes(fill = model),alpha = 1, outlier.shape = NA) + 
   scale_fill_manual(values = model_color_palette) +
   facet_wrap(~model, scale="free") +
   geom_jitter(color = "black", alpha = 0.7, size = 0.7) + 
@@ -160,7 +160,7 @@ ML_models <- c("GB", "LR", "RF")
 ML_df <- df[df$gen == 'all' & df$model %in% ML_models, ]
 annotation_data <- ML_df %>% filter(model == "RF") %>% distinct(model)
 ggplot(ML_df, aes(x = MAF, y = corr_iter)) +
-  geom_boxplot(alpha = 0.7, aes(fill = model), outlier.shape = NA) + 
+  geom_boxplot(alpha = 1, aes(fill = model), outlier.shape = NA) + 
   scale_fill_manual(values = model_color_palette) +
   geom_jitter(color = "black", alpha = 0.7, size = 2) +
   geom_signif(
@@ -175,7 +175,7 @@ ggplot(ML_df, aes(x = MAF, y = corr_iter)) +
     data = annotation_data, 
     inherit.aes = FALSE,
     x = Inf, 
-    y = 0.225, 
+    y = 0.22, 
     label = "*** = p < 0.001\n** = p < 0.01\n* = p < 0.05\nt-test", 
     size = 3.5, 
     hjust = 1.05,
@@ -193,7 +193,7 @@ R_models <- c("GBLUP", "LASSO", "EGBLUP", "BayesB", "BRR", "RKHS")
 R_models <- df[df$gen == 'all' & df$model %in% R_models, ]
 annotation_data <- R_models %>% filter(model == "GBLUP") %>% distinct(model)
 ggplot(R_models, aes(x = MAF, y = corr_iter)) +
-  geom_boxplot(alpha = 0.7, aes(fill = model), outlier.shape = NA) + 
+  geom_boxplot(alpha = 1, aes(fill = model), outlier.shape = NA) + 
   scale_fill_manual(values = model_color_palette) +
   geom_jitter(color = "black", alpha = 0.7, size = 0.5) +
   geom_signif(
