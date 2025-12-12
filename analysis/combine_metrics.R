@@ -151,40 +151,39 @@ MAF01F2 <- MAF01F2 %>%
 
 ###############################################################################
 
-### TBA MAF005 All
-# 
-# MLmaf005all <- "X"
-# Rmaf005all <- "Y"
-# MLmaf005all <- read.csv(MLmaf005all) 
-# Rmaf005all <- read.csv(Rmaf005all)
-# names(Rmaf005all) <- tolower(names(Rmaf005all))
-# names(MLmaf005all) <- tolower(names(MLmaf005all))
-# MLmaf005all <- MLmaf005all %>%
-#   rename(correlation = pearsonr)
-# Rmaf005all <- Rmaf005all %>%
-#   mutate(model=dplyr::recode(model, "BL" = "LASSO"))
-# 
-# MLmaf005all <- MLmaf005all %>%
-#   group_by(model) %>%
-#   mutate(iteration = rep(1:10, each = 5, length.out = n())) %>%
-#   ungroup()
-# 
-# MAF005ALL <- rbind(MLmaf005all, Rmaf005all)
-# 
-# MAF005ALL <- MAF005ALL %>%
-#   group_by(model, iteration) %>%
-#   summarise(
-#     auc_iter = mean(auc, na.rm = TRUE),
-#     corr_iter = mean(correlation, na.rm = TRUE),
-#     .groups = "drop"
-#   )
-# MAF005ALL$MAF <- 0.005
-# MAF005ALL$gen <- "all"
-# MAF005ALL <- MAF005ALL %>%
-#   select(-auc_iter)
+## TBA MAF005 All
+
+MLmaf005all <- "/work/tfs3/gsAI/MLmodels/gebvs/MAF0.005AllOld_fold_metrics.csv"
+Rmaf005all <- "/work/tfs3/gsAI/Rmodels/gebvs/Dec11_CrossValFoldMetrics_allMAF005QC.csv"
+MLmaf005all <- read.csv(MLmaf005all)
+Rmaf005all <- read.csv(Rmaf005all)
+names(Rmaf005all) <- tolower(names(Rmaf005all))
+names(MLmaf005all) <- tolower(names(MLmaf005all))
+MLmaf005all <- MLmaf005all %>%
+  rename(correlation = pearsonr)
+Rmaf005all <- Rmaf005all %>%
+  mutate(model=dplyr::recode(model, "BL" = "LASSO"))
+
+MLmaf005all <- MLmaf005all %>%
+  group_by(model) %>%
+  mutate(iteration = rep(1:10, each = 5, length.out = n())) %>%
+  ungroup()
+
+MAF005ALL <- rbind(MLmaf005all, Rmaf005all)
+
+MAF005ALL <- MAF005ALL %>%
+  group_by(model, iteration) %>%
+  summarise(
+    auc_iter = mean(auc, na.rm = TRUE),
+    corr_iter = mean(correlation, na.rm = TRUE),
+    .groups = "drop"
+  )
+MAF005ALL$MAF <- 0.005
+MAF005ALL$gen <- "all"
+MAF005ALL <- MAF005ALL %>%
+  select(-auc_iter)
 
 ###############################################################################
-### TBA MAF005 All
 
 MLmaf005f2 <- "/work/tfs3/gsAI/MLmodels/gebvs/MAF0.005F2Old_fold_metrics.csv"
 Rmaf005f2 <- "/work/tfs3/gsAI/Rmodels/gebvs/Nov29_CrossValFoldMetrics_F2MAF005QC.csv"

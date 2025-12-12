@@ -26,15 +26,14 @@ setwd("/work/tfs3/gsAI/")
 # load("/work/tfs3/gsAI/4paul/gebvs/Oct01_CV_noQCAllGens.RData")
 # these correlations are for run done on 10/1. w/o QC, all gens.
 
-ml_models_path <- "/work/tfs3/gsAI/MLmodels/gebvs/MAF0.05AllExtra_GEBVs_10foldCV.csv"
-r_models_path <- "/work/tfs3/gsAI/Rmodels/gebvs/Dec06_CrossValDarpaGebv_allMAF01QC.xlsx"
+ml_models_path <- "/work/tfs3/gsAI/MLmodels/gebvs/MAF0.05AllOld_GEBVs_10foldCV.csv"
+r_models_path <- "/work/tfs3/gsAI/Rmodels/gebvs/Nov30_CrossValDarpaGebv_allMAF05QC.xlsx"
 
-ml_metrics_path <- "/work/tfs3/gsAI/MLmodels/gebvs/MAF0.05AllExtra_fold_metrics.csv"
-r_metrics_path <- "/work/tfs3/gsAI/Rmodels/gebvs/Dec06_CrossValFoldMetrics_allMAF01QC.csv"
+ml_metrics_path <- "/work/tfs3/gsAI/MLmodels/gebvs/MAF0.05AllOld_fold_metrics.csv"
+r_metrics_path <- "/work/tfs3/gsAI/Rmodels/gebvs/Nov30_CrossValFoldMetrics_allMAF05QC.csv"
 
 DARPAGEBV <- read.csv(ml_models_path) 
 DARPAGEBV2 <- read_xlsx(r_models_path)
-# DARPAGEBV2 <- read.csv(r_models_path)
 DARPAGEBV2 <- DARPAGEBV2 %>%
   rename_with(~ str_remove(., "_Mean$"), ends_with("_Mean"))
 df <- merge(DARPAGEBV, DARPAGEBV2)
@@ -316,10 +315,8 @@ ggplot(df_long, aes(x = Value, y = Model, fill = Model)) +
 ```
 
 ```{r}
-gebv_cols <- c("GBLUP", "EGBLUP", "BRR", "BayesB",
-               "LASSO", "RKHS", "LR", "RF", "GB")
-
-
+gebv_cols <- c("BayesB", "BRR", "EGBLUP", "GBLUP",
+               "LASSO", "RKHS", "GB", "LR", "RF")
 df_long <- df %>%
   dplyr::select(gebv_cols, "Status") %>% # Include 'Status'
   tidyr::pivot_longer(cols = all_of(gebv_cols), 
@@ -329,6 +326,12 @@ df_long <- df %>%
     Value = as.numeric(Value),
     Status_Label = factor(Status, levels = c(0, 1), labels = c("Dead", "Alive"))
   )
+priority_models <- c("GB", "LR", "RF")
+all_models <- unique(as.character(df_long$Model))
+other_models <- setdiff(all_models, priority_models)
+new_model_order <- c(priority_models, other_models)
+df_long$Model <- factor(df_long$Model, levels = new_model_order)
+
 
 p_overlay_status <- ggplot(df_long, aes(x = Value, y = Model, fill = Status_Label)) +
   geom_density_ridges() +
@@ -340,10 +343,9 @@ p_overlay_status <- ggplot(df_long, aes(x = Value, y = Model, fill = Status_Labe
        y = "Model",
        fill = "Status") +
   theme(panel.grid.major = element_blank())+
-  scale_x_continuous(breaks = c(0,0.25,0.5,0.75,1), limits = c(0, 1))+
-  # geom_vline(xintercept = 0.5, linetype = "dashed", color = "black") +
-  geom_vline(xintercept = 0.5328808, linetype = "dashed", color = "red", alpha = 0.8)
-
+  # geom_vline(xintercept = 0.5, linetype = "dashed", color = "black")+
+  geom_vline(xintercept = 0.5328808, linetype = "dashed", color = "red", alpha = 0.8)+
+  scale_x_continuous(breaks = c(0,0.25,0.5,0.75,1), limits = c(0, 1))
 print(p_overlay_status)
 
 

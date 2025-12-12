@@ -19,8 +19,12 @@ library(FSA)
 library(ggsignif)
 library(ggthemes)
 library(multcompView)
+library(rcompanion)
 
 df <- read.csv("/work/tfs3/gsAI/data/combined_fold_metrics.csv")
+df <- df %>%
+  mutate(model = dplyr::recode(model,
+                        "BB" = "BayesB"))
 df$MAF <- factor(df$MAF, levels = unique(sort(df$MAF)))
 model_names <- c("GB", "LR", "RF", "BayesB", "BRR", "EGBLUP","GBLUP", 
                  "LASSO","RKHS")
@@ -37,19 +41,22 @@ df$model <- factor(df$model, levels = new_model_order)
 
 
 ################################################################################
+new_labels <- c("0.005" = "MAF 0.005", "0.05" = "MAF 0.05", "0.01" = "MAF 0.01")
 
 ##### plot boxplot all generations faceted by MAF
 my_plot<-ggplot(df[df$gen == 'all', ], aes(x = model, y = corr_iter, fill = model)) +
     geom_boxplot() +
-    facet_wrap(~ MAF,ncol=1,scales = "free_y") + 
+    facet_wrap(~ MAF,ncol=3,scales = "free_y",labeller = as_labeller(new_labels)) + 
     scale_fill_manual(values = model_color_palette) +
-    geom_jitter(color = "black", alpha = 0.3, size = 1) +
+    geom_jitter(color = "black", alpha = 0.8, size = 1) +
     labs(x = "Correlation", y = "Model", fill="Model") +
     theme_classic(base_size = 12) +
+    theme(strip.text = element_text(size = 12)) + 
     # theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
     theme(panel.grid.major.x = element_blank()) +
-    theme(legend.position = "none") 
-ggsave("/work/tfs3/gsAI/analysis/misc/boxplot.png", my_plot, width = 6, height = 8, units = "in")
+    theme(legend.position = "none") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt")))  # Adjusted vjust, hjust, and added negative bottom margin to pull labels closer to the axis.
+ggsave("/work/tfs3/gsAI/analysis/misc/boxplot.png", my_plot, width = 10, height = 8, units = "in")
 
 ###### point plot all generations faceted by MAF 
 summary_by_model <- df %>%
@@ -61,7 +68,6 @@ summary_by_model <- df %>%
     n_iters       = n(),
     .groups = "drop"
   )
-new_labels <- c("0.005" = "MAF 0.005", "0.05" = "MAF 0.05", "0.01" = "MAF 0.01")
 
 my_plot2<-ggplot(summary_by_model[summary_by_model$gen == 'all', ], aes(x = model, y = mean_of_iters, color = model)) +
   geom_point(size = 5) +
@@ -74,7 +80,7 @@ my_plot2<-ggplot(summary_by_model[summary_by_model$gen == 'all', ], aes(x = mode
   labs(y = "Correlation",color="Model") +
   theme(strip.text = element_text(size = 12)) + 
   theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
-ggsave("/work/tfs3/gsAI/analysis/misc/point.png", my_plot2, width = 8, height = 5, units = "in")
+ggsave("/work/tfs3/gsAI/analysis/misc/point.svg", my_plot2, width = 8, height = 5, units = "in")
 
 my_plot3<-ggplot(summary_by_model[summary_by_model$gen == 'all', ], aes(x = model, y = mean_of_iters, color = model)) +
   geom_point(size = 5) +
@@ -87,7 +93,7 @@ my_plot3<-ggplot(summary_by_model[summary_by_model$gen == 'all', ], aes(x = mode
   theme(strip.text = element_text(size = 12)) + 
   labs(y = "Correlation",color="Model") +
   theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
-ggsave("/work/tfs3/gsAI/analysis/misc/point2.png", my_plot3, width = 8, height = 5, units = "in")
+ggsave("/work/tfs3/gsAI/analysis/misc/point2.svg", my_plot3, width = 8, height = 5, units = "in")
 
 ###### point plot all generations MAF0.01
 MAF01df <- summary_by_model[summary_by_model$gen == 'all' & summary_by_model$MAF == 0.01,]
@@ -222,35 +228,271 @@ ggplot(R_models, aes(x = MAF, y = corr_iter)) +
   theme(legend.position = "none") + 
   facet_wrap(~model,scale="free")
 
-
 ################################################################################
-MAF01df <- df[df$MAF == '0.01', ]
-MAF005df <- df[df$MAF == '0.005', ]
-MAF05df <- df[df$MAF == '0.05', ]
+################################################################################
+
+MAF01df <- df[df$gen == 'all' & df$MAF == '0.01', ]
+MAF005df <- df[df$gen == 'all' & df$MAF == '0.005',]
+MAF05df <- df[df$gen == 'all' & df$MAF == '0.05', ]
 
 kruskal <- kruskal.test(corr_iter ~ model, data = MAF005df)
 dunn_res <- dunnTest(corr_iter ~ model, data = MAF005df, method="bh")
 dunn_table <- dunn_res$res
 dunn_table <- dunn_table %>%
   dplyr::mutate(across(where(is.numeric), ~ round(., 4)))
-nonsig <- dunn_table %>%
-  dplyr::filter(P.adj > 0.05)
-print(nonsig)
+model_order_index <- setNames(seq_along(new_model_order), new_model_order)
+dunn_table_ordered <- dunn_table %>%
+  tidyr::separate(Comparison, into = c("Model1", "Model2"), sep = " - ", remove = FALSE) %>%
+    dplyr::mutate(
+    Model1_Rank = model_order_index[Model1],
+    Model2_Rank = model_order_index[Model2]
+  ) %>%
+  dplyr::arrange(
+    Model1_Rank,
+    Model2_Rank
+  ) %>% dplyr::select(-Model1, -Model2, -Model1_Rank, -Model2_Rank)
+CLD1 = cldList(P.adj ~ Comparison, data=dunn_table_ordered)
+CLD1
 
 kruskal <- kruskal.test(corr_iter ~ model, data = MAF01df)
 dunn_res <- dunnTest(corr_iter ~ model, data = MAF01df, method="bh")
 dunn_table <- dunn_res$res
 dunn_table <- dunn_table %>%
   dplyr::mutate(across(where(is.numeric), ~ round(., 4)))
-nonsig <- dunn_table %>%
-  dplyr::filter(P.adj > 0.05)
-print(nonsig)
+dunn_table_ordered <- dunn_table %>%
+  tidyr::separate(Comparison, into = c("Model1", "Model2"), sep = " - ", remove = FALSE) %>%
+  dplyr::mutate(
+    Model1_Rank = model_order_index[Model1],
+    Model2_Rank = model_order_index[Model2]
+  ) %>%
+  dplyr::arrange(
+    Model1_Rank,
+    Model2_Rank
+  ) %>% dplyr::select(-Model1, -Model2, -Model1_Rank, -Model2_Rank)
+CLD2 = cldList(P.adj ~ Comparison, data=dunn_table_ordered)
+CLD2
 
 kruskal <- kruskal.test(corr_iter ~ model, data = MAF05df)
 dunn_res <- dunnTest(corr_iter ~ model, data = MAF05df, method="bh")
 dunn_table <- dunn_res$res
 dunn_table <- dunn_table %>%
   dplyr::mutate(across(where(is.numeric), ~ round(., 4)))
-nonsig <- dunn_table %>%
-  dplyr::filter(P.adj > 0.05)
-print(nonsig)
+dunn_table_ordered <- dunn_table %>%
+  tidyr::separate(Comparison, into = c("Model1", "Model2"), sep = " - ", remove = FALSE) %>%
+  dplyr::mutate(
+    Model1_Rank = model_order_index[Model1],
+    Model2_Rank = model_order_index[Model2]
+  ) %>%
+  dplyr::arrange(
+    Model1_Rank,
+    Model2_Rank
+  ) %>% dplyr::select(-Model1, -Model2, -Model1_Rank, -Model2_Rank)
+CLD3 = cldList(P.adj ~ Comparison, data=dunn_table_ordered)
+CLD3
+
+################################
+CLD_list <- list(
+  list(cld_result = CLD1, MAF = '0.005'),
+  list(cld_result = CLD2, MAF = '0.01'),
+  list(cld_result = CLD3, MAF = '0.05')
+)
+all_CLD_df <- bind_rows(
+  lapply(CLD_list, function(cld_item) {
+    as.data.frame(cld_item$cld_result) %>%
+      dplyr::rename(model = Group) %>%
+      dplyr::mutate(
+        MAF = cld_item$MAF,
+        model = factor(model, levels = new_model_order)
+      )
+  })
+)
+plot_data_with_cld_all <- summary_by_model[summary_by_model$gen == 'all', ] %>%
+  dplyr::left_join(all_CLD_df, by = c("model", "MAF")) %>%
+  dplyr::mutate(
+    CLD_y_pos = mean_of_iters + sd_of_iters + 0.005
+  )
+
+cld_point <- ggplot(
+  summary_by_model[summary_by_model$gen == 'all', ],
+  aes(x = model, y = mean_of_iters, color = model)
+) +
+  geom_point(size = 5) +
+  geom_errorbar(
+    aes(ymin = mean_of_iters - sd_of_iters, ymax = mean_of_iters + sd_of_iters),
+    width = 0.2, color = "black", linewidth = 0.5
+  ) +
+  facet_wrap(~ MAF, scales = "free_y", labeller = as_labeller(new_labels)) +
+  scale_color_manual(values = model_color_palette) +
+  theme_classic() +
+  theme(strip.text = element_text(size = 12)) +
+  labs(y = "Correlation", color = "Model") +
+  theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
+  geom_text(
+    data = plot_data_with_cld_all, 
+    aes(x = model, y = CLD_y_pos, label = Letter, group = MAF),
+    inherit.aes = FALSE,
+    color = "black",
+    size = 4,
+    vjust = 0
+  )
+ggsave("/work/tfs3/gsAI/analysis/misc/point_cld_all_facets.png", cld_point, width = 8, height = 5, units = "in")
+
+cld_point2 <- ggplot(
+  summary_by_model[summary_by_model$gen == 'all', ],
+  aes(x = model, y = mean_of_iters, color = model)
+) +
+  geom_point(size = 5) +
+  geom_errorbar(
+    aes(ymin = mean_of_iters - sd_of_iters, ymax = mean_of_iters + sd_of_iters),
+    width = 0.2, color = "black", linewidth = 0.5
+  ) +
+  facet_wrap(~ MAF, labeller = as_labeller(new_labels)) +
+  scale_color_manual(values = model_color_palette) +
+  theme_classic() +
+  theme(strip.text = element_text(size = 12)) +
+  labs(y = "Correlation", color = "Model") +
+  theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
+    geom_text(
+    data = plot_data_with_cld_all, 
+    aes(x = model, y = CLD_y_pos, label = Letter, group = MAF),
+    inherit.aes = FALSE,
+    color = "black",
+    size = 4,
+    vjust = 0
+  )
+ggsave("/work/tfs3/gsAI/analysis/misc/point2_cld_all_facets.png", cld_point2, width = 8, height = 5, units = "in")
+
+################################################################################
+################################################################################
+
+MAF01df <- df[df$gen == 'F2' & df$MAF == '0.01', ]
+MAF005df <- df[df$gen == 'F2' & df$MAF == '0.005',]
+MAF05df <- df[df$gen == 'F2' & df$MAF == '0.05', ]
+
+kruskal <- kruskal.test(corr_iter ~ model, data = MAF005df)
+dunn_res <- dunnTest(corr_iter ~ model, data = MAF005df, method="bh")
+dunn_table <- dunn_res$res
+dunn_table <- dunn_table %>%
+  dplyr::mutate(across(where(is.numeric), ~ round(., 4)))
+model_order_index <- setNames(seq_along(new_model_order), new_model_order)
+dunn_table_ordered <- dunn_table %>%
+  tidyr::separate(Comparison, into = c("Model1", "Model2"), sep = " - ", remove = FALSE) %>%
+  dplyr::mutate(
+    Model1_Rank = model_order_index[Model1],
+    Model2_Rank = model_order_index[Model2]
+  ) %>%
+  dplyr::arrange(
+    Model1_Rank,
+    Model2_Rank
+  ) %>% dplyr::select(-Model1, -Model2, -Model1_Rank, -Model2_Rank)
+CLD1 = cldList(P.adj ~ Comparison, data=dunn_table_ordered)
+CLD1
+
+kruskal <- kruskal.test(corr_iter ~ model, data = MAF01df)
+dunn_res <- dunnTest(corr_iter ~ model, data = MAF01df, method="bh")
+dunn_table <- dunn_res$res
+dunn_table <- dunn_table %>%
+  dplyr::mutate(across(where(is.numeric), ~ round(., 4)))
+dunn_table_ordered <- dunn_table %>%
+  tidyr::separate(Comparison, into = c("Model1", "Model2"), sep = " - ", remove = FALSE) %>%
+  dplyr::mutate(
+    Model1_Rank = model_order_index[Model1],
+    Model2_Rank = model_order_index[Model2]
+  ) %>%
+  dplyr::arrange(
+    Model1_Rank,
+    Model2_Rank
+  ) %>% dplyr::select(-Model1, -Model2, -Model1_Rank, -Model2_Rank)
+CLD2 = cldList(P.adj ~ Comparison, data=dunn_table_ordered)
+CLD2
+
+kruskal <- kruskal.test(corr_iter ~ model, data = MAF05df)
+dunn_res <- dunnTest(corr_iter ~ model, data = MAF05df, method="bh")
+dunn_table <- dunn_res$res
+dunn_table <- dunn_table %>%
+  dplyr::mutate(across(where(is.numeric), ~ round(., 4)))
+dunn_table_ordered <- dunn_table %>%
+  tidyr::separate(Comparison, into = c("Model1", "Model2"), sep = " - ", remove = FALSE) %>%
+  dplyr::mutate(
+    Model1_Rank = model_order_index[Model1],
+    Model2_Rank = model_order_index[Model2]
+  ) %>%
+  dplyr::arrange(
+    Model1_Rank,
+    Model2_Rank
+  ) %>% dplyr::select(-Model1, -Model2, -Model1_Rank, -Model2_Rank)
+CLD3 = cldList(P.adj ~ Comparison, data=dunn_table_ordered)
+CLD3
+
+################################
+CLD_list <- list(
+  list(cld_result = CLD1, MAF = '0.005'),
+  list(cld_result = CLD2, MAF = '0.01'),
+  list(cld_result = CLD3, MAF = '0.05')
+)
+all_CLD_df <- bind_rows(
+  lapply(CLD_list, function(cld_item) {
+    as.data.frame(cld_item$cld_result) %>%
+      dplyr::rename(model = Group) %>%
+      dplyr::mutate(
+        MAF = cld_item$MAF,
+        model = factor(model, levels = new_model_order)
+      )
+  })
+)
+plot_data_with_cld_all <- summary_by_model[summary_by_model$gen == 'all', ] %>%
+  dplyr::left_join(all_CLD_df, by = c("model", "MAF")) %>%
+  dplyr::mutate(
+    CLD_y_pos = mean_of_iters + sd_of_iters + 0.005
+  )
+
+cld_point <- ggplot(
+  summary_by_model[summary_by_model$gen == 'all', ],
+  aes(x = model, y = mean_of_iters, color = model)
+) +
+  geom_point(size = 5) +
+  geom_errorbar(
+    aes(ymin = mean_of_iters - sd_of_iters, ymax = mean_of_iters + sd_of_iters),
+    width = 0.2, color = "black", linewidth = 0.5
+  ) +
+  facet_wrap(~ MAF, scales = "free_y", labeller = as_labeller(new_labels)) +
+  scale_color_manual(values = model_color_palette) +
+  theme_classic() +
+  theme(strip.text = element_text(size = 12)) +
+  labs(y = "Correlation", color = "Model") +
+  theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
+  geom_text(
+    data = plot_data_with_cld_all, 
+    aes(x = model, y = CLD_y_pos, label = Letter, group = MAF),
+    inherit.aes = FALSE,
+    color = "black",
+    size = 4,
+    vjust = 0
+  )
+ggsave("/work/tfs3/gsAI/analysis/misc/point_f2_cld_all_facets.png", cld_point, width = 8, height = 5, units = "in")
+
+cld_point2 <- ggplot(
+  summary_by_model[summary_by_model$gen == 'all', ],
+  aes(x = model, y = mean_of_iters, color = model)
+) +
+  geom_point(size = 5) +
+  geom_errorbar(
+    aes(ymin = mean_of_iters - sd_of_iters, ymax = mean_of_iters + sd_of_iters),
+    width = 0.2, color = "black", linewidth = 0.5
+  ) +
+  facet_wrap(~ MAF, labeller = as_labeller(new_labels)) +
+  scale_color_manual(values = model_color_palette) +
+  theme_classic() +
+  theme(strip.text = element_text(size = 12)) +
+  labs(y = "Correlation", color = "Model") +
+  theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
+  geom_text(
+    data = plot_data_with_cld_all, 
+    aes(x = model, y = CLD_y_pos, label = Letter, group = MAF),
+    inherit.aes = FALSE,
+    color = "black",
+    size = 4,
+    vjust = 0
+  )
+ggsave("/work/tfs3/gsAI/analysis/misc/point2_f2_cld_all_facets.png", cld_point2, width = 8, height = 5, units = "in")
+
