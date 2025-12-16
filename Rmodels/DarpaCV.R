@@ -17,9 +17,8 @@ cat("  Genotype file: ", geno_path, "\n")
 cat("  Output prefix: ", output_prefix, "\n")
 cat("  Split fraction:", split_fraction, "\n")
 
-
 cat("==> R script has started and loaded ==>\n")
-.libPaths("/work/tfs3/gsAI/Rmodels/rlib")
+.libPaths("/work/tfs3/gsAI/rlib")
 cat("Library path:\n")
 print(.libPaths())
 
