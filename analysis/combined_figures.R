@@ -117,7 +117,8 @@ maf05bp <- ggplot(df[df$MAF == '0.05', ], aes(x = gen, y = corr_iter)) +
   geom_signif(
     comparisons = list(c("F2", "all")),
     test = "t.test",
-    map_signif_level = c("***"=0.001, "**"=0.01, "*"=0.05),
+    map_signif_level = c("***"=0.001, "**"=0.01, "*"=0.05," "=2),
+    tip_length=0,
     step_increase = 0.3
   ) + 
   labs(x = "Generation", y = "Correlation") +
