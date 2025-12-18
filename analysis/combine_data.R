@@ -5,6 +5,7 @@
 setwd("/work/tfs3/gsAI")
 library(tidyverse)
 library(readxl)
+library(readr)
 library(vegan)
 library(RColorBrewer)
 library(broom)
@@ -219,3 +220,48 @@ MAF005F2 <- MAF005F2 %>%
 
 all_foldmets <- rbind(MAF005F2, MAF005ALL, MAF01F2, MAF01ALL, MAF05F2, MAF05ALL)
 write.csv(all_foldmets, "/work/tfs3/gsAI/data/combined_fold_metrics.csv", row.names = FALSE)
+
+
+###############################################################################
+###############################################################################
+###############################################################################
+
+## combine GEBV data
+
+MLMAF05gebv <- "/work/tfs3/gsAI/MLmodels/gebvs/MAF0.05AllOld_GEBVs_10foldCV.csv"
+RMLMAF05gebv <- "/work/tfs3/gsAI/Rmodels/gebvs/Nov30_CrossValDarpaGebv_allMAF05QC.xlsx"
+DARPAGEBV <- read.csv(MLMAF05gebv) 
+DARPAGEBV2 <- read_xlsx(RMLMAF05gebv)
+DARPAGEBV2 <- DARPAGEBV2 %>%
+  rename_with(~ str_remove(., "_Mean$"), ends_with("_Mean"))
+df <- inner_join(DARPAGEBV, DARPAGEBV2, by = "ID")
+
+MLMAF01gebv <- "/work/tfs3/gsAI/MLmodels/gebvs/MAF0.01AllOld_GEBVs_10foldCV.csv"
+RMLMAF01gebv <- "/work/tfs3/gsAI/Rmodels/gebvs/Dec06_CrossValDarpaGebv_allMAF01QC.xlsx"
+DARPAGEBV01 <- read.csv(MLMAF01gebv) 
+DARPAGEBV01_2 <- read_xlsx(RMLMAF01gebv)
+DARPAGEBV01_2 <- DARPAGEBV01_2 %>%
+  rename_with(~ str_remove(., "_Mean$"), ends_with("_Mean"))
+df2 <- inner_join(DARPAGEBV01, DARPAGEBV01_2, by = "ID")
+df2 <- df2 %>%
+  dplyr::rename(Status = Status.x) %>%
+  dplyr::select(-Status.y)
+
+MLMAF005gebv <- "/work/tfs3/gsAI/MLmodels/gebvs/MAF0.005AllOld_GEBVs_10foldCV.csv"
+RMLMAF005gebv <- "/work/tfs3/gsAI/Rmodels/gebvs/Dec11_CrossValDarpaGebv_allMAF005QC.xlsx"
+DARPAGEBV005 <- read.csv(MLMAF005gebv) 
+DARPAGEBV005_2 <- read_xlsx(RMLMAF005gebv)
+DARPAGEBV005_2 <- DARPAGEBV005_2 %>%
+  rename_with(~ str_remove(., "_Mean$"), ends_with("_Mean"))
+df3 <- inner_join(DARPAGEBV005, DARPAGEBV005_2,by = "ID")
+df3 <- df3 %>%
+  dplyr::rename(Status = Status.x) %>%
+  dplyr::select(-Status.y)
+
+df$MAF <- 0.05
+df2$MAF <- 0.01
+df3$MAF <- 0.005
+combined_df <- rbind(df, df2, df3)
+write.csv(combined_df, file = "/work/tfs3/gsAI/data/combined_gebvs.csv", row.names = FALSE)
+
+gebvdf<-read.csv("/work/tfs3/gsAI/data/combined_gebvs.csv")
