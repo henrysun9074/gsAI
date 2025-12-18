@@ -21,6 +21,7 @@ library(ggsignif)
 library(ggthemes)
 library(multcompView)
 library(rcompanion)
+library(ggsci)
 
 df <- read.csv("/work/tfs3/gsAI/data/combined_fold_metrics.csv")
 df <- df %>%
