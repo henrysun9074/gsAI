@@ -515,3 +515,5 @@ df_f2 <- df[df$gen == 'F2',]
 cohens_d_F2 <- df_f2 %>%
   group_by(MAF) %>%
   cohens_d(corr_iter ~ model)
+
+## saved effect sizes - GB has large effect in all pairwise comparisons
