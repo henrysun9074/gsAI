@@ -1,0 +1,22 @@
+# git rm -r --cached for removing files which are already committed
+*.sh
+*.csv
+*.dat
+/misc
+/data/
+/analysis/misc
+/rlib
+/Rmodels/rlib
+/Rmodels/logs
+/Rmodels/old
+/Rmodels/raw
+/MLmodels/models
+/MLmodels/misc
+/MLmodels/gebvs
+*.RData
+*.rdscd 
+*.joblib
+*.pth
+*.err
+*.out
+core.*
