@@ -18,6 +18,14 @@ library(ggthemes)
 library(multcompView)
 library(rcompanion)
 library(ggsci)
+library(cowplot)
+library(corrplot)
+library(rstatix)
+library(tidyplots)
+library(ggrepel)
+library(ggstats)
+library(ggalign)
+library(ggridges)
 
 df <- read.csv("/work/tfs3/gsAI/data/combined_gebvs.csv")
 df$MAF <- factor(df$MAF, levels = unique(sort(df$MAF)))
@@ -40,6 +48,7 @@ MAF01df <- df[df$MAF == 0.01,]
 MAF005df <- df[df$MAF == 0.005,]
 
 ################################################################################
+## correlation
 
 ## select MAF
 Pairwise <- MAF01df[, c("GBLUP", "LASSO", "RKHS", 
@@ -151,12 +160,12 @@ ggpar(p_overlay_status,
 ################################################################################
 
 ggplot(MAF01df_long, aes(x = Model, y = Value, fill = Model)) +
-  geom_boxplot() +
+  geom_violin() +
   scale_fill_manual(values = model_color_palette) +
   labs(x = "Model", y = "Breeding Value", fill="Model") +
-  geom_jitter(aes(color = Model, 
-                  shape = as.factor(Status_Label)), 
-              width = 0.2, size = 2, alpha = 0.7) + 
+  # geom_jitter(aes(color = Model, 
+  #                 shape = as.factor(Status_Label)), 
+  #             width = 0.2, size = 2, alpha = 0.7) + 
   scale_color_manual(values = model_color_palette) +
   theme_classic(base_size = 12) +
   theme(strip.text = element_text(size = 12)) + 

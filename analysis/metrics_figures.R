@@ -23,7 +23,12 @@ library(multcompView)
 library(rcompanion)
 library(ggsci)
 library(lsr)
+library(cowplot)
 library(rstatix)
+library(tidyplots)
+library(ggrepel)
+library(ggstats)
+library(ggalign)
 
 df <- read.csv("/work/tfs3/gsAI/data/combined_fold_metrics.csv")
 df <- df %>%
@@ -53,7 +58,7 @@ my_plot<-ggplot(df[df$gen == 'all', ], aes(x = model, y = corr_iter, fill = mode
     facet_wrap(~ MAF,ncol=3,scales = "free_y",labeller = as_labeller(new_labels)) + 
     scale_fill_manual(values = model_color_palette) +
     geom_jitter(color = "black", alpha = 0.8, size = 1) +
-    labs(x = "Correlation", y = "Model", fill="Model") +
+    labs(x = "Model", y = "Correlation", fill="Model") +
     theme_classic(base_size = 12) +
     theme(strip.text = element_text(size = 12)) + 
     # theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
@@ -72,45 +77,6 @@ summary_by_model <- df %>%
     n_iters       = n(),
     .groups = "drop"
   )
-
-my_plot2<-ggplot(summary_by_model[summary_by_model$gen == 'all', ], aes(x = model, y = mean_of_iters, color = model)) +
-  geom_point(size = 5) +
-  geom_errorbar(aes(ymin = mean_of_iters - sd_of_iters, ymax = mean_of_iters + sd_of_iters),
-                width = 0.2, color="black",linewidth = 0.5) +
-  facet_wrap(~ MAF, scales = "free_y", labeller = as_labeller(new_labels)) +
-  scale_color_manual(values = model_color_palette) +
-  theme_classic() +
-  theme(axis.text.x = element_blank()) +
-  labs(y = "Correlation",color="Model") +
-  theme(strip.text = element_text(size = 12)) + 
-  theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
-ggsave("/work/tfs3/gsAI/analysis/misc/point.svg", my_plot2, width = 8, height = 5, units = "in")
-
-my_plot3<-ggplot(summary_by_model[summary_by_model$gen == 'all', ], aes(x = model, y = mean_of_iters, color = model)) +
-  geom_point(size = 5) +
-  geom_errorbar(aes(ymin = mean_of_iters - sd_of_iters, ymax = mean_of_iters + sd_of_iters),
-                width = 0.2, color="black",linewidth = 0.5) +
-  facet_wrap(~ MAF, labeller = as_labeller(new_labels)) +
-  scale_color_manual(values = model_color_palette) +
-  theme_classic() +
-  theme(axis.text.x = element_blank()) +
-  theme(strip.text = element_text(size = 12)) + 
-  labs(y = "Correlation",color="Model") +
-  theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
-ggsave("/work/tfs3/gsAI/analysis/misc/point2.svg", my_plot3, width = 8, height = 5, units = "in")
-
-###### point plot all generations MAF0.01
-MAF01df <- summary_by_model[summary_by_model$gen == 'all' & summary_by_model$MAF == 0.01,]
-ggplot(MAF01df, aes(x = model, y = mean_of_iters, color = model)) +
-  geom_point(size = 5) +
-  geom_errorbar(aes(ymin = mean_of_iters - sd_of_iters, ymax = mean_of_iters + sd_of_iters),
-                width = 0.2, color="black", linewidth = 0.5) +
-  scale_color_manual(values = model_color_palette) +
-  theme_classic() +
-  theme(axis.text.x = element_blank()) +
-  labs(y = "Correlation",color="Model") +
-  theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
-
 
 ##### plot all MAF facet by generation
 maf05bp <- ggplot(df[df$MAF == '0.05', ], aes(x = gen, y = corr_iter)) +
@@ -170,7 +136,7 @@ ggsave("/work/tfs3/gsAI/analysis/misc/MAF005boxplot.png", maf005bp, width = 7, h
 ML_models <- c("GB", "LR", "RF")
 ML_df <- df[df$gen == 'all' & df$model %in% ML_models, ]
 annotation_data <- ML_df %>% filter(model == "RF") %>% distinct(model)
-ggplot(ML_df, aes(x = MAF, y = corr_iter)) +
+ML_all_bp <- ggplot(ML_df, aes(x = MAF, y = corr_iter)) +
   geom_boxplot(alpha = 1, aes(fill = model), outlier.shape = NA) + 
   scale_fill_manual(values = model_color_palette) +
   geom_jitter(color = "black", alpha = 0.7, size = 2) +
@@ -198,12 +164,13 @@ ggplot(ML_df, aes(x = MAF, y = corr_iter)) +
   theme(strip.text = element_text(size = 12)) +
   theme(legend.position = "none") + 
   facet_wrap(~model,scale="free")
+ML_all_bp
 
 ##### plot all R models facet by MAF
 R_models <- c("GBLUP", "LASSO", "EGBLUP", "BayesB", "BRR", "RKHS")
 R_models <- df[df$gen == 'all' & df$model %in% R_models, ]
 annotation_data <- R_models %>% filter(model == "GBLUP") %>% distinct(model)
-ggplot(R_models, aes(x = MAF, y = corr_iter)) +
+R_all_bp <- ggplot(R_models, aes(x = MAF, y = corr_iter)) +
   geom_boxplot(alpha = 1, aes(fill = model), outlier.shape = NA) + 
   scale_fill_manual(values = model_color_palette) +
   geom_jitter(color = "black", alpha = 0.7, size = 0.5) +
@@ -232,6 +199,7 @@ ggplot(R_models, aes(x = MAF, y = corr_iter)) +
   theme(strip.text = element_text(size = 10)) +
   theme(legend.position = "none") + 
   facet_wrap(~model,scale="free")
+R_all_bp
 
 ################################################################################
 ################################################################################
@@ -295,7 +263,6 @@ dunn_table_ordered <- dunn_table %>%
 CLD3 = cldList(P.adj ~ Comparison, data=dunn_table_ordered)
 CLD3
 
-################################
 CLD_list <- list(
   list(cld_result = CLD1, MAF = '0.005'),
   list(cld_result = CLD2, MAF = '0.01'),
@@ -317,6 +284,7 @@ plot_data_with_cld_all <- summary_by_model[summary_by_model$gen == 'all', ] %>%
     CLD_y_pos = mean_of_iters + sd_of_iters + 0.005
   )
 
+################################
 cld_point <- ggplot(
   summary_by_model[summary_by_model$gen == 'all', ],
   aes(x = model, y = mean_of_iters, color = model)
@@ -339,7 +307,10 @@ cld_point <- ggplot(
     color = "black",
     size = 4,
     vjust = 0
-  )
+  ) 
+cld_point <- ggdraw(cld_point) +
+  draw_label("KW p < 0.001", x = 0.9, y = 0.05, hjust = 0.5, vjust = 0) +
+  theme_cowplot()
 ggsave("/work/tfs3/gsAI/analysis/misc/point_cld_all_facets.png", cld_point, width = 8, height = 5, units = "in")
 
 cld_point2 <- ggplot(
@@ -365,7 +336,15 @@ cld_point2 <- ggplot(
     size = 4,
     vjust = 0
   )
+cld_point2 <- ggdraw(cld_point2) +
+  draw_label("KW p < 0.001", x = 0.9, y = 0.05, hjust = 0.5, vjust = 0) +
+  theme_cowplot()
 ggsave("/work/tfs3/gsAI/analysis/misc/point2_cld_all_facets.png", cld_point2, width = 8, height = 5, units = "in")
+
+##grid
+test <- align_plots(cld_point,cld_point2,nrow = 2)
+ggsave("/work/tfs3/gsAI/analysis/misc/test.png", test, width = 12, height = 8, units = "in")
+
 
 ################################################################################
 ################################################################################
