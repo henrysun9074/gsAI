@@ -52,7 +52,7 @@ MAF005df <- df[df$MAF == 0.005,]
 ## correlation plots
 
 ## select MAF
-Pairwise <- MAF01df[, c("GBLUP", "LASSO", "RKHS", 
+Pairwise <- MAF005df[, c("GBLUP", "LASSO", "RKHS", 
                    "EGBLUP", "BRR", "BayesB",
                    "LR", "RF", "GB")]
 
@@ -95,7 +95,7 @@ custom_scatter <- function(data, mapping, ...) {
   x_val <- eval_data_col(data, mapping$x)
   y_val <- eval_data_col(data, mapping$y)
   correlation_rho <- round(cor(x_val, y_val, use = "complete.obs"), 3)
-  rho_label <- paste0("rho==",correlation_rho)
+  rho_label <- paste0("rho*paste(' =',", correlation_rho, ")")
   ggplot(data = data, mapping = mapping) +
     geom_point(alpha = 0.4, size = 0.6, color = "midnightblue") +
     geom_smooth(method = "lm", se = FALSE, color = "firebrick", linewidth = 0.5) +
@@ -103,7 +103,7 @@ custom_scatter <- function(data, mapping, ...) {
     scale_y_continuous(limits = c(lim_min, lim_max), breaks = seq(0, 1, 0.25)) +
     annotate("text", x = lim_min, y = lim_max, 
              label = rho_label, parse = TRUE,
-             hjust = -0.1, vjust = 1.5, size = 4) +
+             hjust = -0.1, vjust = 1.5, size = 3.5) +
     theme_classic() +
     theme(
       panel.grid = element_blank(),
@@ -124,9 +124,9 @@ p <- ggpairs(
     strip.background = element_blank(),
     strip.text = element_blank(),
     panel.spacing = unit(0.2, "lines"), 
-    axis.title.x = element_text(size = 14, face = "bold", margin = margin(t = 5))
+    axis.title.x = element_text(size = 16, face = "bold", margin = margin(t = 5))
   )
-ggsave("/work/tfs3/gsAI/analysis/misc/splom.png", p, width = 12, height = 10, units = "in")
+ggsave("/work/tfs3/gsAI/analysis/misc/splom_maf005.png", p, width = 15, height = 10, units = "in")
 
 
 ################################################################################
@@ -165,7 +165,7 @@ MAF05df_long$Model <- factor(MAF05df_long$Model, levels = new_model_order)
 MAF01df_long$Model <- factor(MAF01df_long$Model, levels = new_model_order)
 MAF005df_long$Model <- factor(MAF005df_long$Model, levels = new_model_order)
 
-p_overlay_status <- ggplot(MAF05df_long, aes(x = Value, y = Model, fill = Status_Label)) +
+MAF05_p_overlay_status <- ggplot(MAF05df_long, aes(x = Value, y = Model, fill = Status_Label)) +
   geom_density_ridges(alpha=0.7) +
   theme_ridges() + 
   scale_fill_viridis(discrete = TRUE, alpha=0.8) +
@@ -178,10 +178,10 @@ p_overlay_status <- ggplot(MAF05df_long, aes(x = Value, y = Model, fill = Status
   # geom_vline(xintercept = 0.5, linetype = "dashed", color = "black")+
   geom_vline(xintercept = 0.5328808, linetype = "dashed", color = "red", alpha = 0.8) +
   scale_x_continuous(breaks = c(0,0.25,0.5,0.75,1), limits = c(0, 1))
-ggpar(p_overlay_status,
+ggpar(MAF05_p_overlay_status,
       palette = "startrek")
 
-p_overlay_status <- ggplot(MAF01df_long, aes(x = Value, y = Model, fill = Status_Label)) +
+MAF01_p_overlay_status <- ggplot(MAF01df_long, aes(x = Value, y = Model, fill = Status_Label)) +
   geom_density_ridges(alpha=0.7) +
   theme_ridges() + 
   theme(legend.position = "top") +
@@ -193,10 +193,10 @@ p_overlay_status <- ggplot(MAF01df_long, aes(x = Value, y = Model, fill = Status
   # geom_vline(xintercept = 0.5, linetype = "dashed", color = "black")+
   geom_vline(xintercept = 0.5328808, linetype = "dashed", color = "red", alpha = 0.8) +
   scale_x_continuous(breaks = c(0,0.25,0.5,0.75,1), limits = c(0, 1))
-ggpar(p_overlay_status,
+ggpar(MAF01_p_overlay_status,
       palette = "startrek")
 
-p_overlay_status <- ggplot(MAF005df_long, aes(x = Value, y = Model, fill = Status_Label)) +
+MAF005_p_overlay_status <- ggplot(MAF005df_long, aes(x = Value, y = Model, fill = Status_Label)) +
   geom_density_ridges(alpha=0.7) +
   theme_ridges() + 
   theme(legend.position = "top") +
@@ -208,8 +208,9 @@ p_overlay_status <- ggplot(MAF005df_long, aes(x = Value, y = Model, fill = Statu
   # geom_vline(xintercept = 0.5, linetype = "dashed", color = "black")+
   geom_vline(xintercept = 0.5328808, linetype = "dashed", color = "red", alpha = 0.8) +
   scale_x_continuous(breaks = c(0,0.25,0.5,0.75,1), limits = c(0, 1))
-ggpar(p_overlay_status,
+ggpar(MAF005_p_overlay_status,
       palette = "startrek")
+
 
 ################################################################################
 
