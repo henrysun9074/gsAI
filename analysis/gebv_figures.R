@@ -26,6 +26,7 @@ library(ggrepel)
 library(ggstats)
 library(ggalign)
 library(ggridges)
+library(GGally)
 
 df <- read.csv("/work/tfs3/gsAI/data/combined_gebvs.csv")
 df$MAF <- factor(df$MAF, levels = unique(sort(df$MAF)))
@@ -48,7 +49,7 @@ MAF01df <- df[df$MAF == 0.01,]
 MAF005df <- df[df$MAF == 0.005,]
 
 ################################################################################
-## correlation
+## correlation plots
 
 ## select MAF
 Pairwise <- MAF01df[, c("GBLUP", "LASSO", "RKHS", 
@@ -60,19 +61,72 @@ colnames(Pairwise) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
 cor_matrix <- cor(Pairwise, use = "complete.obs")
 cor_matrix_ordered <- cor_matrix[new_model_order, new_model_order]
 
-# Plot correlation heatmap
-# my_colors <- colorRampPalette(c("#80cdc1", "#dfc27d"))(200)
+# heatmap
+my_colors <- colorRampPalette(c("#80cdc1", "#dfc27d"))(200)
 corrplot(cor_matrix, 
          method = "square", 
          tl.cex = 1,
          tl.col = "black",  
          col.lim = c(0, 1),
          tl.pos = 'l',
-         # addCoef.col = "white",       
+         diag = FALSE,
+         type = 'upper',
+         order = 'hclust',
+         addCoef.col = "white",
          # number.cex = 0.8,
-         mar = c(0, 0, 0, 0)) %>% 
-  corrRect(c(1, 6), col = "green", lwd = 4) %>%  
-  corrRect(c(7, 9), col = "red", lwd = 4)
+         mar = c(0, 0, 0, 0)) 
+  # %>% 
+  # corrRect(c(1, 6), col = "green", lwd = 4) %>%  
+  # corrRect(c(7, 9), col = "red", lwd = 4)
+
+########################### pairwise SPLOM
+
+lim_min <- 0
+lim_max <- 1
+diag_label <- function(data, mapping, ...) {
+  label_text <- rlang::as_label(mapping$x)
+  ggplot() +
+    annotate("text", x = 0.5, y = 0.5, label = label_text, 
+             size = 5, fontface = "bold") +
+    theme_void()
+}
+
+custom_scatter <- function(data, mapping, ...) {
+  x_val <- eval_data_col(data, mapping$x)
+  y_val <- eval_data_col(data, mapping$y)
+  correlation_rho <- round(cor(x_val, y_val, use = "complete.obs"), 3)
+  rho_label <- paste0("rho==",correlation_rho)
+  ggplot(data = data, mapping = mapping) +
+    geom_point(alpha = 0.4, size = 0.6, color = "midnightblue") +
+    geom_smooth(method = "lm", se = FALSE, color = "firebrick", linewidth = 0.5) +
+    scale_x_continuous(limits = c(lim_min, lim_max), breaks = seq(0, 1, 0.25)) +
+    scale_y_continuous(limits = c(lim_min, lim_max), breaks = seq(0, 1, 0.25)) +
+    annotate("text", x = lim_min, y = lim_max, 
+             label = rho_label, parse = TRUE,
+             hjust = -0.1, vjust = 1.5, size = 4) +
+    theme_classic() +
+    theme(
+      panel.grid = element_blank(),
+      axis.text.x = element_text(angle = 45, hjust = 1, size = 7),
+      axis.text.y = element_text(size = 7),
+      panel.border = element_rect(color = "black", fill = NA, linewidth = 0.5)
+    ) 
+}
+p <- ggpairs(
+  Pairwise,
+  columns = 1:ncol(Pairwise),
+  upper = "blank", 
+  diag = list(continuous = diag_label),
+  lower = list(continuous = custom_scatter),
+  xlab = "Breeding Value"
+) +
+  theme(
+    strip.background = element_blank(),
+    strip.text = element_blank(),
+    panel.spacing = unit(0.2, "lines"), 
+    axis.title.x = element_text(size = 14, face = "bold", margin = margin(t = 5))
+  )
+ggsave("/work/tfs3/gsAI/analysis/misc/splom.png", p, width = 12, height = 10, units = "in")
 
 
 ################################################################################
