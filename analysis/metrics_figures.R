@@ -37,7 +37,6 @@ df <- df %>%
 df$MAF <- factor(df$MAF, levels = unique(sort(df$MAF)))
 model_names <- c("GB", "LR", "RF", "BayesB", "BRR", "EGBLUP","GBLUP", 
                  "LASSO","RKHS")
-# hex_codes <- turbo(n = 9, alpha = 0.8)
 hex_codes <-c("#5E81ACFF", "#8FA87AFF", "#BF616AFF", "#E7D202FF", "#7D5329FF", 
               "#F49538FF", "#66CDAAFF", "#D070B9FF", "#98FB98FF", "#FCA3B7FF")
 model_color_palette <- setNames(hex_codes, model_names)
@@ -500,7 +499,7 @@ ggsave("/work/tfs3/gsAI/analysis/misc/point2_cld_all_facets.png", cld_point2, wi
 ################################################################################
 ################################################################################
 
-### same thing as above but for extra MAF
+### point plot with correlations per MAF but for extra alleles
 
 summary_by_model <- extra_df %>%
   pivot_longer(cols = c(corr_iter), names_to = "metric", values_to = "iter_mean") %>%
@@ -656,30 +655,8 @@ ggsave("/work/tfs3/gsAI/analysis/misc/point2_cld_all_facets_extra.png", cld_poin
 ## combined between 
 df$extra <- 0
 combined_df <- rbind(df, extra_df) %>%
-  filter(gen == "all", MAF == 0.05) %>%
+  filter(gen == "all", MAF == 0.05) %>% ### modify MAF here
   mutate(extra = factor(extra, levels = c(0, 1), labels = c("Default", "Extra")))
-# 
-# MAF01_extra_plot <- ggplot(combined_df, aes(x = extra, y = corr_iter)) +
-#   geom_boxplot(aes(fill = model), alpha = 0.8, outlier.shape = NA) + 
-#   geom_jitter(color = "black", alpha = 0.5, size = 0.7, width = 0.2) +
-#   facet_wrap(~model, scales = "free") +
-#   scale_fill_manual(values = model_color_palette) +
-#   scale_y_continuous(expand = expansion(mult = c(0.05, 0.2))) +
-#   labs(
-#     x = "Dataset", 
-#     y = "Correlation"
-#   ) +
-#   theme_pubr(base_size = 12) +
-#   theme(legend.position = "none",
-#         strip.text = element_text(size=12)
-#         ) +
-#   geom_signif(
-#     comparisons = list(c("Default", "Extra")),
-#     test = "t.test",
-#     map_signif_level = c("***"=0.001, "**"=0.01, "*"=0.05, "N.S."=2),
-#     step_increase = 0.1
-#   )
-# ggsave("/work/tfs3/gsAI/analysis/misc/maf01extra.png", MAF01_extra_plot, width = 8, height = 5, units = "in", dpi = 300)
 
 MAF05_extra_plot <- ggplot(combined_df, aes(x = extra, y = corr_iter)) +
   geom_boxplot(aes(fill = model), alpha = 0.8, outlier.shape = NA) + 
@@ -704,10 +681,7 @@ MAF05_extra_plot <- ggplot(combined_df, aes(x = extra, y = corr_iter)) +
 ggsave("/work/tfs3/gsAI/analysis/misc/maf05extra.png", MAF05_extra_plot, width = 8, height = 5, units = "in", dpi = 300)
 
 
-## extra to do 
-## Box plot by MAF for ML models vs R models separately for extra
-
-##### plot all R models facet by MAF
+##### plot all models facet by MAF with extra dataset
 R_models <- c("GBLUP", "LASSO", "EGBLUP", "BayesB", "BRR", "RKHS")
 R_models <- extra_df[extra_df$gen == 'all', ]
 annotation_data <- R_models %>% filter(model == "GBLUP") %>% distinct(model)
@@ -742,9 +716,6 @@ R_all_bp <- ggplot(R_models, aes(x = MAF, y = corr_iter)) +
   facet_wrap(~model,scale="free")
 R_all_bp
 ggsave("/work/tfs3/gsAI/analysis/misc/bpallmafextra.jpg", R_all_bp, width = 9, height = 5, units = "in", dpi = 300)
-
-## SPLOMs at each MAF and density ridgelines for extra -> in gebv figures
-
 
 ################################################################################
 
