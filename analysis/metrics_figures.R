@@ -96,15 +96,14 @@ maf05bp <- ggplot(df[df$MAF == '0.05', ], aes(x = gen, y = corr_iter)) +
   geom_signif(
     comparisons = list(c("F2", "all")),
     test = "t.test",
-    map_signif_level = c("***"=0.001, "**"=0.01, "*"=0.05," "=2),
-    tip_length=0,
+    map_signif_level = c("***"=0.001, "**"=0.01, "*"=0.05),
     step_increase = 0.3
   ) + 
   labs(x = "Generation", y = "Correlation") +
   theme_pubr(base_size = 12) +
   scale_y_continuous(expand = expansion(mult = c(0.05, 0.2))) +
   theme(legend.position = "none") 
-ggsave("/work/tfs3/gsAI/analysis/misc/MAF05boxplot.png", maf05bp, width = 7, height = 5, units = "in")
+ggsave("/work/tfs3/gsAI/analysis/misc/MAF05boxplot.png", maf05bp, width = 9, height = 5, units = "in")
 
 maf01bp <- ggplot(df[df$MAF == '0.01', ], aes(x = gen, y = corr_iter)) +
   geom_boxplot(aes(fill = model),alpha = 1, outlier.shape = NA) + 
@@ -121,7 +120,7 @@ maf01bp <- ggplot(df[df$MAF == '0.01', ], aes(x = gen, y = corr_iter)) +
   theme_pubr(base_size = 12) +
   scale_y_continuous(expand = expansion(mult = c(0.05, 0.2))) +
   theme(legend.position = "none") 
-ggsave("/work/tfs3/gsAI/analysis/misc/MAF01boxplot.png", maf01bp, width = 7, height = 5, units = "in")
+ggsave("/work/tfs3/gsAI/analysis/misc/MAF01boxplot.png", maf01bp, width = 9, height = 5, units = "in")
 
 maf005bp <- ggplot(df[df$MAF == '0.005', ], aes(x = gen, y = corr_iter)) +
   geom_boxplot(aes(fill = model),alpha = 1, outlier.shape = NA) + 
@@ -138,7 +137,7 @@ maf005bp <- ggplot(df[df$MAF == '0.005', ], aes(x = gen, y = corr_iter)) +
   theme_pubr(base_size = 12) +
   scale_y_continuous(expand = expansion(mult = c(0.05, 0.2))) +
   theme(legend.position = "none") 
-ggsave("/work/tfs3/gsAI/analysis/misc/MAF005boxplot.png", maf005bp, width = 7, height = 5, units = "in")
+ggsave("/work/tfs3/gsAI/analysis/misc/MAF005boxplot.png", maf005bp, width = 9, height = 5, units = "in")
 
 
 ##### plot all ML models facet by MAF
@@ -724,16 +723,16 @@ R_all_bp <- ggplot(R_models, aes(x = MAF, y = corr_iter)) +
   ) +
   labs(x = "Minor Allele Frequency", y = "Correlation") +
   theme_pubr(base_size = 12) + 
-  geom_text(
-    data = annotation_data, 
-    inherit.aes = FALSE,
-    x = 0.67, 
-    y = 0.240, 
-    label = "*** = p < 0.001\n** = p < 0.01\n* = p < 0.05\nt-test", 
-    size = 3, 
-    hjust = 0,
-    vjust = 0
-  ) +
+  # geom_text(
+  #   data = annotation_data, 
+  #   inherit.aes = FALSE,
+  #   x = 0.67, 
+  #   y = 0.240, 
+  #   label = "*** = p < 0.001\n** = p < 0.01\n* = p < 0.05\nt-test", 
+  #   size = 3, 
+  #   hjust = 0,
+  #   vjust = 0
+  # ) +
   scale_y_continuous(expand = expansion(mult = c(0.05, 0.2))) +
   theme(axis.text.x = element_text(size = 8)) +
   theme(axis.title.y = element_text(size = 12)) +
@@ -742,7 +741,7 @@ R_all_bp <- ggplot(R_models, aes(x = MAF, y = corr_iter)) +
   theme(legend.position = "none") + 
   facet_wrap(~model,scale="free")
 R_all_bp
-ggsave("/work/tfs3/gsAI/analysis/misc/bpallmafextra.jpg", R_all_bp, width = 8, height = 6, units = "in", dpi = 300)
+ggsave("/work/tfs3/gsAI/analysis/misc/bpallmafextra.jpg", R_all_bp, width = 9, height = 5, units = "in", dpi = 300)
 
 ## SPLOMs at each MAF and density ridgelines for extra -> in gebv figures
 
