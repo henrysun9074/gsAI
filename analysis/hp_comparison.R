@@ -107,6 +107,9 @@ MAF005ALL <- MAF005ALL %>%
 
 df <- rbind(df, MAF01ALL, MAF05ALL, MAF005ALL)
 df$hpt <- factor(df$hpt, levels = unique(sort(df$hpt)))
+df <- df %>%
+  mutate(hpt = factor(hpt, levels = c(0, 1), labels = c("No", "Yes")))
+
 
 maf05bp <- ggplot(df[df$MAF == '0.05', ], aes(x = hpt, y = corr_iter)) +
   geom_boxplot(aes(fill = model),alpha = 1, outlier.shape = NA) + 
@@ -159,6 +162,16 @@ maf005bp <- ggplot(df[df$MAF == '0.005', ], aes(x = hpt, y = corr_iter)) +
   theme(legend.position = "none") 
 maf005bp
 
+combined_hpt <- plot_grid(
+  maf05bp, maf01bp, maf005bp, 
+  ncol = 3, 
+  labels = c("A", "B", "C"),      # Adds the A, B, C identifiers
+  label_size = 14,                # Optional: adjust label font size
+  rel_widths = c(1, 1, 1),        # Forces identical relative widths
+  align = 'h',                    # Aligns plots horizontally by their axes
+  axis = 'bt'                     # Ensures the bottom and top axes line up
+)
+ggsave("/work/tfs3/gsAI/analysis/misc/hpt_influence.jpg", combined_hpt, width = 12, height = 7, dpi = 500)
 
 ################################################################################
 

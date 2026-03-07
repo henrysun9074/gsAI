@@ -28,7 +28,10 @@ library(ggalign)
 library(ggridges)
 library(GGally)
 
+### now using with extra SNPs
+df <- read.csv("/work/tfs3/gsAI/data/combined_gebvs_extra.csv")
 df <- read.csv("/work/tfs3/gsAI/data/combined_gebvs.csv")
+
 df$MAF <- factor(df$MAF, levels = unique(sort(df$MAF)))
 df$Status <- factor(df$Status, levels = unique(sort(df$Status)))
 
@@ -52,7 +55,7 @@ MAF005df <- df[df$MAF == 0.005,]
 ## correlation plots
 
 ## select MAF
-Pairwise <- MAF005df[, c("GBLUP", "LASSO", "RKHS", 
+Pairwise <- MAF05df[, c("GBLUP", "LASSO", "RKHS", 
                    "EGBLUP", "BRR", "BayesB",
                    "LR", "RF", "GB")]
 
@@ -104,7 +107,7 @@ custom_scatter <- function(data, mapping, ...) {
     annotate("text", x = lim_min, y = lim_max, 
              label = rho_label, parse = TRUE,
              hjust = -0.1, vjust = 1.5, size = 3.5) +
-    theme_classic() +
+    theme_pubr() +
     theme(
       panel.grid = element_blank(),
       axis.text.x = element_text(angle = 45, hjust = 1, size = 7),
@@ -112,6 +115,10 @@ custom_scatter <- function(data, mapping, ...) {
       panel.border = element_rect(color = "black", fill = NA, linewidth = 0.5)
     ) 
 }
+
+Pairwise <- MAF005df[, c("GBLUP", "LASSO", "RKHS", 
+                        "EGBLUP", "BRR", "BayesB",
+                        "LR", "RF", "GB")]
 p <- ggpairs(
   Pairwise,
   columns = 1:ncol(Pairwise),
@@ -213,19 +220,3 @@ ggpar(MAF005_p_overlay_status,
 
 
 ################################################################################
-
-ggplot(MAF01df_long, aes(x = Model, y = Value, fill = Model)) +
-  geom_violin() +
-  scale_fill_manual(values = model_color_palette) +
-  labs(x = "Model", y = "Breeding Value", fill="Model") +
-  # geom_jitter(aes(color = Model, 
-  #                 shape = as.factor(Status_Label)), 
-  #             width = 0.2, size = 2, alpha = 0.7) + 
-  scale_color_manual(values = model_color_palette) +
-  theme_classic(base_size = 12) +
-  theme(strip.text = element_text(size = 12)) + 
-  theme(panel.grid.major.x = element_blank()) +
-  theme(legend.position = "none") +
-  theme(axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0.5, l = 0, unit = "pt")))+
-  theme(axis.text.x = element_text(angle = 30, vjust = 0.75, hjust = 1, 
-                                   margin = margin(t = 0, r = 0, b = 0, l = 0, unit = "pt")))

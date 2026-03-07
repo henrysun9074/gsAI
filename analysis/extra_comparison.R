@@ -36,14 +36,6 @@ extra_df$extra <- 1
 
 df <- rbind(df, extra_df)
 
-
-######################## todo 3/6
-
-## Point plot by MAF for extra
-## Box plot by MAF for ML models vs R models separately for extra
-## SPLOMs for extra at each MAF OR density ridgelines for extra
-
-
 ################################################################################
 
 MLmaf01all <- "/work/tfs3/gsAI/MLmodels/gebvs/MAF0.01AllExtra_fold_metrics.csv"
@@ -151,7 +143,5 @@ bp2 <- ggplot(df[df$extra==1,], aes(x = MAF, y = corr_iter)) +
   scale_y_continuous(expand = expansion(mult = c(0.05, 0.2))) +
   theme(legend.position = "none") 
 bp2
-
-
 
 
