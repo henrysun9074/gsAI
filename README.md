@@ -6,7 +6,7 @@
 
 ## 📖 Overview
 
-We test 9 different genomic selection models to predict survival to dermo upon infection in eastern oysters. Scripts here 
+We test 9 different genomic selection models to predict survival to dermo upon infection in eastern oysters. 
 
 ---
 
