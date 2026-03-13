@@ -1,18 +1,20 @@
 # 🧬 Genomic Selection for dermo Resistance in Eastern Oyster (*Crassostrea virginica*)
 
-**Author:** Henry Sun, hs325[at]duke.edu
+**Contact:** Henry Sun, hs325[at]duke.edu
 
 ---
 
 ## 📖 Overview
 
-TBA upon project completion
+We test 9 different genomic selection models to predict survival to dermo upon infection in eastern oysters. Scripts here 
 
 ---
 
 ## 📂 Repository Structure
 
-TBA upon project completion
+*/MLmodels* has code for training, hyperparameter tuning, and cross-validation of 3 different machine learning models.  
+*/Rmodels* has code for training and cross-validation of 6 genomic selection models.  
+*/analysis* has code for generating all visualizations associated with the project. 
 
 ---
 
