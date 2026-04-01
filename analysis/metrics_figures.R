@@ -69,10 +69,9 @@ MAF05df <- df[df$gen == 'F2' & df$MAF == '0.05', ]
 
 ## kruskal and posthoc dunn tests for each MAF
 kruskal <- kruskal.test(corr_iter ~ model, data = MAF005df)
+# Kruskal-Wallis chi-squared = 77.601, df = 8, p-value = 1.484e-13
 dunn_res <- dunnTest(corr_iter ~ model, data = MAF005df, method="none")
 dunn_table <- dunn_res$res
-dunn_table <- dunn_table %>%
-  dplyr::mutate(across(where(is.numeric), ~ round(., 4)))
 model_order_index <- setNames(seq_along(new_model_order), new_model_order)
 dunn_table_ordered <- dunn_table %>%
   tidyr::separate(Comparison, into = c("Model1", "Model2"), sep = " - ", remove = FALSE) %>%
@@ -84,14 +83,15 @@ dunn_table_ordered <- dunn_table %>%
     Model1_Rank,
     Model2_Rank
   ) %>% dplyr::select(-Model1, -Model2, -Model1_Rank, -Model2_Rank)
+F2_dunn_MAF005 <- dunn_table_ordered
+
 CLD1 = cldList(P.adj ~ Comparison, data=dunn_table_ordered)
 CLD1
 
 kruskal <- kruskal.test(corr_iter ~ model, data = MAF01df)
+# Kruskal-Wallis chi-squared = 72.596, df = 8, p-value = 1.492e-12
 dunn_res <- dunnTest(corr_iter ~ model, data = MAF01df, method="none")
 dunn_table <- dunn_res$res
-dunn_table <- dunn_table %>%
-  dplyr::mutate(across(where(is.numeric), ~ round(., 4)))
 dunn_table_ordered <- dunn_table %>%
   tidyr::separate(Comparison, into = c("Model1", "Model2"), sep = " - ", remove = FALSE) %>%
   dplyr::mutate(
@@ -102,14 +102,15 @@ dunn_table_ordered <- dunn_table %>%
     Model1_Rank,
     Model2_Rank
   ) %>% dplyr::select(-Model1, -Model2, -Model1_Rank, -Model2_Rank)
+F2_dunn_MAF01 <- dunn_table_ordered
+
 CLD2 = cldList(P.adj ~ Comparison, data=dunn_table_ordered)
 CLD2
 
 kruskal <- kruskal.test(corr_iter ~ model, data = MAF05df)
+# Kruskal-Wallis chi-squared = 59.59, df = 8, p-value = 5.61e-10
 dunn_res <- dunnTest(corr_iter ~ model, data = MAF05df, method="none")
 dunn_table <- dunn_res$res
-dunn_table <- dunn_table %>%
-  dplyr::mutate(across(where(is.numeric), ~ round(., 4)))
 dunn_table_ordered <- dunn_table %>%
   tidyr::separate(Comparison, into = c("Model1", "Model2"), sep = " - ", remove = FALSE) %>%
   dplyr::mutate(
@@ -120,6 +121,8 @@ dunn_table_ordered <- dunn_table %>%
     Model1_Rank,
     Model2_Rank
   ) %>% dplyr::select(-Model1, -Model2, -Model1_Rank, -Model2_Rank)
+F2_dunn_MAF05 <- dunn_table_ordered
+
 CLD3 = cldList(P.adj ~ Comparison, data=dunn_table_ordered)
 CLD3
 
@@ -413,10 +416,9 @@ MAF05df <- df[df$gen == 'all' & df$MAF == '0.05', ]
 
 ## calculate kruskal-wallis and dunn test results for 'all' generations at each MAF
 kruskal <- kruskal.test(corr_iter ~ model, data = MAF005df)
+# Kruskal-Wallis chi-squared = 82.683, df = 8, p-value = 1.408e-14
 dunn_res <- dunnTest(corr_iter ~ model, data = MAF005df, method="none")
 dunn_table <- dunn_res$res
-dunn_table <- dunn_table %>%
-  dplyr::mutate(across(where(is.numeric), ~ round(., 4)))
 model_order_index <- setNames(seq_along(new_model_order), new_model_order)
 dunn_table_ordered <- dunn_table %>%
   tidyr::separate(Comparison, into = c("Model1", "Model2"), sep = " - ", remove = FALSE) %>%
@@ -428,14 +430,15 @@ dunn_table_ordered <- dunn_table %>%
     Model1_Rank,
     Model2_Rank
   ) %>% dplyr::select(-Model1, -Model2, -Model1_Rank, -Model2_Rank)
+all_dunn_MAF005 <- dunn_table_ordered
+
 CLD1 = cldList(P.adj ~ Comparison, data=dunn_table_ordered)
 CLD1
 
 kruskal <- kruskal.test(corr_iter ~ model, data = MAF01df)
+# Kruskal-Wallis chi-squared = 84.215, df = 8, p-value = 6.904e-15
 dunn_res <- dunnTest(corr_iter ~ model, data = MAF01df, method="none")
 dunn_table <- dunn_res$res
-dunn_table <- dunn_table %>%
-  dplyr::mutate(across(where(is.numeric), ~ round(., 4)))
 dunn_table_ordered <- dunn_table %>%
   tidyr::separate(Comparison, into = c("Model1", "Model2"), sep = " - ", remove = FALSE) %>%
   dplyr::mutate(
@@ -446,14 +449,15 @@ dunn_table_ordered <- dunn_table %>%
     Model1_Rank,
     Model2_Rank
   ) %>% dplyr::select(-Model1, -Model2, -Model1_Rank, -Model2_Rank)
+all_dunn_MAF01 <- dunn_table_ordered
+
 CLD2 = cldList(P.adj ~ Comparison, data=dunn_table_ordered)
 CLD2
 
 kruskal <- kruskal.test(corr_iter ~ model, data = MAF05df)
+# Kruskal-Wallis chi-squared = 77.059, df = 8, p-value = 1.907e-13
 dunn_res <- dunnTest(corr_iter ~ model, data = MAF05df, method="none")
 dunn_table <- dunn_res$res
-dunn_table <- dunn_table %>%
-  dplyr::mutate(across(where(is.numeric), ~ round(., 4)))
 dunn_table_ordered <- dunn_table %>%
   tidyr::separate(Comparison, into = c("Model1", "Model2"), sep = " - ", remove = FALSE) %>%
   dplyr::mutate(
@@ -464,6 +468,8 @@ dunn_table_ordered <- dunn_table %>%
     Model1_Rank,
     Model2_Rank
   ) %>% dplyr::select(-Model1, -Model2, -Model1_Rank, -Model2_Rank)
+all_dunn_MAF05 <- dunn_table_ordered
+
 CLD3 = cldList(P.adj ~ Comparison, data=dunn_table_ordered)
 CLD3
 
@@ -570,10 +576,9 @@ MAF005df <- extra_df[extra_df$gen == 'all' & extra_df$MAF == '0.005',]
 MAF05df <- extra_df[extra_df$gen == 'all' & extra_df$MAF == '0.05', ]
 
 kruskal <- kruskal.test(corr_iter ~ model, data = MAF005df)
+# Kruskal-Wallis chi-squared = 87.739, df = 8, p-value = 1.337e-15
 dunn_res <- dunnTest(corr_iter ~ model, data = MAF005df, method="none")
 dunn_table <- dunn_res$res
-dunn_table <- dunn_table %>%
-  dplyr::mutate(across(where(is.numeric), ~ round(., 4)))
 model_order_index <- setNames(seq_along(new_model_order), new_model_order)
 dunn_table_ordered <- dunn_table %>%
   tidyr::separate(Comparison, into = c("Model1", "Model2"), sep = " - ", remove = FALSE) %>%
@@ -585,14 +590,15 @@ dunn_table_ordered <- dunn_table %>%
     Model1_Rank,
     Model2_Rank
   ) %>% dplyr::select(-Model1, -Model2, -Model1_Rank, -Model2_Rank)
+imputed_dunn_MAF005 <- dunn_table_ordered
+
 CLD1 = cldList(P.adj ~ Comparison, data=dunn_table_ordered)
 CLD1
 
 kruskal <- kruskal.test(corr_iter ~ model, data = MAF01df)
+# Kruskal-Wallis chi-squared = 86.875, df = 8, p-value = 2e-15
 dunn_res <- dunnTest(corr_iter ~ model, data = MAF01df, method="none")
 dunn_table <- dunn_res$res
-dunn_table <- dunn_table %>%
-  dplyr::mutate(across(where(is.numeric), ~ round(., 4)))
 dunn_table_ordered <- dunn_table %>%
   tidyr::separate(Comparison, into = c("Model1", "Model2"), sep = " - ", remove = FALSE) %>%
   dplyr::mutate(
@@ -603,14 +609,16 @@ dunn_table_ordered <- dunn_table %>%
     Model1_Rank,
     Model2_Rank
   ) %>% dplyr::select(-Model1, -Model2, -Model1_Rank, -Model2_Rank)
+imputed_dunn_MAF01 <- dunn_table_ordered
+
+
 CLD2 = cldList(P.adj ~ Comparison, data=dunn_table_ordered)
 CLD2
 
 kruskal <- kruskal.test(corr_iter ~ model, data = MAF05df)
+# Kruskal-Wallis chi-squared = 87.974, df = 8, p-value = 1.198e-15
 dunn_res <- dunnTest(corr_iter ~ model, data = MAF05df, method="none")
 dunn_table <- dunn_res$res
-dunn_table <- dunn_table %>%
-  dplyr::mutate(across(where(is.numeric), ~ round(., 4)))
 dunn_table_ordered <- dunn_table %>%
   tidyr::separate(Comparison, into = c("Model1", "Model2"), sep = " - ", remove = FALSE) %>%
   dplyr::mutate(
@@ -621,6 +629,8 @@ dunn_table_ordered <- dunn_table %>%
     Model1_Rank,
     Model2_Rank
   ) %>% dplyr::select(-Model1, -Model2, -Model1_Rank, -Model2_Rank)
+imputed_dunn_MAF05 <- dunn_table_ordered
+
 CLD3 = cldList(P.adj ~ Comparison, data=dunn_table_ordered)
 CLD3
 
@@ -876,16 +886,60 @@ ggsave("/work/tfs3/gsAI/analysis/pdfs/MAFAllImputedboxplot.pdf", Extra_models_bp
 
 ################################################################################
 
-# Table with average corr_iter & SD per model at F2 vs all and at each MAF
-# Table with average corr_iter & SD per model at imputed and not imputed
+# Table with average corr_iter at F2 vs all and at each MAF
+model_summary_table <- df %>%
+  group_by(MAF, model, gen) %>%
+  summarise(
+    mean_corr = mean(corr_iter, na.rm = TRUE),
+    sd_corr   = sd(corr_iter, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Table with average corr_iter at imputed and not imputed at each MAF
+extra_model_summary_table <- extra_df %>%
+  group_by(MAF, model, gen) %>%
+  summarise(
+    mean_corr = mean(corr_iter, na.rm = TRUE),
+    sd_corr   = sd(corr_iter, na.rm = TRUE),
+    .groups = "drop"
+  )
 
 # P-values KW/dunn between models at each MAF on all generation
 # P-values KW/dunn between models at each MAF on F2 generation
+F2_dunn_MAF05
+F2_dunn_MAF01
+F2_dunn_MAF005
 # P-values KW/dunn between models at each MAF on imputed data
+imputed_dunn_MAF005
+imputed_dunn_MAF05 
+imputed_dunn_MAF01
 
-# P-values wilcoxon between MAF for each model
-# P-values wilcoxon at each MAF between F2 and all
-# P-values wilcoxon at each MAF between default and imputed
+# P-values wilcoxon between MAF for each model for each model 
+maf_pvals <- df %>%
+  filter(gen == "all") %>%
+  group_by(model) %>%
+  pairwise_wilcox_test(corr_iter ~ MAF) %>%
+  ungroup()
+maf_pvals
+
+# P-values wilcoxon at each MAF between F2 and all for each model 
+f2_vs_all_pvals <- df %>%
+  group_by(MAF, model) %>%
+  wilcox_test(corr_iter ~ gen) %>%
+  add_significance()
+f2_vs_all_pvals
+
+# P-values wilcoxon at each MAF between default and imputed for each model
+final_df <- rbind(MAF005_combined_df, MAF01_combined_df, MAF05_combined_df)
+final_df <- final_df %>%
+  mutate(imputed_status = ifelse(extra == 1, "Imputed", "Default"))
+imputed_pvals <- final_df %>%
+  group_by(MAF, model) %>%
+  wilcox_test(corr_iter ~ imputed_status) %>%
+  adjust_pvalue(method = "BH") %>%
+  add_significance()
+
+imputed_pvals
 
 ################################################################################
 # Effect sizes

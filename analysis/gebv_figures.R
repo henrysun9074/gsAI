@@ -31,6 +31,7 @@ library(ggstats)
 library(ggalign)
 library(ggridges)
 library(GGally)
+library(ggplotify)
 
 # extra SNPs from imputation 
 extra_df <- read.csv("/work/tfs3/gsAI/data/combined_gebvs_extra.csv")
@@ -62,72 +63,239 @@ MAF01extradf <- extra_df[extra_df$MAF == 0.01,]
 MAF005extradf <- extra_df[extra_df$MAF == 0.005,]
 
 ################################################################################
-## correlation plots unused
+## correlation plots for default dataset
 
-## MAF05
-# Pairwise <- MAF05df[, c("GBLUP", "LASSO", "RKHS", 
-#                    "EGBLUP", "BRR", "BayesB",
-#                    "LR", "RF", "GB")]
-# colnames(Pairwise) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
-#                         "LR", "RF", "GB")
-# cor_matrix <- cor(Pairwise, use = "complete.obs")
-# corrplot(cor_matrix, 
-#          method = "square", 
-#          tl.cex = 1,
-#          tl.col = "black",  
-#          col.lim = c(0, 1),
-#          tl.pos = 'l',
-#          diag = FALSE,
-#          type = 'upper',
-#          order = 'hclust',
-#          addCoef.col = "white",
-#          # number.cex = 0.8,
-#          mar = c(0, 0, 0, 0))
-# 
-# ## MAF01
-# Pairwise01 <- MAF01df[, c("GBLUP", "LASSO", "RKHS", 
-#                         "EGBLUP", "BRR", "BayesB",
-#                         "LR", "RF", "GB")]
-# colnames(Pairwise01) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
-#                         "LR", "RF", "GB")
-# cor_matrix_01 <- cor(Pairwise01, use = "complete.obs")
-# corrplot(cor_matrix_01, 
-#          method = "square", 
-#          tl.cex = 1,
-#          tl.col = "black",  
-#          col.lim = c(0, 1),
-#          tl.pos = 'l',
-#          diag = FALSE,
-#          type = 'upper',
-#          order = 'hclust',
-#          addCoef.col = "white",
-#          # number.cex = 0.8,
-#          mar = c(0, 0, 0, 0)) 
-# 
-# ## MAF005
-# Pairwise005 <- MAF005df[, c("GBLUP", "LASSO", "RKHS", 
-#                           "EGBLUP", "BRR", "BayesB",
-#                           "LR", "RF", "GB")]
-# 
-# colnames(Pairwise005) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
-#                           "LR", "RF", "GB")
-# cor_matrix005 <- cor(Pairwise005, use = "complete.obs")
-# cor_matrix_ordered005 <- cor_matrix005[new_model_order, new_model_order]
-# corrplot(cor_matrix_ordered005, 
-#          method = "square", 
-#          tl.cex = 1,
-#          tl.col = "black",  
-#          col.lim = c(0, 1),
-#          tl.pos = 'l',
-#          diag = FALSE,
-#          type = 'upper',
-#          order = 'hclust',
-#          addCoef.col = "white",
-#          # number.cex = 0.8,
-#          mar = c(0, 0, 0, 0)) 
+# MAF05
+Pairwise <- MAF05df[, c("GBLUP", "LASSO", "RKHS",
+                   "EGBLUP", "BRR", "BayesB",
+                   "LR", "RF", "GB")]
+colnames(Pairwise) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
+                        "LR", "RF", "GB")
+cor_matrix <- cor(Pairwise, use = "complete.obs")
+# pdf(file = "/work/tfs3/gsAI/analysis/pdfs/CorrelationMatrixMAF05.pdf", width = 7, height = 6)
+corrplot(cor_matrix,
+         method = "square",
+         tl.cex = 1,
+         tl.col = "black",
+         col.lim = c(0, 1),
+         tl.pos = 'l',
+         diag = FALSE,
+         type = 'upper',
+         order = 'hclust',
+         addCoef.col = "white",
+         # number.cex = 0.8,
+         mar = c(0, 0, 0, 0))
+# dev.off()
+
+# MAF01
+Pairwise01 <- MAF01df[, c("GBLUP", "LASSO", "RKHS",
+                        "EGBLUP", "BRR", "BayesB",
+                        "LR", "RF", "GB")]
+colnames(Pairwise01) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
+                        "LR", "RF", "GB")
+cor_matrix_01 <- cor(Pairwise01, use = "complete.obs")
+# pdf(file = "/work/tfs3/gsAI/analysis/pdfs/CorrelationMatrixMAF01.pdf", width = 7, height = 6)
+corrplot(cor_matrix_01,
+         method = "square",
+         tl.cex = 1,
+         tl.col = "black",
+         col.lim = c(0, 1),
+         tl.pos = 'l',
+         diag = FALSE,
+         type = 'upper',
+         order = 'hclust',
+         addCoef.col = "white",
+         # number.cex = 0.8,
+         mar = c(0, 0, 0, 0))
+# dev.off()
+
+## MAF005
+Pairwise005 <- MAF005df[, c("GBLUP", "LASSO", "RKHS",
+                          "EGBLUP", "BRR", "BayesB",
+                          "LR", "RF", "GB")]
+
+colnames(Pairwise005) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
+                          "LR", "RF", "GB")
+cor_matrix005 <- cor(Pairwise005, use = "complete.obs")
+cor_matrix_ordered005 <- cor_matrix005[new_model_order, new_model_order]
+# pdf(file = "/work/tfs3/gsAI/analysis/pdfs/CorrelationMatrixMAF005.pdf", width = 7, height = 6)
+corrplot(cor_matrix_ordered005,
+         method = "square",
+         tl.cex = 1,
+         tl.col = "black",
+         col.lim = c(0, 1),
+         tl.pos = 'l',
+         diag = FALSE,
+         type = 'upper',
+         order = 'hclust',
+         addCoef.col = "white",
+         # number.cex = 0.8,
+         mar = c(0, 0, 0, 0))
+# dev.off()
+
+
+pdf("/work/tfs3/gsAI/analysis/pdfs/CorrelationMatrixAllMAF.pdf",
+    width = 12, height = 5)
+
+par(mfrow = c(1, 3),   # 1 row, 3 columns
+    mar = c(1,1,1.5,1))  # tighter margins
+
+corrplot(cor_matrix,
+         method = "square",
+         tl.cex = 0.9,
+         tl.col = "black",
+         col.lim = c(0, 1),
+         tl.pos = 'l',
+         diag = FALSE,
+         type = 'upper',
+         order = 'hclust',
+         addCoef.col = "white",
+         mar = c(0, 0, 0, 0))
+title("MAF = 0.05", line = 0.5)
+
+corrplot(cor_matrix_01,
+         method = "square",
+         tl.cex = 0.9,
+         tl.col = "black",
+         col.lim = c(0, 1),
+         tl.pos = 'l',
+         diag = FALSE,
+         type = 'upper',
+         order = 'hclust',
+         addCoef.col = "white",
+         mar = c(0, 0, 0, 0))
+title("MAF = 0.01", line = 0.5)
+
+corrplot(cor_matrix_ordered005,
+         method = "square",
+         tl.cex = 0.9,
+         tl.col = "black",
+         col.lim = c(0, 1),
+         tl.pos = 'l',
+         diag = FALSE,
+         type = 'upper',
+         order = 'hclust',
+         addCoef.col = "white",
+         mar = c(0, 0, 0, 0))
+title("MAF = 0.005", line = 0.5)
+
+dev.off()
 
 ################################################################################
-# SPLOM of model GEBVs
+
+# correlation plots for extra dataset
+
+Pairwise <- MAF05extradf[, c("GBLUP", "LASSO", "RKHS",
+                        "EGBLUP", "BRR", "BayesB",
+                        "LR", "RF", "GB")]
+colnames(Pairwise) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
+                        "LR", "RF", "GB")
+cor_matrix <- cor(Pairwise, use = "complete.obs")
+corrplot(cor_matrix,
+         method = "square",
+         tl.cex = 1,
+         tl.col = "black",
+         col.lim = c(0, 1),
+         tl.pos = 'l',
+         diag = FALSE,
+         type = 'upper',
+         order = 'hclust',
+         addCoef.col = "white",
+         # number.cex = 0.8,
+         mar = c(0, 0, 0, 0))
+
+# MAF01
+Pairwise01 <- MAF01extradf[, c("GBLUP", "LASSO", "RKHS",
+                          "EGBLUP", "BRR", "BayesB",
+                          "LR", "RF", "GB")]
+colnames(Pairwise01) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
+                          "LR", "RF", "GB")
+cor_matrix_01 <- cor(Pairwise01, use = "complete.obs")
+corrplot(cor_matrix_01,
+         method = "square",
+         tl.cex = 1,
+         tl.col = "black",
+         col.lim = c(0, 1),
+         tl.pos = 'l',
+         diag = FALSE,
+         type = 'upper',
+         order = 'hclust',
+         addCoef.col = "white",
+         # number.cex = 0.8,
+         mar = c(0, 0, 0, 0))
+
+## MAF005
+Pairwise005 <- MAF005extradf[, c("GBLUP", "LASSO", "RKHS",
+                            "EGBLUP", "BRR", "BayesB",
+                            "LR", "RF", "GB")]
+
+colnames(Pairwise005) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
+                           "LR", "RF", "GB")
+cor_matrix005 <- cor(Pairwise005, use = "complete.obs")
+cor_matrix_ordered005 <- cor_matrix005[new_model_order, new_model_order]
+corrplot(cor_matrix_ordered005,
+         method = "square",
+         tl.cex = 1,
+         tl.col = "black",
+         col.lim = c(0, 1),
+         tl.pos = 'l',
+         diag = FALSE,
+         type = 'upper',
+         order = 'hclust',
+         addCoef.col = "white",
+         # number.cex = 0.8,
+         mar = c(0, 0, 0, 0))
+
+
+pdf("/work/tfs3/gsAI/analysis/pdfs/CorrelationMatrixAllMAFImputed.pdf",
+    width = 12, height = 5)
+
+par(mfrow = c(1, 3),   # 1 row, 3 columns
+    mar = c(1,1,1.5,1))  # tighter margins
+
+corrplot(cor_matrix,
+         method = "square",
+         tl.cex = 0.9,
+         tl.col = "black",
+         col.lim = c(0, 1),
+         tl.pos = 'l',
+         diag = FALSE,
+         type = 'upper',
+         order = 'hclust',
+         addCoef.col = "white",
+         mar = c(0, 0, 0, 0))
+title("MAF = 0.05", line = 0.5)
+
+corrplot(cor_matrix_01,
+         method = "square",
+         tl.cex = 0.9,
+         tl.col = "black",
+         col.lim = c(0, 1),
+         tl.pos = 'l',
+         diag = FALSE,
+         type = 'upper',
+         order = 'hclust',
+         addCoef.col = "white",
+         mar = c(0, 0, 0, 0))
+title("MAF = 0.01", line = 0.5)
+
+corrplot(cor_matrix_ordered005,
+         method = "square",
+         tl.cex = 0.9,
+         tl.col = "black",
+         col.lim = c(0, 1),
+         tl.pos = 'l',
+         diag = FALSE,
+         type = 'upper',
+         order = 'hclust',
+         addCoef.col = "white",
+         mar = c(0, 0, 0, 0))
+title("MAF = 0.005", line = 0.5)
+
+dev.off()
+
+################################################################################
+# SPLOM of model GEBVs for normal dataset
 
 lim_min <- 0
 lim_max <- 1
@@ -144,7 +312,7 @@ custom_scatter <- function(data, mapping, ...) {
   x_val <- eval_data_col(data, mapping$x)
   y_val <- eval_data_col(data, mapping$y)
   correlation_rho <- round(cor(x_val, y_val, use = "complete.obs"), 3)
-  rho_label <- paste0("rho*paste(' =',", correlation_rho, ")")
+  rho_label <- paste0("rho*paste(' = ',", correlation_rho, ")")
   ggplot(data = data, mapping = mapping) +
     geom_point(alpha = 0.4, size = 0.6, color = "midnightblue") +
     geom_smooth(method = "lm", se = FALSE, color = "firebrick", linewidth = 0.5) +
@@ -224,11 +392,106 @@ p005 <- ggpairs(
   )
 ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF005SPLOM.pdf", p005, width = 15, height = 10, units = "in")
 
+################################################################################
 
+lim_min <- 0
+lim_max <- 1
+diag_label <- function(data, mapping, ...) {
+  label_text <- rlang::as_label(mapping$x)
+  ggplot() +
+    annotate("text", x = 0.5, y = 0.5, label = label_text, 
+             size = 5, fontface = "bold") +
+    theme_void()
+}
+
+# this helper function generates the scatterplot
+custom_scatter <- function(data, mapping, ...) {
+  x_val <- eval_data_col(data, mapping$x)
+  y_val <- eval_data_col(data, mapping$y)
+  correlation_rho <- round(cor(x_val, y_val, use = "complete.obs"), 3)
+  rho_label <- paste0("rho*paste(' = ',", correlation_rho, ")")
+  ggplot(data = data, mapping = mapping) +
+    geom_point(alpha = 0.4, size = 0.6, color = "skyblue4") +
+    geom_smooth(method = "lm", se = FALSE, color = "lightcoral", linewidth = 0.5) +
+    scale_x_continuous(limits = c(lim_min, lim_max), breaks = seq(0, 1, 0.25)) +
+    scale_y_continuous(limits = c(lim_min, lim_max), breaks = seq(0, 1, 0.25)) +
+    annotate("text", x = lim_min, y = lim_max, 
+             label = rho_label, parse = TRUE,
+             hjust = -0.1, vjust = 1.5, size = 3.5) +
+    theme_pubr() +
+    theme(
+      panel.grid = element_blank(),
+      axis.text.x = element_text(angle = 45, hjust = 1, size = 7),
+      axis.text.y = element_text(size = 7),
+      panel.border = element_rect(color = "black", fill = NA, linewidth = 0.5)
+    ) 
+}
+
+# MAF05
+Pairwise <- MAF05extradf[, c("GBLUP", "LASSO", "RKHS", 
+                        "EGBLUP", "BRR", "BayesB",
+                        "LR", "RF", "GB")]
+p05_extra <- ggpairs(
+  Pairwise,
+  columns = 1:ncol(Pairwise),
+  upper = "blank", 
+  diag = list(continuous = diag_label),
+  lower = list(continuous = custom_scatter),
+  xlab = "Breeding Value"
+) +
+  theme(
+    strip.background = element_blank(),
+    strip.text = element_blank(),
+    panel.spacing = unit(0.2, "lines"), 
+    axis.title.x = element_text(size = 16, face = "bold", margin = margin(t = 5))
+  )
+ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF05SPLOMImputed.pdf", p05_extra, width = 15, height = 10, units = "in")
+
+
+# MAF01
+Pairwise <- MAF01extradf[, c("GBLUP", "LASSO", "RKHS", 
+                        "EGBLUP", "BRR", "BayesB",
+                        "LR", "RF", "GB")]
+p01_extra <- ggpairs(
+  Pairwise,
+  columns = 1:ncol(Pairwise),
+  upper = "blank", 
+  diag = list(continuous = diag_label),
+  lower = list(continuous = custom_scatter),
+  xlab = "Breeding Value"
+) +
+  theme(
+    strip.background = element_blank(),
+    strip.text = element_blank(),
+    panel.spacing = unit(0.2, "lines"), 
+    axis.title.x = element_text(size = 16, face = "bold", margin = margin(t = 5))
+  )
+ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF01SPLOMImputed.pdf", p01_extra, width = 15, height = 10, units = "in")
+
+
+# MAF005
+Pairwise <- MAF005extradf[, c("GBLUP", "LASSO", "RKHS", 
+                         "EGBLUP", "BRR", "BayesB",
+                         "LR", "RF", "GB")]
+p005_extra <- ggpairs(
+  Pairwise,
+  columns = 1:ncol(Pairwise),
+  upper = "blank", 
+  diag = list(continuous = diag_label),
+  lower = list(continuous = custom_scatter),
+  xlab = "Breeding Value"
+) +
+  theme(
+    strip.background = element_blank(),
+    strip.text = element_blank(),
+    panel.spacing = unit(0.2, "lines"), 
+    axis.title.x = element_text(size = 16, face = "bold", margin = margin(t = 5))
+  )
+ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF005SPLOMImputed.pdf", p005_extra, width = 15, height = 10, units = "in")
 
 ################################################################################
 
-# ridgeline plots 
+# ridgeline plots for standard dataset
 
 gebv_cols <- c("GBLUP", "EGBLUP", "BRR", "BayesB",
                "LASSO", "RKHS", "LR", "RF", "GB")
@@ -274,12 +537,12 @@ MAF05_p_overlay_status <- ggplot(MAF05df_long, aes(x = Value, y = Model, fill = 
     y = "Model",
     fill = "Status") +
   theme(panel.grid.major = element_blank())+
-  # uncomment below line to show 0.5 instead of mean survival line below
-  # geom_vline(xintercept = 0.5, linetype = "dashed", color = "black")+
-  geom_vline(xintercept = 0.5328808, linetype = "dashed", color = "red", alpha = 0.8) +
+  geom_vline(xintercept = 0.5, linetype = "dashed", color = "black")+
+  # geom_vline(xintercept = 0.5328808, linetype = "dashed", color = "red", alpha = 0.8) +
   scale_x_continuous(breaks = c(0,0.25,0.5,0.75,1), limits = c(0, 1))
-ggpar(MAF05_p_overlay_status,
+MAF05_p_overlay_status <- ggpar(MAF05_p_overlay_status,
       palette = "startrek")
+ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF05ridgeline.pdf", MAF05_p_overlay_status, width=8,height=7,dpi=300)
 
 MAF01_p_overlay_status <- ggplot(MAF01df_long, aes(x = Value, y = Model, fill = Status_Label)) +
   geom_density_ridges(alpha=0.7) +
@@ -290,11 +553,13 @@ MAF01_p_overlay_status <- ggplot(MAF01df_long, aes(x = Value, y = Model, fill = 
     y = "Model",
     fill = "Status") +
   theme(panel.grid.major = element_blank())+
-  # geom_vline(xintercept = 0.5, linetype = "dashed", color = "black")+
-  geom_vline(xintercept = 0.5328808, linetype = "dashed", color = "red", alpha = 0.8) +
+  geom_vline(xintercept = 0.5, linetype = "dashed", color = "black")+
+  # mean survival = 0.53
+  # geom_vline(xintercept = 0.5328808, linetype = "dashed", color = "red", alpha = 0.8) +
   scale_x_continuous(breaks = c(0,0.25,0.5,0.75,1), limits = c(0, 1))
-ggpar(MAF01_p_overlay_status,
+MAF01_p_overlay_status <- ggpar(MAF01_p_overlay_status,
       palette = "startrek")
+ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF01ridgeline.pdf", MAF01_p_overlay_status, width=10,height=6,dpi=300)
 
 MAF005_p_overlay_status <- ggplot(MAF005df_long, aes(x = Value, y = Model, fill = Status_Label)) +
   geom_density_ridges(alpha=0.7) +
@@ -305,11 +570,151 @@ MAF005_p_overlay_status <- ggplot(MAF005df_long, aes(x = Value, y = Model, fill 
     y = "Model",
     fill = "Status") +
   theme(panel.grid.major = element_blank())+
-  # geom_vline(xintercept = 0.5, linetype = "dashed", color = "black")+
-  geom_vline(xintercept = 0.5328808, linetype = "dashed", color = "red", alpha = 0.8) +
+  geom_vline(xintercept = 0.5, linetype = "dashed", color = "black")+
+  # geom_vline(xintercept = 0.5328808, linetype = "dashed", color = "red", alpha = 0.8) +
   scale_x_continuous(breaks = c(0,0.25,0.5,0.75,1), limits = c(0, 1))
-ggpar(MAF005_p_overlay_status,
+MAF005_p_overlay_status <- ggpar(MAF005_p_overlay_status,
       palette = "startrek")
+ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF005ridgeline.pdf", MAF005_p_overlay_status, width=10,height=6,dpi=300)
+
+################################################################################
+
+# ridgeline plots for imputed SNPs
+
+gebv_cols <- c("GBLUP", "EGBLUP", "BRR", "BayesB",
+               "LASSO", "RKHS", "LR", "RF", "GB")
+MAF05extradf_long <- MAF05extradf %>%
+  dplyr::select(gebv_cols, "Status") %>% # Include 'Status'
+  tidyr::pivot_longer(cols = all_of(gebv_cols), 
+                      names_to = "Model",
+                      values_to = "Value") %>%
+  dplyr::mutate(
+    Value = as.numeric(Value),
+    Status_Label = factor(Status, levels = c(0, 1), labels = c("Dead", "Alive"))
+  )
+MAF01extradf_long <- MAF01extradf %>%
+  dplyr::select(gebv_cols, "Status") %>% # Include 'Status'
+  tidyr::pivot_longer(cols = all_of(gebv_cols), 
+                      names_to = "Model",
+                      values_to = "Value") %>%
+  dplyr::mutate(
+    Value = as.numeric(Value),
+    Status_Label = factor(Status, levels = c(0, 1), labels = c("Dead", "Alive"))
+  )
+MAF005extradf_long <- MAF005extradf %>%
+  dplyr::select(gebv_cols, "Status") %>% # Include 'Status'
+  tidyr::pivot_longer(cols = all_of(gebv_cols), 
+                      names_to = "Model",
+                      values_to = "Value") %>%
+  dplyr::mutate(
+    Value = as.numeric(Value),
+    Status_Label = factor(Status, levels = c(0, 1), labels = c("Dead", "Alive"))
+  )
+
+MAF05extradf_long$Model <- factor(MAF05extradf_long$Model, levels = new_model_order)
+MAF01extradf_long$Model <- factor(MAF01extradf_long$Model, levels = new_model_order)
+MAF005extradf_long$Model <- factor(MAF005extradf_long$Model, levels = new_model_order)
+
+MAF05_p_overlay_status_extra <- ggplot(MAF05extradf_long, aes(x = Value, y = Model, fill = Status_Label)) +
+  geom_density_ridges(alpha=0.7) +
+  theme_ridges() + 
+  scale_fill_manual(values = c(
+    "Dead" = "palevioletred3",   
+    "Alive" = "dodgerblue3"   
+  )) + 
+  theme(legend.position = "top") +
+  labs(
+    x = "Breeding Value",
+    y = "Model",
+    fill = "Status") +
+  theme(panel.grid.major = element_blank())+
+  geom_vline(xintercept = 0.5, linetype = "dashed", color = "black")+
+  # geom_vline(xintercept = 0.5328808, linetype = "dashed", color = "red", alpha = 0.8) +
+  scale_x_continuous(breaks = c(0,0.25,0.5,0.75,1), limits = c(0, 1))
+ggsave("/work/tfs3/gsAI/analysis/pdfs/ImputedMAF05ridgeline.pdf", MAF05_p_overlay_status_extra, 
+       width=8,height=7,dpi=300)
+
+MAF01_p_overlay_status_extra <- ggplot(MAF01extradf_long, aes(x = Value, y = Model, fill = Status_Label)) +
+  geom_density_ridges(alpha=0.7) +
+  theme_ridges() + 
+  scale_fill_manual(values = c(
+    "Dead" = "palevioletred3",   
+    "Alive" = "dodgerblue3"   
+  )) +
+  theme(legend.position = "top") +
+  labs(
+    x = "Breeding Value",
+    y = "Model",
+    fill = "Status") +
+  theme(panel.grid.major = element_blank())+
+  geom_vline(xintercept = 0.5, linetype = "dashed", color = "black")+
+  # geom_vline(xintercept = 0.5328808, linetype = "dashed", color = "red", alpha = 0.8) +
+  scale_x_continuous(breaks = c(0,0.25,0.5,0.75,1), limits = c(0, 1))
+ggsave("/work/tfs3/gsAI/analysis/pdfs/ImputedMAF01ridgeline.pdf", MAF01_p_overlay_status_extra, 
+       width=10,height=6,dpi=300)
+
+MAF005_p_overlay_status_extra <- ggplot(MAF005extradf_long, aes(x = Value, y = Model, fill = Status_Label)) +
+  geom_density_ridges(alpha=0.7) +
+  theme_ridges() + 
+  scale_fill_manual(values = c(
+    "Dead" = "palevioletred3",   
+    "Alive" = "dodgerblue3"   
+  )) +
+  theme(legend.position = "top") +
+  labs(
+    x = "Breeding Value",
+    y = "Model",
+    fill = "Status") +
+  theme(panel.grid.major = element_blank())+
+  geom_vline(xintercept = 0.5, linetype = "dashed", color = "black")+
+  # geom_vline(xintercept = 0.5328808, linetype = "dashed", color = "red", alpha = 0.8) +
+  scale_x_continuous(breaks = c(0,0.25,0.5,0.75,1), limits = c(0, 1))
+ggsave("/work/tfs3/gsAI/analysis/pdfs/ImputedMAF005ridgeline.pdf", MAF005_p_overlay_status_extra, width=10,height=6,dpi=300)
 
 
+################################################################################
+
+# combine multipanel ridgeline plots
+
+# MAF 05
+ridgeline05plot <- plot_grid(
+  MAF05_p_overlay_status, MAF05_p_overlay_status_extra,
+  nrow = 2,
+  labels = c("A","B"), 
+  label_size = 18
+)
+ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF05ridgelinesCombined.pdf",
+       ridgeline05plot,
+       width = 7,
+       height = 9,
+       units = "in",
+       dpi = 300)
+
+# MAF 01
+ridgeline01plot <- plot_grid(
+  MAF01_p_overlay_status, MAF01_p_overlay_status_extra,
+  nrow = 2,
+  labels = c("A","B"), 
+  label_size = 18
+)
+ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF01ridgelinesCombined.pdf",
+       ridgeline01plot,
+       width = 7,
+       height = 9,
+       units = "in",
+       dpi = 300)
+
+# MAF005
+ridgeline005plot <- plot_grid(
+  MAF005_p_overlay_status, MAF005_p_overlay_status_extra,
+  nrow = 2,
+  labels = c("A","B"), 
+  label_size = 18
+)
+ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF005ridgelinesCombined.pdf",
+       ridgeline005plot,
+       width = 7,
+       height = 9,
+       units = "in",
+       dpi = 300)
 ################################################################################
