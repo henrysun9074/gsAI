@@ -61,18 +61,13 @@ new_labels <- c("0.005" = "MAF 0.005", "0.05" = "MAF 0.05", "0.01" = "MAF 0.01")
 
 ################################################################################
 
-#### F2 vs All at each MAF boxplot
-
-
-
-################################################################################
-
 ### point plots for F2 generation only
 
 MAF01df <- df[df$gen == 'F2' & df$MAF == '0.01', ]
 MAF005df <- df[df$gen == 'F2' & df$MAF == '0.005',]
 MAF05df <- df[df$gen == 'F2' & df$MAF == '0.05', ]
 
+## kruskal and posthoc dunn tests for each MAF
 kruskal <- kruskal.test(corr_iter ~ model, data = MAF005df)
 dunn_res <- dunnTest(corr_iter ~ model, data = MAF005df, method="none")
 dunn_table <- dunn_res$res
@@ -161,31 +156,33 @@ plot_data_with_cld_all <- summary_by_model[summary_by_model$gen == 'all', ] %>%
     CLD_y_pos = mean_of_iters + sd_of_iters + 0.005
   )
 
-cld_point <- ggplot(
-  summary_by_model[summary_by_model$gen == 'all', ],
-  aes(x = model, y = mean_of_iters, color = model)
-) +
-  geom_point(size = 5) +
-  geom_errorbar(
-    aes(ymin = mean_of_iters - sd_of_iters, ymax = mean_of_iters + sd_of_iters),
-    width = 0.2, color = "black", linewidth = 0.5
-  ) +
-  facet_wrap(~ MAF, scales = "free_y", labeller = as_labeller(new_labels)) +
-  scale_color_manual(values = model_color_palette) +
-  theme_pubr() +
-  theme(strip.text = element_text(size = 12)) +
-  labs(y = "Correlation Accuracy", color = "Model") +
-  theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
-  geom_text(
-    data = plot_data_with_cld_all, 
-    aes(x = model, y = CLD_y_pos, label = Letter, group = MAF),
-    inherit.aes = FALSE,
-    color = "black",
-    size = 4,
-    vjust = 0
-  )
-ggsave("/work/tfs3/gsAI/analysis/misc/point_f2_cld_all_facets.png", cld_point, width = 8, height = 5, units = "in")
+### free y scale
+# cld_point <- ggplot(
+#   summary_by_model[summary_by_model$gen == 'all', ],
+#   aes(x = model, y = mean_of_iters, color = model)
+# ) +
+#   geom_point(size = 5) +
+#   geom_errorbar(
+#     aes(ymin = mean_of_iters - sd_of_iters, ymax = mean_of_iters + sd_of_iters),
+#     width = 0.2, color = "black", linewidth = 0.5
+#   ) +
+#   facet_wrap(~ MAF, scales = "free_y", labeller = as_labeller(new_labels)) +
+#   scale_color_manual(values = model_color_palette) +
+#   theme_pubr() +
+#   theme(strip.text = element_text(size = 12)) +
+#   labs(y = "Correlation Accuracy", color = "Model") +
+#   theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
+#   geom_text(
+#     data = plot_data_with_cld_all, 
+#     aes(x = model, y = CLD_y_pos, label = Letter, group = MAF),
+#     inherit.aes = FALSE,
+#     color = "black",
+#     size = 4,
+#     vjust = 0
+#   )
+# ggsave("/work/tfs3/gsAI/analysis/misc/point_f2_cld_all_facets.png", cld_point, width = 8, height = 5, units = "in")
 
+### fixed y scale
 cld_point2 <- ggplot(
   summary_by_model[summary_by_model$gen == 'all', ],
   aes(x = model, y = mean_of_iters, color = model)
@@ -209,12 +206,14 @@ cld_point2 <- ggplot(
     size = 4,
     vjust = 0
   )
-ggsave("/work/tfs3/gsAI/analysis/misc/point2_f2_cld_all_facets.png", cld_point2, width = 8, height = 5, units = "in")
+cld_point2 <- ggdraw(cld_point2) +
+  draw_label("KW p < 0.001", x = 0.9, y = 0.04, hjust = 0.5, vjust = 0)
+ggsave("/work/tfs3/gsAI/analysis/pdfs/F2atallMAFs.pdf", cld_point2, width = 8, height = 5, units = "in")
 
 
 ################################################################################
 
-##### plot all MAF facet by generation
+##### plot F2 vs all performance at different MAFs
 
 maf05bp <- ggplot(df[df$MAF == '0.05', ], aes(x = gen, y = corr_iter)) +
   geom_boxplot(aes(fill = model, color = model),alpha = 0.8, outlier.shape = NA) + 
@@ -243,7 +242,7 @@ maf05bp <- ggplot(df[df$MAF == '0.05', ], aes(x = gen, y = corr_iter)) +
   theme_pubr(base_size = 12) +
   scale_y_continuous(expand = expansion(mult = c(0.05, 0.2))) +
   theme(legend.position = "none") 
-ggsave("/work/tfs3/gsAI/analysis/misc/MAF05boxplot.png", maf05bp, width = 9, height = 5, units = "in")
+ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF05F2vsAll.pdf", maf05bp, width = 7, height = 6, units = "in")
 
 maf01bp <- ggplot(df[df$MAF == '0.01', ], aes(x = gen, y = corr_iter)) +
   geom_boxplot(aes(fill = model, color = model),alpha = 0.3, outlier.shape = NA) + 
@@ -273,7 +272,7 @@ maf01bp <- ggplot(df[df$MAF == '0.01', ], aes(x = gen, y = corr_iter)) +
   theme_pubr(base_size = 12) +
   scale_y_continuous(expand = expansion(mult = c(0.05, 0.2))) +
   theme(legend.position = "none") 
-ggsave("/work/tfs3/gsAI/analysis/misc/MAF01boxplot.png", maf01bp, width = 9, height = 5, units = "in")
+ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF01F2vsAll.pdf", maf01bp, width = 7, height = 6, units = "in")
 
 maf005bp <- ggplot(df[df$MAF == '0.005', ], aes(x = gen, y = corr_iter)) +
   geom_boxplot(aes(fill = model, color = model),alpha = 0.3, outlier.shape = NA) + 
@@ -302,8 +301,9 @@ maf005bp <- ggplot(df[df$MAF == '0.005', ], aes(x = gen, y = corr_iter)) +
   theme_pubr(base_size = 12) +
   scale_y_continuous(expand = expansion(mult = c(0.05, 0.2))) +
   theme(legend.position = "none") 
-ggsave("/work/tfs3/gsAI/analysis/misc/MAF005boxplot.png", maf005bp, width = 9, height = 5, units = "in")
+ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF005F2vsAll.pdf", maf005bp, width = 7, height = 6, units = "in")
 
+################################################################################
 
 ##### plot all ML models facet by MAF
 ML_models <- c("GB", "LR", "RF")
@@ -333,21 +333,11 @@ ML_all_bp <- ggplot(ML_df, aes(x = MAF, y = corr_iter)) +
     step_increase = 0.1
   ) +
   labs(x = "Minor Allele Frequency", y = "Correlation Accuracy") +
-  theme_pubr(base_size = 10) + 
-  geom_text(
-    data = annotation_data, 
-    inherit.aes = FALSE,
-    x = Inf, 
-    y = 0.22, 
-    label = "*** = p < 0.001\n** = p < 0.01\n* = p < 0.05\nt-test", 
-    size = 3.5, 
-    hjust = 1.05,
-    vjust = -0.5
-  ) +
-  theme(axis.text.x = element_text(size = 8)) +
-  theme(axis.title.x = element_text(size = 12)) +
-  theme(axis.title.y = element_text(size = 12)) +
-  theme(strip.text = element_text(size = 12)) +
+  theme_pubr(base_size = 12) + 
+  theme(axis.text.x = element_text(size = 10)) +
+  theme(axis.title.x = element_text(size = 14)) +
+  theme(axis.title.y = element_text(size = 14)) +
+  theme(strip.text = element_text(size = 14)) +
   theme(legend.position = "none") + 
   facet_wrap(~model,scale="free")
 ML_all_bp
@@ -379,40 +369,30 @@ R_all_bp <- ggplot(R_models, aes(x = MAF, y = corr_iter)) +
     step_increase = 0.3
   ) +
   labs(x = "Minor Allele Frequency", y = "Correlation Accuracy") +
-  theme_pubr(base_size = 10) + 
-  geom_text(
-    data = annotation_data, 
-    inherit.aes = FALSE,
-    x = 0.67, 
-    y = 0.2335, 
-    label = "*** = p < 0.001\n** = p < 0.01\n* = p < 0.05\nt-test", 
-    size = 3, 
-    hjust = 0,
-    vjust = 0
-  ) +
+  theme_pubr(base_size = 12) + 
   scale_y_continuous(expand = expansion(mult = c(0.05, 0.2))) +
-  theme(axis.text.x = element_text(size = 8)) +
-  theme(axis.title.y = element_text(size = 12)) +
-  theme(axis.title.x = element_text(size = 12)) +
-  theme(strip.text = element_text(size = 10)) +
+  theme(axis.text.x = element_text(size = 10)) +
+  theme(axis.title.y = element_text(size = 14)) +
+  theme(axis.title.x = element_text(size = 14)) +
+  theme(strip.text = element_text(size = 14)) +
   theme(legend.position = "none") + 
   facet_wrap(~model,scale="free")
 R_all_bp
 
 
-## combine ML_all_bp and R_all_bp with cowplot, label A and B
-## width 12 x height 6
+## combine ML_all_bp and R_all_bp 
 combined_plot <- plot_grid(
   ML_all_bp, 
   R_all_bp,
   labels = c("A", "B"),
-  label_size = 20,
+  label_size = 18,
   ncol = 2)
-ggsave("/work/tfs3/gsAI/analysis/misc/combined_mafboxplot.png",
+ggsave("/work/tfs3/gsAI/analysis/pdfs/AllModelsMAFboxplot.pdf",
        combined_plot,
-       width = 12,
-       height = 6,
-       units = "in")
+       width = 11,
+       height = 7,
+       units = "in",
+       dpi = 300)
 
 ################################################################################
 
@@ -431,6 +411,7 @@ MAF01df <- df[df$gen == 'all' & df$MAF == '0.01', ]
 MAF005df <- df[df$gen == 'all' & df$MAF == '0.005',]
 MAF05df <- df[df$gen == 'all' & df$MAF == '0.05', ]
 
+## calculate kruskal-wallis and dunn test results for 'all' generations at each MAF
 kruskal <- kruskal.test(corr_iter ~ model, data = MAF005df)
 dunn_res <- dunnTest(corr_iter ~ model, data = MAF005df, method="none")
 dunn_table <- dunn_res$res
@@ -566,13 +547,13 @@ cld_point2 <- ggplot(
 )
 cld_point2 <- ggdraw(cld_point2) +
 draw_label("KW p < 0.001", x = 0.9, y = 0.05, hjust = 0.5, vjust = 0)
-ggsave("/work/tfs3/gsAI/analysis/misc/point2_cld_all_facets.png", cld_point2, width = 8, height = 5, units = "in")
+ggsave("/work/tfs3/gsAI/analysis/pdfs/AllModelsMAFpointplot.pdf", cld_point2, width = 8, height = 5, units = "in")
 
 ################################################################################
 ################################################################################
 ################################################################################
 
-### point plot with correlations per MAF but for extra alleles
+### point plot with correlations per MAF but for extra alleles with imputation
 
 summary_by_model <- extra_df %>%
   pivot_longer(cols = c(corr_iter), names_to = "metric", values_to = "iter_mean") %>%
@@ -693,7 +674,7 @@ plot_data_with_cld_all <- summary_by_model[summary_by_model$gen == 'all', ] %>%
 # cld_point <- ggdraw(cld_point) +
 #   draw_label("KW p < 0.001", x = 0.9, y = 0.05, hjust = 0.5, vjust = 0) +
 #   theme_cowplot()
-# ggsave("/work/tfs3/gsAI/analysis/pdfs/ExtraSNPsinfluence.pdf", cld_point, width = 8, height = 5, units = "in")
+# ggsave("/work/tfs3/gsAI/analysis/pdfs/ImputedSNPsMAFpointplot.pdf", cld_point, width = 8, height = 5, units = "in")
 
 # fixed y scale for facets
 cld_point2 <- ggplot(
@@ -722,7 +703,7 @@ cld_point2 <- ggplot(
 cld_point2 <- ggdraw(cld_point2) +
   draw_label("KW p < 0.001", x = 0.17, y = 0.04, hjust = 0.5, vjust = 0) +
   theme_cowplot()
-ggsave("/work/tfs3/gsAI/analysis/pdfs/ExtraSNPsMAFplot.pdf", cld_point2, width = 8, height = 5, units = "in")
+ggsave("/work/tfs3/gsAI/analysis/pdfs/ImputedSNPsMAFpointplot.pdf", cld_point2, width = 8, height = 5, units = "in")
 
 
 ################################################################################
@@ -731,11 +712,13 @@ ggsave("/work/tfs3/gsAI/analysis/pdfs/ExtraSNPsMAFplot.pdf", cld_point2, width =
 ## combined between 
 df$extra <- 0
 
-combined_df <- rbind(df, extra_df) %>%
+#############################
+# MAF05
+MAF05_combined_df <- rbind(df, extra_df) %>%
   filter(gen == "all", MAF == 0.05) %>% ### modify MAF here
-  mutate(extra = factor(extra, levels = c(0, 1), labels = c("Default", "Extra")))
+  mutate(extra = factor(extra, levels = c(0, 1), labels = c("Default", "Imputed")))
 
-MAF05_extra_plot <- ggplot(combined_df, aes(x = extra, y = corr_iter)) +
+MAF05_extra_plot <- ggplot(MAF05_combined_df, aes(x = extra, y = corr_iter)) +
   geom_boxplot(aes(fill = model, color = model),alpha = 0.3, outlier.shape = NA) + 
   geom_jitter(aes(fill = model),
               shape = 21,
@@ -762,14 +745,96 @@ MAF05_extra_plot <- ggplot(combined_df, aes(x = extra, y = corr_iter)) +
         strip.text = element_text(size=12)
   ) +
   geom_signif(
-    comparisons = list(c("Default", "Extra")),
+    comparisons = list(c("Default", "Imputed")),
     test = "wilcox.test",
     map_signif_level = c("***"=0.001, "**"=0.01, "*"=0.05, "N.S."=2),
     step_increase = 0.1
   )
-ggsave("/work/tfs3/gsAI/analysis/misc/maf05extra.png", MAF05_extra_plot, width = 8, height = 5, units = "in", dpi = 300)
+ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF05Imputed.pdf", MAF05_extra_plot, width = 8, height = 5, units = "in", dpi = 300)
+
+#############################
+# MAF01
+MAF01_combined_df <- rbind(df, extra_df) %>%
+  filter(gen == "all", MAF == 0.01) %>% ### modify MAF here
+  mutate(extra = factor(extra, levels = c(0, 1), labels = c("Default", "Imputed")))
+
+MAF01_extra_plot <- ggplot(MAF01_combined_df, aes(x = extra, y = corr_iter)) +
+  geom_boxplot(aes(fill = model, color = model),alpha = 0.3, outlier.shape = NA) + 
+  geom_jitter(aes(fill = model),
+              shape = 21,
+              color = "transparent",
+              alpha = 0.4,
+              size = 2.7,
+              position = position_jitter(width = 0.2, seed = 123)) +
+  geom_jitter(aes(color = model),
+              shape = 21,
+              fill = NA,
+              stroke = 0.8,
+              size = 2.7,
+              position = position_jitter(width = 0.2, seed = 123)) +
+  facet_wrap(~model, scales = "free") +
+  scale_color_manual(values = model_color_palette) + 
+  scale_fill_manual(values = model_color_palette) +
+  scale_y_continuous(expand = expansion(mult = c(0.05, 0.2))) +
+  labs(
+    x = "Dataset", 
+    y = "Correlation Accuracy"
+  ) +
+  theme_pubr(base_size = 12) +
+  theme(legend.position = "none",
+        strip.text = element_text(size=12)
+  ) +
+  geom_signif(
+    comparisons = list(c("Default", "Imputed")),
+    test = "wilcox.test",
+    map_signif_level = c("***"=0.001, "**"=0.01, "*"=0.05, "N.S."=2),
+    step_increase = 0.1
+  )
+ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF01Imputed.pdf", MAF01_extra_plot, width = 8, height = 5, units = "in", dpi = 300)
 
 
+#############################
+# MAF005
+MAF005_combined_df <- rbind(df, extra_df) %>%
+  filter(gen == "all", MAF == 0.005) %>% ### modify MAF here
+  mutate(extra = factor(extra, levels = c(0, 1), labels = c("Default", "Imputed")))
+
+MAF005_extra_plot <- ggplot(MAF005_combined_df, aes(x = extra, y = corr_iter)) +
+  geom_boxplot(aes(fill = model, color = model),alpha = 0.3, outlier.shape = NA) + 
+  geom_jitter(aes(fill = model),
+              shape = 21,
+              color = "transparent",
+              alpha = 0.4,
+              size = 2.7,
+              position = position_jitter(width = 0.2, seed = 123)) +
+  geom_jitter(aes(color = model),
+              shape = 21,
+              fill = NA,
+              stroke = 0.8,
+              size = 2.7,
+              position = position_jitter(width = 0.2, seed = 123)) +
+  facet_wrap(~model, scales = "free") +
+  scale_color_manual(values = model_color_palette) + 
+  scale_fill_manual(values = model_color_palette) +
+  scale_y_continuous(expand = expansion(mult = c(0.05, 0.2))) +
+  labs(
+    x = "Dataset", 
+    y = "Correlation Accuracy"
+  ) +
+  theme_pubr(base_size = 12) +
+  theme(legend.position = "none",
+        strip.text = element_text(size=12)
+  ) +
+  geom_signif(
+    comparisons = list(c("Default", "Imputed")),
+    test = "wilcox.test",
+    map_signif_level = c("***"=0.001, "**"=0.01, "*"=0.05, "N.S."=2),
+    step_increase = 0.1
+  )
+ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF005Imputed.pdf", MAF005_extra_plot, width = 8, height = 5, units = "in", dpi = 300)
+
+
+################################################################################ 
 ##### plot all models facet by MAF with extra dataset
 Extra_models <- c("GBLUP", "LASSO", "EGBLUP", "BayesB", "BRR", "RKHS")
 Extra_models <- extra_df[extra_df$gen == 'all', ]
@@ -807,13 +872,26 @@ Extra_models_bp <- ggplot(Extra_models, aes(x = MAF, y = corr_iter)) +
   theme(legend.position = "none") + 
   facet_wrap(~model,scale="free")
 Extra_models_bp
-ggsave("/work/tfs3/gsAI/analysis/misc/bpallmafextra.jpg", R_all_bp, width = 9, height = 5, units = "in", dpi = 300)
+ggsave("/work/tfs3/gsAI/analysis/pdfs/MAFAllImputedboxplot.pdf", Extra_models_bp, width = 8, height = 6, units = "in", dpi = 300)
 
 ################################################################################
 
-## Compute cohen's d for all models
-df_all <- extra_df[extra_df$gen == 'all',]
+
+# P-values KW/DUNN at each MAF
+
+
+################################################################################
+# Effect sizes
+
+# Compute cohen's d
+df_all <- df[df$gen == 'all',]
 cohens_d_all <- df_all %>%
+  group_by(MAF) %>%
+  cohens_d(corr_iter ~ model)
+
+## Compute cohen's d formodels after imputation
+extra_df_all <- extra_df[extra_df$gen == 'all',]
+cohens_d_extra <- extra_df_all %>%
   group_by(MAF) %>%
   cohens_d(corr_iter ~ model)
 
