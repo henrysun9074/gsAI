@@ -7,6 +7,7 @@
 /data/extra/
 /data/*.xlsx
 /analysis/misc
+/analysis/pdfs
 /analysis/combine_data.R
 /analysis/combine_data_extra.R
 /analysis/extra_comparison.R
