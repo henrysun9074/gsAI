@@ -876,9 +876,16 @@ ggsave("/work/tfs3/gsAI/analysis/pdfs/MAFAllImputedboxplot.pdf", Extra_models_bp
 
 ################################################################################
 
+# Table with average corr_iter & SD per model at F2 vs all and at each MAF
+# Table with average corr_iter & SD per model at imputed and not imputed
 
-# P-values KW/DUNN at each MAF
+# P-values KW/dunn between models at each MAF on all generation
+# P-values KW/dunn between models at each MAF on F2 generation
+# P-values KW/dunn between models at each MAF on imputed data
 
+# P-values wilcoxon between MAF for each model
+# P-values wilcoxon at each MAF between F2 and all
+# P-values wilcoxon at each MAF between default and imputed
 
 ################################################################################
 # Effect sizes

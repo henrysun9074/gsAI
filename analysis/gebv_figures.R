@@ -33,7 +33,7 @@ library(ggridges)
 library(GGally)
 
 # extra SNPs from imputation 
-# df <- read.csv("/work/tfs3/gsAI/data/combined_gebvs_extra.csv")
+extra_df <- read.csv("/work/tfs3/gsAI/data/combined_gebvs_extra.csv")
 
 # default
 df <- read.csv("/work/tfs3/gsAI/data/combined_gebvs.csv")
@@ -57,38 +57,77 @@ MAF05df <- df[df$MAF == 0.05,]
 MAF01df <- df[df$MAF == 0.01,]
 MAF005df <- df[df$MAF == 0.005,]
 
+MAF05extradf <- extra_df[extra_df$MAF == 0.05,]
+MAF01extradf <- extra_df[extra_df$MAF == 0.01,]
+MAF005extradf <- extra_df[extra_df$MAF == 0.005,]
+
 ################################################################################
-## correlation plots
+## correlation plots unused
 
-## select MAF to use for subsequent plots
-Pairwise <- MAF05df[, c("GBLUP", "LASSO", "RKHS", 
-                   "EGBLUP", "BRR", "BayesB",
-                   "LR", "RF", "GB")]
+## MAF05
+# Pairwise <- MAF05df[, c("GBLUP", "LASSO", "RKHS", 
+#                    "EGBLUP", "BRR", "BayesB",
+#                    "LR", "RF", "GB")]
+# colnames(Pairwise) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
+#                         "LR", "RF", "GB")
+# cor_matrix <- cor(Pairwise, use = "complete.obs")
+# corrplot(cor_matrix, 
+#          method = "square", 
+#          tl.cex = 1,
+#          tl.col = "black",  
+#          col.lim = c(0, 1),
+#          tl.pos = 'l',
+#          diag = FALSE,
+#          type = 'upper',
+#          order = 'hclust',
+#          addCoef.col = "white",
+#          # number.cex = 0.8,
+#          mar = c(0, 0, 0, 0))
+# 
+# ## MAF01
+# Pairwise01 <- MAF01df[, c("GBLUP", "LASSO", "RKHS", 
+#                         "EGBLUP", "BRR", "BayesB",
+#                         "LR", "RF", "GB")]
+# colnames(Pairwise01) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
+#                         "LR", "RF", "GB")
+# cor_matrix_01 <- cor(Pairwise01, use = "complete.obs")
+# corrplot(cor_matrix_01, 
+#          method = "square", 
+#          tl.cex = 1,
+#          tl.col = "black",  
+#          col.lim = c(0, 1),
+#          tl.pos = 'l',
+#          diag = FALSE,
+#          type = 'upper',
+#          order = 'hclust',
+#          addCoef.col = "white",
+#          # number.cex = 0.8,
+#          mar = c(0, 0, 0, 0)) 
+# 
+# ## MAF005
+# Pairwise005 <- MAF005df[, c("GBLUP", "LASSO", "RKHS", 
+#                           "EGBLUP", "BRR", "BayesB",
+#                           "LR", "RF", "GB")]
+# 
+# colnames(Pairwise005) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
+#                           "LR", "RF", "GB")
+# cor_matrix005 <- cor(Pairwise005, use = "complete.obs")
+# cor_matrix_ordered005 <- cor_matrix005[new_model_order, new_model_order]
+# corrplot(cor_matrix_ordered005, 
+#          method = "square", 
+#          tl.cex = 1,
+#          tl.col = "black",  
+#          col.lim = c(0, 1),
+#          tl.pos = 'l',
+#          diag = FALSE,
+#          type = 'upper',
+#          order = 'hclust',
+#          addCoef.col = "white",
+#          # number.cex = 0.8,
+#          mar = c(0, 0, 0, 0)) 
 
-colnames(Pairwise) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
-                        "LR", "RF", "GB")
-cor_matrix <- cor(Pairwise, use = "complete.obs")
-cor_matrix_ordered <- cor_matrix[new_model_order, new_model_order]
-
-# heatmap
-my_colors <- colorRampPalette(c("#80cdc1", "#dfc27d"))(200)
-corrplot(cor_matrix, 
-         method = "square", 
-         tl.cex = 1,
-         tl.col = "black",  
-         col.lim = c(0, 1),
-         tl.pos = 'l',
-         diag = FALSE,
-         type = 'upper',
-         order = 'hclust',
-         addCoef.col = "white",
-         # number.cex = 0.8,
-         mar = c(0, 0, 0, 0)) 
-  # %>% 
-  # corrRect(c(1, 6), col = "green", lwd = 4) %>%  
-  # corrRect(c(7, 9), col = "red", lwd = 4)
-
-########################### SPLOM of model GEBVs
+################################################################################
+# SPLOM of model GEBVs
 
 lim_min <- 0
 lim_max <- 1
@@ -123,10 +162,11 @@ custom_scatter <- function(data, mapping, ...) {
     ) 
 }
 
-Pairwise <- MAF005df[, c("GBLUP", "LASSO", "RKHS", 
+# MAF05
+Pairwise <- MAF05df[, c("GBLUP", "LASSO", "RKHS", 
                         "EGBLUP", "BRR", "BayesB",
                         "LR", "RF", "GB")]
-p <- ggpairs(
+p05 <- ggpairs(
   Pairwise,
   columns = 1:ncol(Pairwise),
   upper = "blank", 
@@ -140,7 +180,50 @@ p <- ggpairs(
     panel.spacing = unit(0.2, "lines"), 
     axis.title.x = element_text(size = 16, face = "bold", margin = margin(t = 5))
   )
-ggsave("/work/tfs3/gsAI/analysis/misc/splom_maf005.png", p, width = 15, height = 10, units = "in")
+ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF05SPLOM.pdf", p05, width = 15, height = 10, units = "in")
+
+
+# MAF01
+Pairwise <- MAF01df[, c("GBLUP", "LASSO", "RKHS", 
+                        "EGBLUP", "BRR", "BayesB",
+                        "LR", "RF", "GB")]
+p01 <- ggpairs(
+  Pairwise,
+  columns = 1:ncol(Pairwise),
+  upper = "blank", 
+  diag = list(continuous = diag_label),
+  lower = list(continuous = custom_scatter),
+  xlab = "Breeding Value"
+) +
+  theme(
+    strip.background = element_blank(),
+    strip.text = element_blank(),
+    panel.spacing = unit(0.2, "lines"), 
+    axis.title.x = element_text(size = 16, face = "bold", margin = margin(t = 5))
+  )
+ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF01SPLOM.pdf", p01, width = 15, height = 10, units = "in")
+
+
+# MAF005
+Pairwise <- MAF005df[, c("GBLUP", "LASSO", "RKHS", 
+                        "EGBLUP", "BRR", "BayesB",
+                        "LR", "RF", "GB")]
+p005 <- ggpairs(
+  Pairwise,
+  columns = 1:ncol(Pairwise),
+  upper = "blank", 
+  diag = list(continuous = diag_label),
+  lower = list(continuous = custom_scatter),
+  xlab = "Breeding Value"
+) +
+  theme(
+    strip.background = element_blank(),
+    strip.text = element_blank(),
+    panel.spacing = unit(0.2, "lines"), 
+    axis.title.x = element_text(size = 16, face = "bold", margin = margin(t = 5))
+  )
+ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF005SPLOM.pdf", p005, width = 15, height = 10, units = "in")
+
 
 
 ################################################################################
