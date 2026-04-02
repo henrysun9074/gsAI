@@ -1,0 +1,22 @@
+{
+    "LR": {
+        "C": 0.00014475116765378214,
+        "penalty": "l2"
+    },
+    "RF": {
+        "max_depth": 26,
+        "max_features": "sqrt",
+        "min_samples_leaf": 2,
+        "min_samples_split": 2,
+        "n_estimators": 2000
+    },
+    "GB": {
+        "colsample_bytree": 0.5,
+        "gamma": 2.76433585660614,
+        "learning_rate": 0.00397574606830666,
+        "max_depth": 5,
+        "min_child_weight": 1,
+        "n_estimators": 1088,
+        "subsample": 1.0
+    }
+}

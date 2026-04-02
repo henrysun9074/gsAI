@@ -18,7 +18,7 @@
 /Rmodels/old
 /Rmodels/gebvs
 /Rmodels/raw
-/MLmodels/models
+/MLmodels/models/*.joblib
 /MLmodels/misc
 /MLmodels/gebvs
 *.RData
