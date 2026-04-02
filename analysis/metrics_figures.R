@@ -894,6 +894,7 @@ model_summary_table <- df %>%
     sd_corr   = sd(corr_iter, na.rm = TRUE),
     .groups = "drop"
   )
+# write.csv(model_summary_table, "/work/tfs3/gsAI/analysis/stats/model_summary.csv")
 
 # Table with average corr_iter at imputed and not imputed at each MAF
 extra_model_summary_table <- extra_df %>%
@@ -903,24 +904,41 @@ extra_model_summary_table <- extra_df %>%
     sd_corr   = sd(corr_iter, na.rm = TRUE),
     .groups = "drop"
   )
+# write.csv(extra_model_summary_table, "/work/tfs3/gsAI/analysis/stats/imputed_model_summary.csv")
 
+################################################################################
 # P-values KW/dunn between models at each MAF on all generation
-# P-values KW/dunn between models at each MAF on F2 generation
-F2_dunn_MAF05
-F2_dunn_MAF01
-F2_dunn_MAF005
-# P-values KW/dunn between models at each MAF on imputed data
-imputed_dunn_MAF005
-imputed_dunn_MAF05 
-imputed_dunn_MAF01
+all_dunn_MAF05$MAF <- 0.05
+all_dunn_MAF01$ MAF <- 0.01
+all_dunn_MAF005$MAF <- 0.005
+dunn_results_all <- rbind(all_dunn_MAF05, all_dunn_MAF01, all_dunn_MAF005)
+# write.csv(dunn_results_all, "/work/tfs3/gsAI/analysis/stats/dunn_results_allgen.csv")
 
-# P-values wilcoxon between MAF for each model for each model 
+# P-values KW/dunn between models at each MAF on F2 generation
+F2_dunn_MAF05$MAF <- 0.05
+F2_dunn_MAF01$MAF <- 0.01
+F2_dunn_MAF005$MAF <- 0.005
+dunn_results_f2 <- rbind(F2_dunn_MAF05, F2_dunn_MAF01, F2_dunn_MAF005)
+# write.csv(dunn_results_f2, "/work/tfs3/gsAI/analysis/stats/dunn_results_f2gen.csv")
+
+# P-values KW/dunn between models at each MAF on imputed data
+imputed_dunn_MAF005$MAF <- 0.05
+imputed_dunn_MAF05$MAF <- 0.01
+imputed_dunn_MAF01$MAF <- 0.005
+imputed_dunn <- rbind(imputed_dunn_MAF05, imputed_dunn_MAF01, imputed_dunn_MAF005)
+# write.csv(dunn_results_f2, "/work/tfs3/gsAI/analysis/stats/dunn_results_imputed.csv")
+
+
+################################################################################
+# P-values wilcoxon between MAF for each model
+
 maf_pvals <- df %>%
   filter(gen == "all") %>%
   group_by(model) %>%
   pairwise_wilcox_test(corr_iter ~ MAF) %>%
   ungroup()
 maf_pvals
+write.csv(maf_pvals, "/work/tfs3/gsAI/analysis/stats/MAF_wilcoxon.csv")
 
 # P-values wilcoxon at each MAF between F2 and all for each model 
 f2_vs_all_pvals <- df %>%
@@ -928,18 +946,17 @@ f2_vs_all_pvals <- df %>%
   wilcox_test(corr_iter ~ gen) %>%
   add_significance()
 f2_vs_all_pvals
+write.csv(f2_vs_all_pvals, "/work/tfs3/gsAI/analysis/stats/F2vAll_wilcoxon.csv")
 
 # P-values wilcoxon at each MAF between default and imputed for each model
 final_df <- rbind(MAF005_combined_df, MAF01_combined_df, MAF05_combined_df)
-final_df <- final_df %>%
-  mutate(imputed_status = ifelse(extra == 1, "Imputed", "Default"))
 imputed_pvals <- final_df %>%
   group_by(MAF, model) %>%
-  wilcox_test(corr_iter ~ imputed_status) %>%
-  adjust_pvalue(method = "BH") %>%
+  wilcox_test(corr_iter ~ extra) %>%
   add_significance()
-
 imputed_pvals
+write.csv(imputed_pvals, "/work/tfs3/gsAI/analysis/stats/Imputed_wilcoxon.csv")
+
 
 ################################################################################
 # Effect sizes
@@ -949,17 +966,21 @@ df_all <- df[df$gen == 'all',]
 cohens_d_all <- df_all %>%
   group_by(MAF) %>%
   cohens_d(corr_iter ~ model)
+write.csv(cohens_d_all, "/work/tfs3/gsAI/analysis/stats/allgens_cohensd.csv")
 
-## Compute cohen's d formodels after imputation
+## Compute cohen's d for models after imputation
 extra_df_all <- extra_df[extra_df$gen == 'all',]
 cohens_d_extra <- extra_df_all %>%
   group_by(MAF) %>%
   cohens_d(corr_iter ~ model)
+write.csv(cohens_d_extra, "/work/tfs3/gsAI/analysis/stats/imputation_cohensd.csv")
 
 ## Compute cohen's d for F2 models
 df_f2 <- df[df$gen == 'F2',]
 cohens_d_F2 <- df_f2 %>%
   group_by(MAF) %>%
   cohens_d(corr_iter ~ model)
+write.csv(cohens_d_F2, "/work/tfs3/gsAI/analysis/stats/f2_cohensd.csv")
+
 
 ## saved effect sizes - GB has large effect in all pairwise comparisons
