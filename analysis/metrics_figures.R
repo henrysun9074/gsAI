@@ -61,6 +61,60 @@ new_labels <- c("0.005" = "MAF 0.005", "0.05" = "MAF 0.05", "0.01" = "MAF 0.01")
 
 ################################################################################
 
+# boxplot all generations
+df$gen <- factor(df$gen, levels = c("F2", "all"))
+gen_colors <- c("F2" = "#D2A6B4FF", "all" = "#8E2043FF")
+
+bpF2vAll <- ggplot(df, aes(x = MAF, y = corr_iter, fill = gen, color = gen)) +
+  geom_boxplot(
+    position = position_dodge(width = 0.8), 
+    outlier.shape = NA,
+    alpha = 0.7
+  ) +
+  geom_jitter(
+    position = position_jitterdodge(
+      jitter.width = 0.15, 
+      dodge.width = 0.8, 
+      seed = 123
+    ),
+    shape = 21,
+    size = 2,
+    alpha = 0.4,
+    stroke = 0.5
+  ) +
+  facet_wrap(~model, scales = "free_y") +
+  stat_compare_means(
+    aes(group = gen), 
+    label = "p.signif", 
+    method = "wilcox.test",
+    hide.ns = FALSE,
+    label.y.npc = "top",
+    symnum.args = list(cutpoints = c(0, 0.001, 0.01, 0.05, Inf), 
+                        symbols = c("***", "**", "*", "ns"))
+  ) +
+  scale_fill_manual(values = gen_colors) +
+  scale_color_manual(values = gen_colors) +
+  scale_y_continuous(expand = expansion(mult = c(0.05, 0.2))) +
+  theme_pubr() +
+  labs(
+    x = "Minor Allele Frequency",
+    y = "Correlation Accuracy",
+    fill = "Generation",
+    color = "Generation"
+  ) +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_text(size =14),
+    legend.text = element_text(size = 14),
+    strip.text = element_text(size = 14),
+    axis.title.x = element_text(size = 16),
+    axis.title.y = element_text(size = 16)
+  )
+ggsave("/work/tfs3/gsAI/analysis/pdfs/AllMAFsF2vsAll.pdf", bpF2vAll, width = 12, height = 10, dpi = 300)
+# *p<.05, **p<.01, ***p<0.001
+
+################################################################################
+
 ### point plots for F2 generation only
 
 MAF01df <- df[df$gen == 'F2' & df$MAF == '0.01', ]
@@ -526,7 +580,7 @@ plot_data_with_cld_all <- summary_by_model[summary_by_model$gen == 'all', ] %>%
 # ggsave("/work/tfs3/gsAI/analysis/misc/point_cld_all_facets.png", cld_point, width = 8, height = 5, units = "in")
 
 # this fixes the y-axis scale for all facets
-cld_point2 <- ggplot(
+cld_point2_all <- ggplot(
   summary_by_model[summary_by_model$gen == 'all', ],
   aes(x = model, y = mean_of_iters, color = model)
 ) +
@@ -538,7 +592,9 @@ cld_point2 <- ggplot(
   facet_wrap(~ MAF, labeller = as_labeller(new_labels)) +
   scale_color_manual(values = model_color_palette) +
   theme_pubr() +
-  theme(strip.text = element_text(size = 12)) +
+  theme(strip.text = element_text(size = 12),
+        legend.position = "none" # turn this off if just plotting this plot due to ggdraw
+        ) +
   labs(y = "Correlation Accuracy", color = "Model") +
   theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
   geom_text(
@@ -551,11 +607,21 @@ cld_point2 <- ggplot(
   size = 4,
   vjust = 0
 )
-cld_point2 <- ggdraw(cld_point2) +
+cld_point2_all <- ggdraw(cld_point2_all) +
 draw_label("KW p < 0.001", x = 0.9, y = 0.05, hjust = 0.5, vjust = 0)
-ggsave("/work/tfs3/gsAI/analysis/pdfs/AllModelsMAFpointplot.pdf", cld_point2, width = 8, height = 5, units = "in")
+ggsave("/work/tfs3/gsAI/analysis/pdfs/AllModelsMAFpointplot.pdf", cld_point2_all, width = 8, height = 5, units = "in")
 
 ################################################################################
+
+# combine
+combined_pointplot <- plot_grid(
+  cld_point2, 
+  cld_point2_all + theme(legend.position = "none"), ncol=1,
+  labels = c("A", "B"),
+  label_size = 18
+)
+ggsave("/work/tfs3/gsAI/analysis/pdfs/CombinedPointPlotF2All.pdf", combined_pointplot,
+       width = 10, height = 8, dpi = 300)
 ################################################################################
 ################################################################################
 
@@ -715,18 +781,75 @@ cld_point2 <- ggdraw(cld_point2) +
   theme_cowplot()
 ggsave("/work/tfs3/gsAI/analysis/pdfs/ImputedSNPsMAFpointplot.pdf", cld_point2, width = 8, height = 5, units = "in")
 
-
 ################################################################################
 ################################################################################
 
 ## combined between 
 df$extra <- 0
+combined_df_all <- rbind(df,extra_df)
+
+################################################################################
+
+# box plot all generations, at each MAF for default vs GSM markers
+combined_df_allgens <- combined_df_all %>%
+  filter(gen == "all") %>%
+  mutate(extra = factor(extra, levels = c(0, 1), labels = c("Default", "With GSM")))
+
+extra_colors <- c("Default" = "#BAB97DFF", "With GSM" = "#426737FF")
+
+bpDefaultvsGSM <- ggplot(combined_df_allgens, aes(x = MAF, y = corr_iter, fill = extra, color = extra)) +
+  geom_boxplot(
+    position = position_dodge(width = 0.8), 
+    outlier.shape = NA,
+    alpha = 0.7
+  ) +
+  geom_jitter(
+    position = position_jitterdodge(
+      jitter.width = 0.15, 
+      dodge.width = 0.8, 
+      seed = 123
+    ),
+    shape = 21,
+    size = 2,
+    alpha = 0.4,
+    stroke = 0.5
+  ) +
+  facet_wrap(~model, scales = "free_y") +
+  stat_compare_means(
+    aes(group = extra), 
+    label = "p.signif", 
+    method = "wilcox.test",
+    hide.ns = FALSE,
+    label.y.npc = "top",
+    symnum.args = list(cutpoints = c(0, 0.001, 0.01, 0.05, Inf), 
+                       symbols = c("***", "**", "*", "ns"))
+  ) +
+  scale_fill_manual(values = extra_colors) +
+  scale_color_manual(values = extra_colors) +
+  scale_y_continuous(expand = expansion(mult = c(0.05, 0.2))) +
+  theme_pubr() +
+  labs(
+    x = "Minor Allele Frequency",
+    y = "Correlation Accuracy",
+    fill = "Dataset",
+    color = "Dataset"
+  ) +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_text(size =14),
+    legend.text = element_text(size = 14),
+    strip.text = element_text(size = 14),
+    axis.title.x = element_text(size = 16),
+    axis.title.y = element_text(size = 16)
+  )
+ggsave("/work/tfs3/gsAI/analysis/pdfs/AllMAFsDefaultvsImputed.pdf", bpDefaultvsGSM, width = 12, height = 10, dpi = 300)
+# *p<.05, **p<.01, ***p<0.001
 
 #############################
 # MAF05
 MAF05_combined_df <- rbind(df, extra_df) %>%
   filter(gen == "all", MAF == 0.05) %>% ### modify MAF here
-  mutate(extra = factor(extra, levels = c(0, 1), labels = c("Default", "Imputed")))
+  mutate(extra = factor(extra, levels = c(0, 1), labels = c("Default", "With GSM")))
 
 MAF05_extra_plot <- ggplot(MAF05_combined_df, aes(x = extra, y = corr_iter)) +
   geom_boxplot(aes(fill = model, color = model),alpha = 0.3, outlier.shape = NA) + 
@@ -755,7 +878,7 @@ MAF05_extra_plot <- ggplot(MAF05_combined_df, aes(x = extra, y = corr_iter)) +
         strip.text = element_text(size=12)
   ) +
   geom_signif(
-    comparisons = list(c("Default", "Imputed")),
+    comparisons = list(c("Default", "With GSM")),
     test = "wilcox.test",
     map_signif_level = c("***"=0.001, "**"=0.01, "*"=0.05, "N.S."=2),
     step_increase = 0.1
@@ -766,7 +889,7 @@ ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF05Imputed.pdf", MAF05_extra_plot, width
 # MAF01
 MAF01_combined_df <- rbind(df, extra_df) %>%
   filter(gen == "all", MAF == 0.01) %>% ### modify MAF here
-  mutate(extra = factor(extra, levels = c(0, 1), labels = c("Default", "Imputed")))
+  mutate(extra = factor(extra, levels = c(0, 1), labels = c("Default", "With GSM")))
 
 MAF01_extra_plot <- ggplot(MAF01_combined_df, aes(x = extra, y = corr_iter)) +
   geom_boxplot(aes(fill = model, color = model),alpha = 0.3, outlier.shape = NA) + 
@@ -795,7 +918,7 @@ MAF01_extra_plot <- ggplot(MAF01_combined_df, aes(x = extra, y = corr_iter)) +
         strip.text = element_text(size=12)
   ) +
   geom_signif(
-    comparisons = list(c("Default", "Imputed")),
+    comparisons = list(c("Default", "With GSM")),
     test = "wilcox.test",
     map_signif_level = c("***"=0.001, "**"=0.01, "*"=0.05, "N.S."=2),
     step_increase = 0.1
@@ -807,7 +930,7 @@ ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF01Imputed.pdf", MAF01_extra_plot, width
 # MAF005
 MAF005_combined_df <- rbind(df, extra_df) %>%
   filter(gen == "all", MAF == 0.005) %>% ### modify MAF here
-  mutate(extra = factor(extra, levels = c(0, 1), labels = c("Default", "Imputed")))
+  mutate(extra = factor(extra, levels = c(0, 1), labels = c("Default", "With GSM")))
 
 MAF005_extra_plot <- ggplot(MAF005_combined_df, aes(x = extra, y = corr_iter)) +
   geom_boxplot(aes(fill = model, color = model),alpha = 0.3, outlier.shape = NA) + 
@@ -836,7 +959,7 @@ MAF005_extra_plot <- ggplot(MAF005_combined_df, aes(x = extra, y = corr_iter)) +
         strip.text = element_text(size=12)
   ) +
   geom_signif(
-    comparisons = list(c("Default", "Imputed")),
+    comparisons = list(c("Default", "With GSM")),
     test = "wilcox.test",
     map_signif_level = c("***"=0.001, "**"=0.01, "*"=0.05, "N.S."=2),
     step_increase = 0.1
