@@ -677,44 +677,53 @@ ggsave("/work/tfs3/gsAI/analysis/pdfs/ImputedMAF005ridgeline.pdf", MAF005_p_over
 # combine multipanel ridgeline plots
 
 # MAF 05
+MAF01_p_overlay_status <- MAF01_p_overlay_status + theme(legend.position = "none")
+MAF01_p_overlay_status_extra <- MAF01_p_overlay_status_extra + theme(legend.position = "none")
+MAF005_p_overlay_status <- MAF005_p_overlay_status + theme(legend.position = "none")
+MAF005_p_overlay_status_extra <- MAF005_p_overlay_status_extra + theme(legend.position = "none")
+
+margin_adj <- theme(plot.margin = margin(t = 10, l = 5, r = 10, b =5))
 ridgeline05plot <- plot_grid(
-  MAF05_p_overlay_status, MAF05_p_overlay_status_extra,
-  nrow = 2,
-  labels = c("A","B"), 
+  MAF05_p_overlay_status + margin_adj, MAF05_p_overlay_status_extra + margin_adj,
+  MAF01_p_overlay_status + margin_adj, MAF01_p_overlay_status_extra + margin_adj,
+  MAF005_p_overlay_status + margin_adj, MAF005_p_overlay_status_extra + margin_adj,
+  nrow = 3, ncol = 2,
+  align = "hv",
+  labels = c("A","B","C","D","E","F"), 
   label_size = 18
 )
-ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF05ridgelinesCombined.pdf",
+ggsave("/work/tfs3/gsAI/analysis/pdfs/MAFAllRidgelinesCombined.pdf",
        ridgeline05plot,
-       width = 7,
-       height = 9,
+       width = 12,
+       height = 11,
        units = "in",
        dpi = 300)
 
 # MAF 01
-ridgeline01plot <- plot_grid(
-  MAF01_p_overlay_status, MAF01_p_overlay_status_extra,
-  nrow = 2,
-  labels = c("A","B"), 
-  label_size = 18
-)
-ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF01ridgelinesCombined.pdf",
-       ridgeline01plot,
-       width = 7,
-       height = 9,
-       units = "in",
-       dpi = 300)
-
-# MAF005
-ridgeline005plot <- plot_grid(
-  MAF005_p_overlay_status, MAF005_p_overlay_status_extra,
-  nrow = 2,
-  labels = c("A","B"), 
-  label_size = 18
-)
-ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF005ridgelinesCombined.pdf",
-       ridgeline005plot,
-       width = 7,
-       height = 9,
-       units = "in",
-       dpi = 300)
+# ridgeline01plot <- plot_grid(
+#   MAF01_p_overlay_status, MAF01_p_overlay_status_extra,
+#   nrow = 2,
+#   labels = c("A","B"), 
+#   label_size = 18
+# )
+# ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF01ridgelinesCombined.pdf",
+#        ridgeline01plot,
+#        width = 7,
+#        height = 9,
+#        units = "in",
+#        dpi = 300)
+# 
+# # MAF005
+# ridgeline005plot <- plot_grid(
+#   MAF005_p_overlay_status, MAF005_p_overlay_status_extra,
+#   nrow = 2,
+#   labels = c("A","B"), 
+#   label_size = 18
+# )
+# ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF005ridgelinesCombined.pdf",
+#        ridgeline005plot,
+#        width = 7,
+#        height = 9,
+#        units = "in",
+#        dpi = 300)
 ################################################################################
