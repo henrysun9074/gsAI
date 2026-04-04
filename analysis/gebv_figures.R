@@ -32,6 +32,8 @@ library(ggalign)
 library(ggridges)
 library(GGally)
 library(ggplotify)
+library(patchwork)
+library(gridGraphics)
 
 # extra SNPs from imputation 
 extra_df <- read.csv("/work/tfs3/gsAI/data/combined_gebvs_extra.csv")
@@ -190,8 +192,8 @@ Pairwise <- MAF05extradf[, c("GBLUP", "LASSO", "RKHS",
                         "LR", "RF", "GB")]
 colnames(Pairwise) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
                         "LR", "RF", "GB")
-cor_matrix <- cor(Pairwise, use = "complete.obs")
-corrplot(cor_matrix,
+cor_matrix_extra <- cor(Pairwise, use = "complete.obs")
+corrplot(cor_matrix_extra,
          method = "square",
          tl.cex = 1,
          tl.col = "black",
@@ -210,8 +212,8 @@ Pairwise01 <- MAF01extradf[, c("GBLUP", "LASSO", "RKHS",
                           "LR", "RF", "GB")]
 colnames(Pairwise01) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
                           "LR", "RF", "GB")
-cor_matrix_01 <- cor(Pairwise01, use = "complete.obs")
-corrplot(cor_matrix_01,
+cor_matrix_01_extra <- cor(Pairwise01, use = "complete.obs")
+corrplot(cor_matrix_01_extra,
          method = "square",
          tl.cex = 1,
          tl.col = "black",
@@ -231,9 +233,9 @@ Pairwise005 <- MAF005extradf[, c("GBLUP", "LASSO", "RKHS",
 
 colnames(Pairwise005) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
                            "LR", "RF", "GB")
-cor_matrix005 <- cor(Pairwise005, use = "complete.obs")
-cor_matrix_ordered005 <- cor_matrix005[new_model_order, new_model_order]
-corrplot(cor_matrix_ordered005,
+cor_matrix005_extra <- cor(Pairwise005, use = "complete.obs")
+cor_matrix_ordered005_extra <- cor_matrix005[new_model_order, new_model_order]
+corrplot(cor_matrix_ordered005_extra,
          method = "square",
          tl.cex = 1,
          tl.col = "black",
@@ -253,7 +255,7 @@ pdf("/work/tfs3/gsAI/analysis/pdfs/CorrelationMatrixAllMAFImputed.pdf",
 par(mfrow = c(1, 3),   # 1 row, 3 columns
     mar = c(1,1,1.5,1))  # tighter margins
 
-corrplot(cor_matrix,
+corrplot(cor_matrix_extra,
          method = "square",
          tl.cex = 0.9,
          tl.col = "black",
@@ -266,7 +268,7 @@ corrplot(cor_matrix,
          mar = c(0, 0, 0, 0))
 title("MAF = 0.05", line = 0.5)
 
-corrplot(cor_matrix_01,
+corrplot(cor_matrix_01_extra,
          method = "square",
          tl.cex = 0.9,
          tl.col = "black",
@@ -279,7 +281,7 @@ corrplot(cor_matrix_01,
          mar = c(0, 0, 0, 0))
 title("MAF = 0.01", line = 0.5)
 
-corrplot(cor_matrix_ordered005,
+corrplot(cor_matrix_ordered005_extra,
          method = "square",
          tl.cex = 0.9,
          tl.col = "black",
