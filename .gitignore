@@ -21,6 +21,7 @@
 /MLmodels/models/*.joblib
 /MLmodels/misc
 /MLmodels/gebvs
+/MLmodels/misc/models/NNimpute
 *.RData
 *.rdscd 
 *.joblib
