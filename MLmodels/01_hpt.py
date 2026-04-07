@@ -85,7 +85,7 @@ def get_search_spaces():
         # Gradient boosting
         "GB": (
             XGBClassifier(
-                tree_method="hist", device="cpu", eval_metric="logloss"
+                tree_method="hist", device="cuda", eval_metric="logloss"
             ),
             {
                 "n_estimators": Integer(100, 2000),

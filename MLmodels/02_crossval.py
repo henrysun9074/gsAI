@@ -61,7 +61,7 @@ def build_model(name, params):
     elif name == "RF":
         return RandomForestClassifier(n_jobs=-1, **params)
     elif name == "GB":
-        return XGBClassifier(tree_method="hist", eval_metric="logloss", **params)
+        return XGBClassifier(tree_method="hist", device="cuda", eval_metric="logloss", **params)
     else:
         raise ValueError(f"Unknown model name: {name}")
 
