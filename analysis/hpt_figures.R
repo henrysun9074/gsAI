@@ -115,7 +115,7 @@ df <- df %>%
 
 
 maf05bp <- ggplot(df[df$MAF == '0.05', ], aes(x = hpt, y = corr_iter)) +
-  geom_boxplot(aes(fill = model, color = model), alpha = 0.3, outlier.shape = NA) + 
+  geom_boxplot(aes(fill = model, color = model), alpha = 0.6, outlier.shape = NA) + 
   geom_jitter(aes(fill = model),
               shape = 21,
               color = "transparent",
@@ -144,7 +144,7 @@ maf05bp <- ggplot(df[df$MAF == '0.05', ], aes(x = hpt, y = corr_iter)) +
 maf05bp
 
 maf01bp <- ggplot(df[df$MAF == '0.01', ], aes(x = hpt, y = corr_iter)) +
-  geom_boxplot(aes(fill = model, color = model), alpha = 0.3, outlier.shape = NA) + 
+  geom_boxplot(aes(fill = model, color = model), alpha = 0.6, outlier.shape = NA) + 
   geom_jitter(aes(fill = model),
               shape = 21,
               color = "transparent",
@@ -173,7 +173,7 @@ maf01bp <- ggplot(df[df$MAF == '0.01', ], aes(x = hpt, y = corr_iter)) +
 maf01bp
 
 maf005bp <- ggplot(df[df$MAF == '0.005', ], aes(x = hpt, y = corr_iter)) +
-  geom_boxplot(aes(fill = model, color = model), alpha = 0.3, outlier.shape = NA) + 
+  geom_boxplot(aes(fill = model, color = model), alpha = 0.6, outlier.shape = NA) + 
   geom_jitter(aes(fill = model),
               shape = 21,
               color = "transparent",
@@ -251,7 +251,7 @@ df$nested <- factor(df$nested, levels = unique(sort(df$nested)))
 
 
 maf005bp <- ggplot(df[df$MAF == '0.005' & df$gen=='all', ], aes(x = nested, y = corr_iter)) +
-  geom_boxplot(aes(fill = model, color = model), alpha = 0.3, outlier.shape = NA) +
+  geom_boxplot(aes(fill = model, color = model), alpha = 0.6, outlier.shape = NA) +
   geom_jitter(aes(fill = model),
               shape = 21,
               color = "transparent",

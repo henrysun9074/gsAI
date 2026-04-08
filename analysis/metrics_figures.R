@@ -252,7 +252,8 @@ cld_point2 <- ggplot(
   facet_wrap(~ MAF, labeller = as_labeller(new_labels)) +
   scale_color_manual(values = model_color_palette) +
   theme_pubr() +
-  theme(strip.text = element_text(size = 12)) +
+  theme(strip.text = element_text(size = 12),
+        legend.position = "none") +
   labs(y = "Correlation Accuracy", color = "Model") +
   theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
   geom_text(
@@ -302,7 +303,7 @@ maf05bp <- ggplot(df[df$MAF == '0.05', ], aes(x = gen, y = corr_iter)) +
 ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF05F2vsAll.pdf", maf05bp, width = 7, height = 6, units = "in")
 
 maf01bp <- ggplot(df[df$MAF == '0.01', ], aes(x = gen, y = corr_iter)) +
-  geom_boxplot(aes(fill = model, color = model),alpha = 0.3, outlier.shape = NA) + 
+  geom_boxplot(aes(fill = model, color = model),alpha = 0.6, outlier.shape = NA) + 
   scale_fill_manual(values = model_color_palette) +
   facet_wrap(~model, scale="free") +
   geom_jitter(aes(fill = model),
@@ -332,7 +333,7 @@ maf01bp <- ggplot(df[df$MAF == '0.01', ], aes(x = gen, y = corr_iter)) +
 ggsave("/work/tfs3/gsAI/analysis/pdfs/MAF01F2vsAll.pdf", maf01bp, width = 7, height = 6, units = "in")
 
 maf005bp <- ggplot(df[df$MAF == '0.005', ], aes(x = gen, y = corr_iter)) +
-  geom_boxplot(aes(fill = model, color = model),alpha = 0.3, outlier.shape = NA) + 
+  geom_boxplot(aes(fill = model, color = model),alpha = 0.6, outlier.shape = NA) + 
   scale_fill_manual(values = model_color_palette) +
   facet_wrap(~model, scale="free") +
   geom_jitter(aes(fill = model),
@@ -593,7 +594,7 @@ cld_point2_all <- ggplot(
   scale_color_manual(values = model_color_palette) +
   theme_pubr() +
   theme(strip.text = element_text(size = 12),
-        legend.position = "none" # turn this off if just plotting this plot due to ggdraw
+        legend.position = "top" # turn this off if just plotting this plot due to ggdraw
         ) +
   labs(y = "Correlation Accuracy", color = "Model") +
   theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
@@ -607,18 +608,24 @@ cld_point2_all <- ggplot(
   size = 4,
   vjust = 0
 )
+legend_combined <- get_legend(cld_point2_all)
+cld_point2_all <- cld_point2_all + theme(legend.position = "none")
 cld_point2_all <- ggdraw(cld_point2_all) +
 draw_label("KW p < 0.001", x = 0.9, y = 0.05, hjust = 0.5, vjust = 0)
 ggsave("/work/tfs3/gsAI/analysis/pdfs/AllModelsMAFpointplot.pdf", cld_point2_all, width = 8, height = 5, units = "in")
 
 ################################################################################
 
-# combine
 combined_pointplot <- plot_grid(
-  cld_point2, 
-  cld_point2_all + theme(legend.position = "none"), ncol=1,
-  labels = c("A", "B"),
-  label_size = 18
+  legend_combined,                                      # Row 1: The legend with spacers
+  cld_point2 + theme(legend.position = "none"),     # Row 2: Panel A
+  cld_point2_all + theme(legend.position = "none"), # Row 3: Panel B
+  ncol = 1,
+  labels = c("", "A", "B"), 
+  label_size = 18,
+  rel_heights = c(0.3, 1, 1),
+  align = "v",         # Vertically align the subplots
+  axis = "lr"          # Align the left and right margins precisely
 )
 ggsave("/work/tfs3/gsAI/analysis/pdfs/CombinedPointPlotF2All.pdf", combined_pointplot,
        width = 10, height = 8, dpi = 300)
@@ -853,7 +860,7 @@ MAF05_combined_df <- rbind(df, extra_df) %>%
   mutate(extra = factor(extra, levels = c(0, 1), labels = c("Default", "With GSM")))
 
 MAF05_extra_plot <- ggplot(MAF05_combined_df, aes(x = extra, y = corr_iter)) +
-  geom_boxplot(aes(fill = model, color = model),alpha = 0.3, outlier.shape = NA) + 
+  geom_boxplot(aes(fill = model, color = model),alpha = 0.6, outlier.shape = NA) + 
   geom_jitter(aes(fill = model),
               shape = 21,
               color = "transparent",
@@ -893,7 +900,7 @@ MAF01_combined_df <- rbind(df, extra_df) %>%
   mutate(extra = factor(extra, levels = c(0, 1), labels = c("Default", "With GSM")))
 
 MAF01_extra_plot <- ggplot(MAF01_combined_df, aes(x = extra, y = corr_iter)) +
-  geom_boxplot(aes(fill = model, color = model),alpha = 0.3, outlier.shape = NA) + 
+  geom_boxplot(aes(fill = model, color = model),alpha = 0.6, outlier.shape = NA) + 
   geom_jitter(aes(fill = model),
               shape = 21,
               color = "transparent",
@@ -934,7 +941,7 @@ MAF005_combined_df <- rbind(df, extra_df) %>%
   mutate(extra = factor(extra, levels = c(0, 1), labels = c("Default", "With GSM")))
 
 MAF005_extra_plot <- ggplot(MAF005_combined_df, aes(x = extra, y = corr_iter)) +
-  geom_boxplot(aes(fill = model, color = model),alpha = 0.3, outlier.shape = NA) + 
+  geom_boxplot(aes(fill = model, color = model),alpha = 0.6, outlier.shape = NA) + 
   geom_jitter(aes(fill = model),
               shape = 21,
               color = "transparent",
@@ -974,7 +981,7 @@ Extra_models <- c("GBLUP", "LASSO", "EGBLUP", "BayesB", "BRR", "RKHS")
 Extra_models <- extra_df[extra_df$gen == 'all', ]
 annotation_data <- Extra_models %>% filter(model == "GBLUP") %>% distinct(model)
 Extra_models_bp <- ggplot(Extra_models, aes(x = MAF, y = corr_iter)) +
-  geom_boxplot(aes(fill = model, color = model), alpha = 0.3, outlier.shape = NA) + 
+  geom_boxplot(aes(fill = model, color = model), alpha = 0.6, outlier.shape = NA) + 
   geom_jitter(aes(fill = model),
               shape = 21,
               color = "transparent",
