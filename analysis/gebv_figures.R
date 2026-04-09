@@ -35,7 +35,7 @@ library(ggplotify)
 library(patchwork)
 library(gridGraphics)
 
-# extra SNPs from imputation 
+# extra SNPs from GSM 
 extra_df <- read.csv("/work/tfs3/gsAI/data/combined_gebvs_extra.csv")
 
 # default
@@ -728,4 +728,57 @@ ggsave("/work/tfs3/gsAI/analysis/pdfs/MAFAllRidgelinesCombined.pdf",
 #        height = 9,
 #        units = "in",
 #        dpi = 300)
+
 ################################################################################
+
+# KS tests and comparison
+models <- c("LR", "RF", "GB", "GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB")
+
+# Add a source tag and combine
+df_long <- df %>% mutate(Source = "Before") %>% select(Source, MAF, all_of(models))
+extra_long <- extra_df %>% mutate(Source = "After") %>% select(Source, MAF, all_of(models))
+
+combined_data <- bind_rows(df_long, extra_long) %>%
+  pivot_longer(cols = all_of(models), names_to = "Model", values_to = "GEBV")
+
+summary_stats <- combined_data %>%
+  group_by(Model, MAF, Source) %>%
+  summarise(
+    Mean   = mean(GEBV, na.rm = TRUE),
+    Median = median(GEBV, na.rm = TRUE),
+    Q10     = quantile(GEBV, 0.1, na.rm = TRUE),
+    Q90     = quantile(GEBV, 0.9, na.rm = TRUE),
+    IQR    = IQR(GEBV, na.rm = TRUE),
+    .groups = "drop"
+  )
+print(summary_stats)
+
+quantile_diffs <- summary_stats %>%
+  select(Model, MAF, Source, Q10, Q90, Mean, Median) %>%
+  pivot_wider(
+    names_from = Source, 
+    values_from = c(Q10, Q90, Mean, Median)
+  ) %>%
+  mutate(
+    diff_Q10 = Q10_After - Q10_Before,
+    diff_Q90 = Q90_After - Q90_Before,
+    diff_mean = Mean_After - Mean_Before,
+    diff_median = Median_After - Median_Before
+  )
+print(quantile_diffs)
+
+quantile_diffs_ordered <- quantile_diffs %>%
+  arrange((abs(diff_Q10)))
+print(quantile_diffs_ordered)
+
+ks_results <- combined_data %>%
+  group_by(Model, MAF) %>%
+  summarise(
+    ks_p_value = ks.test(
+      GEBV[Source == "Before"], 
+      GEBV[Source == "After"]
+    )$p.value,
+    .groups = "drop"
+  ) %>%
+  mutate(Significant = ifelse(ks_p_value < 0.05, "*", ""))
+print(ks_results)

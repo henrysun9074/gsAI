@@ -617,15 +617,15 @@ ggsave("/work/tfs3/gsAI/analysis/pdfs/AllModelsMAFpointplot.pdf", cld_point2_all
 ################################################################################
 
 combined_pointplot <- plot_grid(
-  legend_combined,                                      # Row 1: The legend with spacers
-  cld_point2 + theme(legend.position = "none"),     # Row 2: Panel A
-  cld_point2_all + theme(legend.position = "none"), # Row 3: Panel B
+  legend_combined,                                    
+  cld_point2 + theme(legend.position = "none"),   
+  cld_point2_all + theme(legend.position = "none"),
   ncol = 1,
   labels = c("", "A", "B"), 
   label_size = 18,
   rel_heights = c(0.3, 1, 1),
-  align = "v",         # Vertically align the subplots
-  axis = "lr"          # Align the left and right margins precisely
+  align = "v",      
+  axis = "lr"       
 )
 ggsave("/work/tfs3/gsAI/analysis/pdfs/CombinedPointPlotF2All.pdf", combined_pointplot,
        width = 10, height = 8, dpi = 300)
@@ -981,7 +981,7 @@ Extra_models <- c("GBLUP", "LASSO", "EGBLUP", "BayesB", "BRR", "RKHS")
 Extra_models <- extra_df[extra_df$gen == 'all', ]
 annotation_data <- Extra_models %>% filter(model == "GBLUP") %>% distinct(model)
 Extra_models_bp <- ggplot(Extra_models, aes(x = MAF, y = corr_iter)) +
-  geom_boxplot(aes(fill = model, color = model), alpha = 0.6, outlier.shape = NA) + 
+  geom_boxplot(aes(color = model, fill = model), alpha = 0.6, outlier.shape = NA) + 
   geom_jitter(aes(fill = model),
               shape = 21,
               color = "transparent",
@@ -1014,6 +1014,13 @@ Extra_models_bp <- ggplot(Extra_models, aes(x = MAF, y = corr_iter)) +
   facet_wrap(~model,scale="free")
 Extra_models_bp
 ggsave("/work/tfs3/gsAI/analysis/pdfs/MAFAllImputedboxplot.pdf", Extra_models_bp, width = 8, height = 6, units = "in", dpi = 300)
+
+combined_GSM_plot <- plot_grid(cld_point2, Extra_models_bp,
+                             labels = c("A", "B"),
+                             label_size = 18,
+                             ncol = 1)
+ggsave("/work/tfs3/gsAI/analysis/pdfs/MAFAllImputed.pdf", combined_GSM_plot, 
+       width = 8, height = 10, units = "in", dpi = 300)
 
 ################################################################################
 
@@ -1112,6 +1119,5 @@ cohens_d_F2 <- df_f2 %>%
   group_by(MAF) %>%
   cohens_d(corr_iter ~ model)
 write.csv(cohens_d_F2, "/work/tfs3/gsAI/analysis/stats/f2_cohensd.csv")
-
 
 ## saved effect sizes - GB has large effect in all pairwise comparisons
