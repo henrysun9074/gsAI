@@ -734,9 +734,22 @@ ggsave("/work/tfs3/gsAI/analysis/pdfs/MAFAllRidgelinesCombined.pdf",
 # KS tests and comparison
 models <- c("LR", "RF", "GB", "GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB")
 
-# Add a source tag and combine
 df_long <- df %>% mutate(Source = "Before") %>% select(Source, MAF, all_of(models))
 extra_long <- extra_df %>% mutate(Source = "After") %>% select(Source, MAF, all_of(models))
+
+df_long <- df %>% 
+  mutate(
+    Source = "Before",
+    MAF = as.numeric(as.character(MAF)) # as.character handles factors safely
+  ) %>% 
+  select(Source, MAF, all_of(models))
+
+extra_long <- extra_df %>% 
+  mutate(
+    Source = "After",
+    MAF = as.numeric(as.character(MAF))
+  ) %>% 
+  select(Source, MAF, all_of(models))
 
 combined_data <- bind_rows(df_long, extra_long) %>%
   pivot_longer(cols = all_of(models), names_to = "Model", values_to = "GEBV")
@@ -784,3 +797,23 @@ ks_results <- combined_data %>%
 print(ks_results)
 # write.csv(ks_results, "ksresults.csv")
 # write.csv(quantile_diffs_ordered, "quantilediffs.csv")
+
+## Shapiro Wilk test
+shapiro_results <- combined_data %>%
+  group_by(Model, MAF, Source) %>%
+  summarise(
+    shapiro_p_value = if(n() >= 3 & n() <= 5000 & var(GEBV, na.rm = TRUE) > 0) {
+      shapiro.test(GEBV)$p.value
+    } else if (n() > 5000 & var(GEBV, na.rm = TRUE) > 0) {
+      # subsample if N > 5000, as shapiro.test fails otherwise
+      shapiro.test(sample(GEBV, 5000))$p.value
+    } else {
+      NA_real_
+    },
+    .groups = "drop"
+  ) %>%
+  mutate(
+    Is_Normal = ifelse(shapiro_p_value > 0.05, "Yes", "No"),
+    Significant_Departure = ifelse(shapiro_p_value < 0.05, "*", "")
+  )
+print(shapiro_results)
