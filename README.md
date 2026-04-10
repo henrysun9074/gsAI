@@ -13,7 +13,6 @@ This project integrates data from three successive generations of lab-based derm
 */MLmodels* has code containing instructions for training, hyperparameter tuning, and cross-validation of LR, RF, GB genomic selection models, as well as .json files with optimal hyperparameter values for all tuned models.  
 */Rmodels* has code containing instructions for training and cross-validation of BayesB, BRR, LASSO, GBLUP, EGBLUP, RKHS genomic selection models.  
 */analysis* has code for statistical analyses comparing model performances and generating figures from the paper.  
-*/data* has data used in analyses and figures containing model performance metrics and aggregated GEBV predictions both with and without additional SNP imputation; contact hs325@duke.edu for raw model weights or training genotype CSVs.  
 **TBA**: Paul's code for GWAS
 
 ---
