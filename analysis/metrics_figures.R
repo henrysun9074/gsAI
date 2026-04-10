@@ -1069,14 +1069,13 @@ imputed_dunn <- rbind(imputed_dunn_MAF05, imputed_dunn_MAF01, imputed_dunn_MAF00
 
 ################################################################################
 # P-values wilcoxon between MAF for each model
-
 maf_pvals <- df %>%
   filter(gen == "all") %>%
   group_by(model) %>%
   pairwise_wilcox_test(corr_iter ~ MAF) %>%
   ungroup()
 maf_pvals
-write.csv(maf_pvals, "/work/tfs3/gsAI/analysis/stats/MAF_wilcoxon.csv")
+# write.csv(maf_pvals, "/work/tfs3/gsAI/analysis/stats/MAF_wilcoxon.csv")
 
 # P-values wilcoxon at each MAF between F2 and all for each model 
 f2_vs_all_pvals <- df %>%
@@ -1084,7 +1083,7 @@ f2_vs_all_pvals <- df %>%
   wilcox_test(corr_iter ~ gen) %>%
   add_significance()
 f2_vs_all_pvals
-write.csv(f2_vs_all_pvals, "/work/tfs3/gsAI/analysis/stats/F2vAll_wilcoxon.csv")
+# write.csv(f2_vs_all_pvals, "/work/tfs3/gsAI/analysis/stats/F2vAll_wilcoxon.csv")
 
 # P-values wilcoxon at each MAF between default and imputed for each model
 final_df <- rbind(MAF005_combined_df, MAF01_combined_df, MAF05_combined_df)
@@ -1093,31 +1092,31 @@ imputed_pvals <- final_df %>%
   wilcox_test(corr_iter ~ extra) %>%
   add_significance()
 imputed_pvals
-write.csv(imputed_pvals, "/work/tfs3/gsAI/analysis/stats/Imputed_wilcoxon.csv")
-
+# write.csv(imputed_pvals, "/work/tfs3/gsAI/analysis/stats/Imputed_wilcoxon.csv")
 
 ################################################################################
 # Effect sizes
+
 
 # Compute cohen's d
 df_all <- df[df$gen == 'all',]
 cohens_d_all <- df_all %>%
   group_by(MAF) %>%
   cohens_d(corr_iter ~ model)
-write.csv(cohens_d_all, "/work/tfs3/gsAI/analysis/stats/allgens_cohensd.csv")
+# write.csv(cohens_d_all, "/work/tfs3/gsAI/analysis/stats/allgens_cohensd.csv")
 
 ## Compute cohen's d for models after imputation
 extra_df_all <- extra_df[extra_df$gen == 'all',]
 cohens_d_extra <- extra_df_all %>%
   group_by(MAF) %>%
   cohens_d(corr_iter ~ model)
-write.csv(cohens_d_extra, "/work/tfs3/gsAI/analysis/stats/imputation_cohensd.csv")
+# write.csv(cohens_d_extra, "/work/tfs3/gsAI/analysis/stats/imputation_cohensd.csv")
 
 ## Compute cohen's d for F2 models
 df_f2 <- df[df$gen == 'F2',]
 cohens_d_F2 <- df_f2 %>%
   group_by(MAF) %>%
   cohens_d(corr_iter ~ model)
-write.csv(cohens_d_F2, "/work/tfs3/gsAI/analysis/stats/f2_cohensd.csv")
+# write.csv(cohens_d_F2, "/work/tfs3/gsAI/analysis/stats/f2_cohensd.csv")
 
 ## saved effect sizes - GB has large effect in all pairwise comparisons

@@ -114,6 +114,40 @@ df <- df %>%
   mutate(hpt = factor(hpt, levels = c(0, 1), labels = c("No", "Yes")))
 
 
+######## compute differences per model and stats
+pct_diff_df <- df %>%
+  group_by(gen, MAF, model, hpt) %>%
+  summarise(mean_corr_iter = mean(corr_iter, na.rm = TRUE), .groups = "drop") %>%
+  pivot_wider(
+    names_from = hpt,
+    values_from = mean_corr_iter
+  ) %>%
+  mutate(
+    pct_difference = 100 * (Yes - No) / No
+  ) %>%
+  arrange(gen, MAF, model)
+
+print(pct_diff_df)
+
+wilcox_results <- df %>%
+  select(gen, MAF, model, iteration, hpt, corr_iter) %>%
+  pivot_wider(
+    id_cols = c(gen, MAF, model, iteration),
+    names_from = hpt,
+    values_from = corr_iter
+  ) %>%
+  filter(!is.na(No) & !is.na(Yes)) %>%
+  group_by(gen, MAF, model) %>%
+  summarise(
+    n_pairs = n(),
+    p_value = wilcox.test(Yes, No, paired = TRUE)$p.value,
+    median_diff = median(Yes - No),
+    mean_diff = mean(Yes - No),
+    .groups = "drop"
+  ) %>%
+  arrange(gen, MAF, model)
+print(wilcox_results)
+
 maf05bp <- ggplot(df[df$MAF == '0.05', ], aes(x = hpt, y = corr_iter)) +
   geom_boxplot(aes(fill = model, color = model), alpha = 0.6, outlier.shape = NA) + 
   geom_jitter(aes(fill = model),
