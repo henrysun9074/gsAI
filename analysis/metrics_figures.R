@@ -1094,6 +1094,34 @@ imputed_pvals <- final_df %>%
 imputed_pvals
 # write.csv(imputed_pvals, "/work/tfs3/gsAI/analysis/stats/Imputed_wilcoxon.csv")
 
+###############
+# calculate % change from extra = 0 → 1
+pct_change_df <- all_df %>%
+  select(gen, MAF, model, iteration, extra, corr_iter) %>%
+  pivot_wider(
+    id_cols = c(gen, MAF, model, iteration),
+    names_from = extra,
+    values_from = corr_iter
+  ) %>%
+  rename(
+    base = `0`,
+    extra = `1`
+  ) %>%
+  mutate(
+    pct_change = 100 * (extra - base) / base
+  )
+
+# average % change across iterations by model and MAF
+summary_df <- pct_change_df %>%
+  group_by(model, MAF) %>%
+  summarise(
+    mean_pct_change = mean(pct_change, na.rm = TRUE),
+    sd_pct_change = sd(pct_change, na.rm = TRUE),
+    n = sum(!is.na(pct_change)),
+    .groups = "drop"
+  ) %>%
+  arrange(model, MAF)
+
 ################################################################################
 # Effect sizes
 
