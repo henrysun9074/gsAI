@@ -139,8 +139,8 @@ corrplot(cor_matrix_ordered005,
 pdf("/work/tfs3/gsAI/analysis/pdfs/CorrelationMatrixAllMAF.pdf",
     width = 12, height = 5)
 
-par(mfrow = c(1, 3),   # 1 row, 3 columns
-    mar = c(1,1,1.5,1))  # tighter margins
+par(mfrow = c(1, 3),   
+    mar = c(1,1,1.5,1)) 
 
 corrplot(cor_matrix,
          method = "square",
@@ -185,7 +185,7 @@ dev.off()
 
 ################################################################################
 
-# correlation plots for extra dataset
+# correlation plots for GSMs
 
 Pairwise <- MAF05extradf[, c("GBLUP", "LASSO", "RKHS",
                         "EGBLUP", "BRR", "BayesB",
@@ -252,8 +252,8 @@ corrplot(cor_matrix_ordered005_extra,
 pdf("/work/tfs3/gsAI/analysis/pdfs/CorrelationMatrixAllMAFImputed.pdf",
     width = 12, height = 5)
 
-par(mfrow = c(1, 3),   # 1 row, 3 columns
-    mar = c(1,1,1.5,1))  # tighter margins
+par(mfrow = c(1, 3),  
+    mar = c(1,1,1.5,1)) 
 
 corrplot(cor_matrix_extra,
          method = "square",
@@ -731,7 +731,7 @@ ggsave("/work/tfs3/gsAI/analysis/pdfs/MAFAllRidgelinesCombined.pdf",
 
 ################################################################################
 
-# KS tests and comparison
+# KS tests and comparison of breeding value shifts following GSM imputation
 models <- c("LR", "RF", "GB", "GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB")
 
 df_long <- df %>% mutate(Source = "Before") %>% select(Source, MAF, all_of(models))
