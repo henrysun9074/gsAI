@@ -76,7 +76,7 @@ colnames(Pairwise) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
 cor_matrix <- cor(Pairwise, use = "complete.obs")
 # pdf(file = "/work/tfs3/gsAI/analysis/pdfs/CorrelationMatrixMAF05.pdf", width = 7, height = 6)
 corrplot(cor_matrix,
-         method = "square",
+         method = "color",
          tl.cex = 1,
          tl.col = "black",
          col.lim = c(0, 1),
@@ -98,16 +98,14 @@ colnames(Pairwise01) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
 cor_matrix_01 <- cor(Pairwise01, use = "complete.obs")
 # pdf(file = "/work/tfs3/gsAI/analysis/pdfs/CorrelationMatrixMAF01.pdf", width = 7, height = 6)
 corrplot(cor_matrix_01,
-         method = "square",
+         method = "color",
          tl.cex = 1,
          tl.col = "black",
          col.lim = c(0, 1),
-         tl.pos = 'l',
-         diag = FALSE,
-         type = 'upper',
-         order = 'hclust',
+         diag = TRUE,
+         type = "upper",
+         order = "hclust",
          addCoef.col = "white",
-         # number.cex = 0.8,
          mar = c(0, 0, 0, 0))
 # dev.off()
 
@@ -122,16 +120,14 @@ cor_matrix005 <- cor(Pairwise005, use = "complete.obs")
 cor_matrix_ordered005 <- cor_matrix005[new_model_order, new_model_order]
 # pdf(file = "/work/tfs3/gsAI/analysis/pdfs/CorrelationMatrixMAF005.pdf", width = 7, height = 6)
 corrplot(cor_matrix_ordered005,
-         method = "square",
+         method = "color",
          tl.cex = 1,
          tl.col = "black",
          col.lim = c(0, 1),
-         tl.pos = 'l',
-         diag = FALSE,
-         type = 'upper',
-         order = 'hclust',
+         diag = TRUE,
+         type = "upper",
+         order = "hclust",
          addCoef.col = "white",
-         # number.cex = 0.8,
          mar = c(0, 0, 0, 0))
 # dev.off()
 
@@ -143,40 +139,37 @@ par(mfrow = c(1, 3),
     mar = c(1,1,1.5,1)) 
 
 corrplot(cor_matrix,
-         method = "square",
-         tl.cex = 0.9,
+         method = "color",
+         tl.cex = 1,
          tl.col = "black",
          col.lim = c(0, 1),
-         tl.pos = 'l',
-         diag = FALSE,
-         type = 'upper',
-         order = 'hclust',
+         diag = TRUE,
+         type = "upper",
+         order = "hclust",
          addCoef.col = "white",
          mar = c(0, 0, 0, 0))
 title("MAF = 0.05", line = 0.5)
 
 corrplot(cor_matrix_01,
-         method = "square",
-         tl.cex = 0.9,
+         method = "color",
+         tl.cex = 1,
          tl.col = "black",
          col.lim = c(0, 1),
-         tl.pos = 'l',
-         diag = FALSE,
-         type = 'upper',
-         order = 'hclust',
+         diag = TRUE,
+         type = "upper",
+         order = "hclust",
          addCoef.col = "white",
          mar = c(0, 0, 0, 0))
 title("MAF = 0.01", line = 0.5)
 
 corrplot(cor_matrix_ordered005,
-         method = "square",
-         tl.cex = 0.9,
+         method = "color",
+         tl.cex = 1,
          tl.col = "black",
          col.lim = c(0, 1),
-         tl.pos = 'l',
-         diag = FALSE,
-         type = 'upper',
-         order = 'hclust',
+         diag = TRUE,
+         type = "upper",
+         order = "hclust",
          addCoef.col = "white",
          mar = c(0, 0, 0, 0))
 title("MAF = 0.005", line = 0.5)
@@ -194,18 +187,15 @@ colnames(Pairwise) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
                         "LR", "RF", "GB")
 cor_matrix_extra <- cor(Pairwise, use = "complete.obs")
 corrplot(cor_matrix_extra,
-         method = "square",
+         method = "color",
          tl.cex = 1,
          tl.col = "black",
          col.lim = c(0, 1),
-         tl.pos = 'l',
-         diag = FALSE,
-         type = 'upper',
-         order = 'hclust',
+         diag = TRUE,
+         type = "upper",
+         order = "hclust",
          addCoef.col = "white",
-         # number.cex = 0.8,
          mar = c(0, 0, 0, 0))
-
 # MAF01
 Pairwise01 <- MAF01extradf[, c("GBLUP", "LASSO", "RKHS",
                           "EGBLUP", "BRR", "BayesB",
@@ -214,16 +204,14 @@ colnames(Pairwise01) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
                           "LR", "RF", "GB")
 cor_matrix_01_extra <- cor(Pairwise01, use = "complete.obs")
 corrplot(cor_matrix_01_extra,
-         method = "square",
+         method = "color",
          tl.cex = 1,
          tl.col = "black",
          col.lim = c(0, 1),
-         tl.pos = 'l',
-         diag = FALSE,
-         type = 'upper',
-         order = 'hclust',
+         diag = TRUE,
+         type = "upper",
+         order = "hclust",
          addCoef.col = "white",
-         # number.cex = 0.8,
          mar = c(0, 0, 0, 0))
 
 ## MAF005
@@ -234,19 +222,18 @@ Pairwise005 <- MAF005extradf[, c("GBLUP", "LASSO", "RKHS",
 colnames(Pairwise005) <- c("GBLUP", "LASSO", "RKHS", "EGBLUP", "BRR", "BayesB",
                            "LR", "RF", "GB")
 cor_matrix005_extra <- cor(Pairwise005, use = "complete.obs")
-cor_matrix_ordered005_extra <- cor_matrix005[new_model_order, new_model_order]
+cor_matrix_ordered005_extra <- cor_matrix005_extra[new_model_order, new_model_order]
 corrplot(cor_matrix_ordered005_extra,
-         method = "square",
+         method = "color",
          tl.cex = 1,
          tl.col = "black",
          col.lim = c(0, 1),
-         tl.pos = 'l',
-         diag = FALSE,
-         type = 'upper',
-         order = 'hclust',
+         diag = TRUE,
+         type = "upper",
+         order = "hclust",
          addCoef.col = "white",
-         # number.cex = 0.8,
          mar = c(0, 0, 0, 0))
+
 
 
 pdf("/work/tfs3/gsAI/analysis/pdfs/CorrelationMatrixAllMAFImputed.pdf",
@@ -256,40 +243,37 @@ par(mfrow = c(1, 3),
     mar = c(1,1,1.5,1)) 
 
 corrplot(cor_matrix_extra,
-         method = "square",
-         tl.cex = 0.9,
+         method = "color",
+         tl.cex = 1,
          tl.col = "black",
          col.lim = c(0, 1),
-         tl.pos = 'l',
-         diag = FALSE,
-         type = 'upper',
-         order = 'hclust',
+         diag = TRUE,
+         type = "upper",
+         order = "hclust",
          addCoef.col = "white",
          mar = c(0, 0, 0, 0))
 title("MAF = 0.05", line = 0.5)
 
 corrplot(cor_matrix_01_extra,
-         method = "square",
-         tl.cex = 0.9,
+         method = "color",
+         tl.cex = 1,
          tl.col = "black",
          col.lim = c(0, 1),
-         tl.pos = 'l',
-         diag = FALSE,
-         type = 'upper',
-         order = 'hclust',
+         diag = TRUE,
+         type = "upper",
+         order = "hclust",
          addCoef.col = "white",
          mar = c(0, 0, 0, 0))
 title("MAF = 0.01", line = 0.5)
 
 corrplot(cor_matrix_ordered005_extra,
-         method = "square",
-         tl.cex = 0.9,
+         method = "color",
+         tl.cex = 1,
          tl.col = "black",
          col.lim = c(0, 1),
-         tl.pos = 'l',
-         diag = FALSE,
-         type = 'upper',
-         order = 'hclust',
+         diag = TRUE,
+         type = "upper",
+         order = "hclust",
          addCoef.col = "white",
          mar = c(0, 0, 0, 0))
 title("MAF = 0.005", line = 0.5)
