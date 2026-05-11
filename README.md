@@ -1,4 +1,4 @@
-# 🧬 Genomic Selection for Dermo Resistance in Eastern Oyster (*Crassostrea virginica*)
+# 🧬 Multigenerational Genomic Selection for Dermo Resistance in Eastern Oyster (*Crassostrea virginica*)
 
 **Contact:** Henry Sun, hs325[at]duke.edu  
 **DOI:** TBA  
