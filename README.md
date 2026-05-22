@@ -2,7 +2,7 @@
 
 **Contact:** Henry Sun, hs325[at]duke.edu  
 **DOI:** TBA  
-**Cite:** TBA upon publication  
+**Cite:** TBA  
 
 ---
 
@@ -10,9 +10,9 @@
 
 This project integrates data from three successive generations of lab-based dermo challenge and genotyping with a high-density SNP array for genomic selection and genome-wide association studies (GWAS) for dermo resistance in oysters, combining three generations into a single training population. We trained 9 different models to perform genomic selection and predict survival to dermo upon infection. We also evaluated the influence of rare variants, i.e. minor alleles, on genomic prediction accuracy, as well as strong-effect SNPs identified by GWAS. In the repository, please find the following folders.  
 
-*/MLmodels* has code containing instructions for training, hyperparameter tuning, and cross-validation of LR, RF, GB genomic selection models, as well as .json files with optimal hyperparameter values for all tuned models.  
-*/Rmodels* has code containing instructions for training and cross-validation of BayesB, BRR, LASSO, GBLUP, EGBLUP, RKHS genomic selection models.  
-*/analysis* has code for statistical analyses comparing model performances and generating figures from the paper, as well as code for a companion genome-wide association study (citation TBA).
+  * `*/MLmodels*` has code containing instructions for training, hyperparameter tuning, and cross-validation of LR, RF, GB genomic selection models, as well as .json files with optimal hyperparameter values for all tuned models.  
+  * `*/Rmodels*` has code containing instructions for training and cross-validation of BayesB, BRR, LASSO, GBLUP, EGBLUP, RKHS genomic selection models.  
+  * `*/analysis*` has code for statistical analyses comparing model performances and generating figures from the paper, as well as code for a companion genome-wide association study (Coyne et al., 2026).
 
 ---
 
