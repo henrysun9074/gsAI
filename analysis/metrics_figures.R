@@ -124,7 +124,7 @@ MAF05df <- df[df$gen == 'F2' & df$MAF == '0.05', ]
 ## kruskal and posthoc dunn tests for each MAF
 kruskal <- kruskal.test(corr_iter ~ model, data = MAF005df)
 # Kruskal-Wallis chi-squared = 77.601, df = 8, p-value = 1.484e-13
-dunn_res <- dunnTest(corr_iter ~ model, data = MAF005df, method="none")
+dunn_res <- dunnTest(corr_iter ~ model, data = MAF005df, method="bh")
 dunn_table <- dunn_res$res
 model_order_index <- setNames(seq_along(new_model_order), new_model_order)
 dunn_table_ordered <- dunn_table %>%
@@ -144,7 +144,7 @@ CLD1
 
 kruskal <- kruskal.test(corr_iter ~ model, data = MAF01df)
 # Kruskal-Wallis chi-squared = 72.596, df = 8, p-value = 1.492e-12
-dunn_res <- dunnTest(corr_iter ~ model, data = MAF01df, method="none")
+dunn_res <- dunnTest(corr_iter ~ model, data = MAF01df, method="bh")
 dunn_table <- dunn_res$res
 dunn_table_ordered <- dunn_table %>%
   tidyr::separate(Comparison, into = c("Model1", "Model2"), sep = " - ", remove = FALSE) %>%
@@ -163,7 +163,7 @@ CLD2
 
 kruskal <- kruskal.test(corr_iter ~ model, data = MAF05df)
 # Kruskal-Wallis chi-squared = 59.59, df = 8, p-value = 5.61e-10
-dunn_res <- dunnTest(corr_iter ~ model, data = MAF05df, method="none")
+dunn_res <- dunnTest(corr_iter ~ model, data = MAF05df, method="bh")
 dunn_table <- dunn_res$res
 dunn_table_ordered <- dunn_table %>%
   tidyr::separate(Comparison, into = c("Model1", "Model2"), sep = " - ", remove = FALSE) %>%
@@ -213,32 +213,6 @@ plot_data_with_cld_all <- summary_by_model[summary_by_model$gen == 'all', ] %>%
     CLD_y_pos = mean_of_iters + sd_of_iters + 0.005
   )
 
-### free y scale
-# cld_point <- ggplot(
-#   summary_by_model[summary_by_model$gen == 'all', ],
-#   aes(x = model, y = mean_of_iters, color = model)
-# ) +
-#   geom_point(size = 5) +
-#   geom_errorbar(
-#     aes(ymin = mean_of_iters - sd_of_iters, ymax = mean_of_iters + sd_of_iters),
-#     width = 0.2, color = "black", linewidth = 0.5
-#   ) +
-#   facet_wrap(~ MAF, scales = "free_y", labeller = as_labeller(new_labels)) +
-#   scale_color_manual(values = model_color_palette) +
-#   theme_pubr() +
-#   theme(strip.text = element_text(size = 12)) +
-#   labs(y = "Correlation Accuracy", color = "Model") +
-#   theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
-#   geom_text(
-#     data = plot_data_with_cld_all, 
-#     aes(x = model, y = CLD_y_pos, label = Letter, group = MAF),
-#     inherit.aes = FALSE,
-#     color = "black",
-#     size = 4,
-#     vjust = 0
-#   )
-# ggsave("/work/tfs3/gsAI/analysis/misc/point_f2_cld_all_facets.png", cld_point, width = 8, height = 5, units = "in")
-
 ### fixed y scale
 cld_point2 <- ggplot(
   summary_by_model[summary_by_model$gen == 'all', ],
@@ -267,6 +241,106 @@ cld_point2 <- ggplot(
 cld_point2 <- ggdraw(cld_point2) +
   draw_label("KW p < 0.001", x = 0.9, y = 0.04, hjust = 0.5, vjust = 0)
 ggsave("/work/tfs3/gsAI/analysis/pdfs/F2atallMAFs.pdf", cld_point2, width = 8, height = 5, units = "in")
+
+############## as box plot
+plot_data_F2 <- df %>%
+  dplyr::filter(gen == "F2") %>%
+  dplyr::mutate(
+    MAF = as.character(MAF),
+    model = factor(model, levels = new_model_order)
+  )
+
+F2_facet_ranges <- plot_data_F2 %>%
+  dplyr::group_by(MAF) %>%
+  dplyr::summarise(
+    facet_range = diff(range(corr_iter, na.rm = TRUE)),
+    .groups = "drop"
+  )
+
+plot_data_with_cld_F2 <- plot_data_F2 %>%
+  dplyr::group_by(MAF, model) %>%
+  dplyr::summarise(
+    model_max = max(corr_iter, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  dplyr::left_join(all_CLD_df, by = c("model", "MAF")) %>%
+  dplyr::left_join(F2_facet_ranges, by = "MAF") %>%
+  dplyr::mutate(
+    CLD_y_pos = model_max + 0.04 * facet_range
+  )
+
+cld_boxplot_F2 <- ggplot(
+  plot_data_F2,
+  aes(x = model, y = corr_iter, color = model)
+) +
+  geom_boxplot(
+    aes(fill = model),
+    width = 0.65,
+    alpha = 0.25,
+    linewidth = 0.6,
+    outlier.shape = NA
+  ) +
+  geom_point(
+    position = position_jitter(
+      width = 0.15,
+      height = 0,
+      seed = 123
+    ),
+    size = 1.7,
+    alpha = 0.65
+  ) +
+  geom_text(
+    data = plot_data_with_cld_F2,
+    aes(
+      x = model,
+      y = CLD_y_pos,
+      label = Letter
+    ),
+    inherit.aes = FALSE,
+    color = "black",
+    size = 4,
+    vjust = 0
+  ) +
+  facet_wrap(
+    ~ MAF,
+    labeller = as_labeller(new_labels)
+  ) +
+  scale_color_manual(values = model_color_palette) +
+  scale_fill_manual(values = model_color_palette) +
+  scale_y_continuous(
+    expand = expansion(mult = c(0.05, 0.12))
+  ) +
+  labs(
+    x = NULL,
+    y = "Correlation Accuracy",
+    color = "Model",
+    fill = "Model"
+  ) +
+  theme_pubr() +
+  theme(
+    strip.text = element_text(size = 12),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    legend.position = "none"
+  )
+
+cld_boxplot_F2 <- ggdraw(cld_boxplot_F2) +
+  draw_label(
+    "KW p < 0.001",
+    x = 0.90,
+    y = 0.04,
+    hjust = 0.5,
+    vjust = 0
+  )
+cld_boxplot_F2
+# 
+# ggsave(
+#   "/work/tfs3/gsAI/analysis/pdfs/F2atallMAFs_boxplot.pdf",
+#   cld_boxplot_F2,
+#   width = 8,
+#   height = 5,
+#   units = "in"
+# )
 
 
 ################################################################################
@@ -472,7 +546,7 @@ MAF05df <- df[df$gen == 'all' & df$MAF == '0.05', ]
 ## calculate kruskal-wallis and dunn test results for 'all' generations at each MAF
 kruskal <- kruskal.test(corr_iter ~ model, data = MAF005df)
 # Kruskal-Wallis chi-squared = 82.683, df = 8, p-value = 1.408e-14
-dunn_res <- dunnTest(corr_iter ~ model, data = MAF005df, method="none")
+dunn_res <- dunnTest(corr_iter ~ model, data = MAF005df, method="bh")
 dunn_table <- dunn_res$res
 model_order_index <- setNames(seq_along(new_model_order), new_model_order)
 dunn_table_ordered <- dunn_table %>%
@@ -492,7 +566,7 @@ CLD1
 
 kruskal <- kruskal.test(corr_iter ~ model, data = MAF01df)
 # Kruskal-Wallis chi-squared = 84.215, df = 8, p-value = 6.904e-15
-dunn_res <- dunnTest(corr_iter ~ model, data = MAF01df, method="none")
+dunn_res <- dunnTest(corr_iter ~ model, data = MAF01df, method="bh")
 dunn_table <- dunn_res$res
 dunn_table_ordered <- dunn_table %>%
   tidyr::separate(Comparison, into = c("Model1", "Model2"), sep = " - ", remove = FALSE) %>%
@@ -511,7 +585,7 @@ CLD2
 
 kruskal <- kruskal.test(corr_iter ~ model, data = MAF05df)
 # Kruskal-Wallis chi-squared = 77.059, df = 8, p-value = 1.907e-13
-dunn_res <- dunnTest(corr_iter ~ model, data = MAF05df, method="none")
+dunn_res <- dunnTest(corr_iter ~ model, data = MAF05df, method="bh")
 dunn_table <- dunn_res$res
 dunn_table_ordered <- dunn_table %>%
   tidyr::separate(Comparison, into = c("Model1", "Model2"), sep = " - ", remove = FALSE) %>%
@@ -551,35 +625,6 @@ plot_data_with_cld_all <- summary_by_model[summary_by_model$gen == 'all', ] %>%
 
 ################################
 
-# this draws the plot with variable y-axis scale for each facet
-# cld_point <- ggplot(
-#   summary_by_model[summary_by_model$gen == 'all', ],
-#   aes(x = model, y = mean_of_iters, color = model)
-# ) +
-#   geom_point(size = 5) +
-#   geom_errorbar(
-#     aes(ymin = mean_of_iters - sd_of_iters, ymax = mean_of_iters + sd_of_iters),
-#     width = 0.2, color = "black", linewidth = 0.5
-#   ) +
-#   facet_wrap(~ MAF, scales = "free_y", labeller = as_labeller(new_labels)) +
-#   scale_color_manual(values = model_color_palette) +
-#   theme_pubr() +
-#   theme(strip.text = element_text(size = 12)) +
-#   labs(y = "Correlation Accuracy", color = "Model") +
-#   theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
-#   geom_text(
-#     data = plot_data_with_cld_all, 
-#     aes(x = model, y = CLD_y_pos, label = Letter, group = MAF),
-#     inherit.aes = FALSE,
-#     color = "black",
-#     size = 4,
-#     vjust = 0
-#   ) 
-# cld_point <- ggdraw(cld_point) +
-#   draw_label("KW p < 0.001", x = 0.9, y = 0.05, hjust = 0.5, vjust = 0) +
-#   theme_cowplot()
-# ggsave("/work/tfs3/gsAI/analysis/misc/point_cld_all_facets.png", cld_point, width = 8, height = 5, units = "in")
-
 # this fixes the y-axis scale for all facets
 cld_point2_all <- ggplot(
   summary_by_model[summary_by_model$gen == 'all', ],
@@ -614,6 +659,98 @@ cld_point2_all <- ggdraw(cld_point2_all) +
 draw_label("KW p < 0.001", x = 0.9, y = 0.05, hjust = 0.5, vjust = 0)
 ggsave("/work/tfs3/gsAI/analysis/pdfs/AllModelsMAFpointplot.pdf", cld_point2_all, width = 8, height = 5, units = "in")
 
+
+########################### plot the above as a boxplot
+plot_data_all <- df %>%
+  dplyr::filter(gen == "all") %>%
+  dplyr::mutate(
+    MAF   = as.character(MAF),
+    model = factor(model, levels = new_model_order)
+  )
+
+plot_data_with_cld_all <- plot_data_all %>%
+  dplyr::group_by(MAF, model) %>%
+  dplyr::summarise(
+    model_max = max(corr_iter, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  dplyr::left_join(all_CLD_df, by = c("model", "MAF")) %>%
+  dplyr::group_by(MAF) %>%
+  dplyr::mutate(
+    facet_range = diff(range(plot_data_all$corr_iter[
+      plot_data_all$MAF == dplyr::first(MAF)
+    ], na.rm = TRUE)),
+    CLD_y_pos = model_max + 0.06 * facet_range
+  ) %>%
+  dplyr::ungroup()
+
+cld_boxplot_all <- ggplot(
+  plot_data_all,
+  aes(x = model, y = corr_iter, color = model)
+) +
+  geom_boxplot(
+    aes(fill = model),
+    width = 0.65,
+    alpha = 0.25,
+    linewidth = 0.6,
+    outlier.shape = NA
+  ) +
+  geom_point(
+    position = position_jitter(
+      width = 0.15,
+      height = 0,
+      seed = 123
+    ),
+    size = 1.7,
+    alpha = 0.65
+  ) +
+  geom_text(
+    data = plot_data_with_cld_all,
+    aes(
+      x = model,
+      y = CLD_y_pos,
+      label = Letter
+    ),
+    inherit.aes = FALSE,
+    color = "black",
+    size = 4,
+    vjust = 0
+  ) +
+  facet_wrap(
+    ~ MAF,
+    labeller = as_labeller(new_labels)
+  ) +
+  scale_color_manual(values = model_color_palette) +
+  scale_fill_manual(values = model_color_palette) +
+  scale_y_continuous(
+    expand = expansion(mult = c(0.05, 0.12))
+  ) +
+  labs(
+    x = NULL,
+    y = "Correlation Accuracy",
+    color = "Model",
+    fill = "Model"
+  ) +
+  theme_pubr() +
+  theme(
+    strip.text = element_text(size = 12),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    legend.position = "top"
+  )
+cld_boxplot_all <- cld_boxplot_all +
+  theme(legend.position = "none")
+
+cld_boxplot_all <- ggdraw(cld_boxplot_all) +
+  draw_label(
+    "KW p < 0.001",
+    x = 0.90,
+    y = 0.05,
+    hjust = 0.5,
+    vjust = 0
+  )
+cld_boxplot_all
+
 ################################################################################
 
 combined_pointplot <- plot_grid(
@@ -630,10 +767,25 @@ combined_pointplot <- plot_grid(
 ggsave("/work/tfs3/gsAI/analysis/pdfs/CombinedPointPlotF2All.pdf", combined_pointplot,
        width = 10, height = 8, dpi = 300)
 
+
+combined_boxplot <- plot_grid(
+  legend_combined,                                    
+  cld_boxplot_F2 + theme(legend.position = "none"),   
+  cld_boxplot_all + theme(legend.position = "none"),
+  ncol = 1,
+  labels = c("", "A", "B"), 
+  label_size = 18,
+  rel_heights = c(0.3, 1, 1),
+  align = "v",      
+  axis = "lr"       
+)
+ggsave("/work/tfs3/gsAI/analysis/pdfs/CombinedBoxPlotF2All.pdf", combined_boxplot,
+       width = 10, height = 8, dpi = 300)
+
 ################################################################################
 ################################################################################
 
-### point plot with correlations per MAF but for extra alleles with imputation
+### point plot with correlations per MAF but with GSM inclusion
 
 summary_by_model <- extra_df %>%
   pivot_longer(cols = c(corr_iter), names_to = "metric", values_to = "iter_mean") %>%
@@ -651,7 +803,7 @@ MAF05df <- extra_df[extra_df$gen == 'all' & extra_df$MAF == '0.05', ]
 
 kruskal <- kruskal.test(corr_iter ~ model, data = MAF005df)
 # Kruskal-Wallis chi-squared = 87.739, df = 8, p-value = 1.337e-15
-dunn_res <- dunnTest(corr_iter ~ model, data = MAF005df, method="none")
+dunn_res <- dunnTest(corr_iter ~ model, data = MAF005df, method="bh")
 dunn_table <- dunn_res$res
 model_order_index <- setNames(seq_along(new_model_order), new_model_order)
 dunn_table_ordered <- dunn_table %>%
@@ -671,7 +823,7 @@ CLD1
 
 kruskal <- kruskal.test(corr_iter ~ model, data = MAF01df)
 # Kruskal-Wallis chi-squared = 86.875, df = 8, p-value = 2e-15
-dunn_res <- dunnTest(corr_iter ~ model, data = MAF01df, method="none")
+dunn_res <- dunnTest(corr_iter ~ model, data = MAF01df, method="bh")
 dunn_table <- dunn_res$res
 dunn_table_ordered <- dunn_table %>%
   tidyr::separate(Comparison, into = c("Model1", "Model2"), sep = " - ", remove = FALSE) %>%
@@ -691,7 +843,7 @@ CLD2
 
 kruskal <- kruskal.test(corr_iter ~ model, data = MAF05df)
 # Kruskal-Wallis chi-squared = 87.974, df = 8, p-value = 1.198e-15
-dunn_res <- dunnTest(corr_iter ~ model, data = MAF05df, method="none")
+dunn_res <- dunnTest(corr_iter ~ model, data = MAF05df, method="bh")
 dunn_table <- dunn_res$res
 dunn_table_ordered <- dunn_table %>%
   tidyr::separate(Comparison, into = c("Model1", "Model2"), sep = " - ", remove = FALSE) %>%
@@ -788,6 +940,98 @@ cld_point2 <- ggdraw(cld_point2) +
   draw_label("KW p < 0.001", x = 0.17, y = 0.04, hjust = 0.5, vjust = 0) +
   theme_cowplot()
 ggsave("/work/tfs3/gsAI/analysis/pdfs/ImputedSNPsMAFpointplot.pdf", cld_point2, width = 8, height = 5, units = "in")
+
+########## as box plot
+plot_data_all_extra <- extra_df %>%
+  dplyr::filter(gen == "all") %>%
+  dplyr::mutate(
+    MAF   = as.character(MAF),
+    model = factor(model, levels = new_model_order)
+  )
+
+plot_data_with_cld_all_extra <- plot_data_all_extra %>%
+  dplyr::group_by(MAF, model) %>%
+  dplyr::summarise(
+    model_max = max(corr_iter, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  dplyr::left_join(all_CLD_df, by = c("model", "MAF")) %>%
+  dplyr::group_by(MAF) %>%
+  dplyr::mutate(
+    facet_range = diff(range(plot_data_all$corr_iter[
+      plot_data_all$MAF == dplyr::first(MAF)
+    ], na.rm = TRUE)),
+    CLD_y_pos = model_max + 0.06 * facet_range
+  ) %>%
+  dplyr::ungroup()
+
+cld_boxplot_all_extra <- ggplot(
+  plot_data_all_extra,
+  aes(x = model, y = corr_iter, color = model)
+) +
+  geom_boxplot(
+    aes(fill = model),
+    width = 0.65,
+    alpha = 0.25,
+    linewidth = 0.6,
+    outlier.shape = NA
+  ) +
+  geom_point(
+    position = position_jitter(
+      width = 0.15,
+      height = 0,
+      seed = 123
+    ),
+    size = 1.7,
+    alpha = 0.65
+  ) +
+  geom_text(
+    data = plot_data_with_cld_all_extra,
+    aes(
+      x = model,
+      y = CLD_y_pos,
+      label = Letter
+    ),
+    inherit.aes = FALSE,
+    color = "black",
+    size = 4,
+    vjust = 0
+  ) +
+  facet_wrap(
+    ~ MAF,
+    labeller = as_labeller(new_labels)
+  ) +
+  scale_color_manual(values = model_color_palette) +
+  scale_fill_manual(values = model_color_palette) +
+  scale_y_continuous(
+    expand = expansion(mult = c(0.05, 0.12))
+  ) +
+  labs(
+    x = NULL,
+    y = "Correlation Accuracy",
+    color = "Model",
+    fill = "Model"
+  ) +
+  theme_pubr() +
+  theme(
+    strip.text = element_text(size = 12),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    legend.position = "top"
+  )
+
+cld_boxplot_all_extra <- cld_boxplot_all_extra +
+  theme(legend.position = "none")
+
+cld_boxplot_all_extra <- ggdraw(cld_boxplot_all_extra) +
+  draw_label(
+    "KW p < 0.001",
+    x = 0.17,
+    y = 0.04,
+    hjust = 0.5,
+    vjust = 0
+  )
+cld_boxplot_all_extra
 
 ################################################################################
 ################################################################################
@@ -1022,6 +1266,14 @@ combined_GSM_plot <- plot_grid(cld_point2, Extra_models_bp,
 ggsave("/work/tfs3/gsAI/analysis/pdfs/MAFAllImputed.pdf", combined_GSM_plot, 
        width = 8, height = 10, units = "in", dpi = 300)
 
+combined_GSM_boxplot <- plot_grid(cld_boxplot_all_extra, Extra_models_bp,
+                               labels = c("A", "B"),
+                               label_size = 18,
+                               ncol = 1,
+                               rel_heights=c(0.6, 1))
+ggsave("/work/tfs3/gsAI/analysis/pdfs/MAFAllImputed_Boxplot.pdf", combined_GSM_boxplot, 
+       width = 8, height = 10, units = "in", dpi = 300)
+
 ################################################################################
 
 # Table with average corr_iter at F2 vs all and at each MAF
@@ -1050,21 +1302,21 @@ all_dunn_MAF05$MAF <- 0.05
 all_dunn_MAF01$ MAF <- 0.01
 all_dunn_MAF005$MAF <- 0.005
 dunn_results_all <- rbind(all_dunn_MAF05, all_dunn_MAF01, all_dunn_MAF005)
-# write.csv(dunn_results_all, "/work/tfs3/gsAI/analysis/stats/dunn_results_allgen.csv")
+write.csv(dunn_results_all, "/work/tfs3/gsAI/analysis/stats/dunn_results_allgen_none.csv")
 
 # P-values KW/dunn between models at each MAF on F2 generation
 F2_dunn_MAF05$MAF <- 0.05
 F2_dunn_MAF01$MAF <- 0.01
 F2_dunn_MAF005$MAF <- 0.005
 dunn_results_f2 <- rbind(F2_dunn_MAF05, F2_dunn_MAF01, F2_dunn_MAF005)
-# write.csv(dunn_results_f2, "/work/tfs3/gsAI/analysis/stats/dunn_results_f2gen.csv")
+write.csv(dunn_results_f2, "/work/tfs3/gsAI/analysis/stats/dunn_results_f2gen_none.csv")
 
 # P-values KW/dunn between models at each MAF on imputed data
 imputed_dunn_MAF005$MAF <- 0.05
 imputed_dunn_MAF05$MAF <- 0.01
 imputed_dunn_MAF01$MAF <- 0.005
 imputed_dunn <- rbind(imputed_dunn_MAF05, imputed_dunn_MAF01, imputed_dunn_MAF005)
-# write.csv(dunn_results_f2, "/work/tfs3/gsAI/analysis/stats/dunn_results_imputed.csv")
+write.csv(dunn_results_f2, "/work/tfs3/gsAI/analysis/stats/dunn_results_imputed_none.csv")
 
 
 ################################################################################
