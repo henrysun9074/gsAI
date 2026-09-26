@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-"""Nested genomic prediction CV for RF/GB only.
+"""Nested hyperparameter tuning for genomic prediction CV using RF/GB only.
 
-Install dependencies:
-    python -m pip install numpy pandas scipy scikit-learn scikit-optimize xgboost joblib
 Execution:
-    python3 nested_crossval.py -f data/genotypes.csv -o my_run -g all
+    python3 nested_hpt_crossval.py -f data/genotypes.csv -o my_run -g all
 
+Optionally, disable hyperparameter tuning using --no-tuning, or change the number of inner folds and search iterations
 """
 
 import argparse
@@ -34,7 +33,7 @@ MODEL_NAMES = ("RF", "GB")
 
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(
-        description="One-step genomic prediction with 10 x 5-fold nested CV.",
+        description="Nested hyperparameter tuning for genomic prediction CV using RF/GB only.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument("-f", "--filename", required=True, help="Input CSV path")
@@ -160,7 +159,7 @@ def fit_model(name, X_train, y_train, seed, args):
         estimator=pipeline,
         search_spaces=get_search_space(name),
         n_iter=args.search_iterations,
-        # skopt's default is 10 initialization points, which would make a five-candidate run entirely random
+        # modify skopt's default which is 10 initialization points, which would make a five-candidate run entirely random
         optimizer_kwargs={"n_initial_points": min(2, max(1, args.search_iterations - 1))},
         n_points=1,
         cv=inner_cv,
@@ -198,7 +197,7 @@ def main(argv=None):
     args = parse_args(argv)
     logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO,
                         format="%(asctime)s %(levelname)s: %(message)s")
-    # Fail early for missing optional dependencies, before starting a long run.
+    # Fail early for dependency issues
     try:
         if "GB" in args.models:
             import xgboost  # noqa: F401
