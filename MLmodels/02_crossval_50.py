@@ -26,6 +26,7 @@ from sklearn.metrics import roc_auc_score, log_loss, brier_score_loss
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
 from xgboost import XGBClassifier
 from scipy.stats import pearsonr
 from collections import defaultdict
@@ -57,7 +58,11 @@ logger.info("Running with outdir=%s filename=%s generation=%s", outdir, filename
 #  This helper function is to build model from previously tuned hyperparameters
 def build_model(name, params):
     if name == "LR":
-        return LogisticRegression(max_iter=1000, solver="saga", **params)
+        # fit() learns scaling from this fold's training data only.
+        return Pipeline([
+            ("scaler", StandardScaler()),
+            ("model", LogisticRegression(max_iter=1000, solver="saga", **params)),
+        ])
     elif name == "RF":
         return RandomForestClassifier(n_jobs=-1, **params)
     elif name == "GB":
@@ -123,14 +128,11 @@ def main():
     if generation != "all":
         df = df[df["Generation"] == generation]
 
-    # Extract and scale features
+    # Extract raw features; only LR is scaled inside its pipeline
     ids = df["ID"].values
     ax_columns = [col for col in df.columns if col.startswith("AX")]
     X = df[ax_columns].to_numpy()
     y = df["Status"].to_numpy()
-
-    scaler = StandardScaler()
-    X = scaler.fit_transform(X)
 
     #  Load hyperparameters 
     with open(f"MLmodels/models/{indir}/best_hyperparams.json", "r") as f:
@@ -144,7 +146,7 @@ def main():
 
     for repeat in range(10):
         logger.info(f"=== Repetition {repeat+1}/10 ===")
-        skf_outer = StratifiedKFold(n_splits=5, shuffle=True, random_state=42 + repeat)
+        skf_outer = StratifiedKFold(n_splits=5, shuffle=True, random_state=123 + repeat)
 
         for fold, (train_idx, test_idx) in enumerate(skf_outer.split(X, y)):
             fold_results, fold_metrics = run_outer_fold(fold, train_idx, test_idx, X, y, ids, best_params)

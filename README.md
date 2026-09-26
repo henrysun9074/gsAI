@@ -5,13 +5,13 @@ Henry Sun, Paul Coyne, Zhenwei Wang, Sandra Casas, Jerome La Peyre, Mason L. Wil
 
 ## 📖 Overview and Repository Structure
 
-This project integrates data from three successive generations of lab-based dermo challenge and genotyping with a high-density SNP array for genomic selection and genome-wide association studies (GWAS) for dermo resistance in oysters, combining three generations into a single training population. 
+This project integrates data from three successive generations of lab-based dermo challenge and genotyping with a high-density SNP array for genomic selection and genome-wide association studies (GWAS) for dermo resistance in oysters, combining three generations into a single training population.  
 
 We trained 9 different genomic prediction models to predict breeding values for survivial against dermo challenge. We also evaluated the influence of alleles with rare variants on genomic prediction accuracy, as well as strong-effect SNPs identified by GWAS (GWAS-selected markers). In the repository, please find the following folders.  
 
-  * [`/MLmodels`](./MLmodels) has code containing instructions for training, hyperparameter tuning, and cross-validation of LR, RF, GB genomic selection models, as well as .json files with optimal hyperparameter values for all tuned models.  
-  * [`/Rmodels`](./Rmodels) has code containing instructions for training and cross-validation of BayesB, BRR, LASSO, GBLUP, EGBLUP, RKHS genomic selection models.  
- * [`/analysis`](./analysis) has code for statistical analyses comparing model performances and generating figures from the paper. Code for companion genome-wide association studies used to identify markers associated with dermo resistance is also included (see `GWASDarpaManuscript.R`).
+  * [`/MLmodels`](./MLmodels) has code for training, hyperparameter tuning, and cross-validation of LR, RF, GB genomic selection models.   
+  * [`/Rmodels`](./Rmodels) has code for training and cross-validation of BayesB, BRR, LASSO, GBLUP, EGBLUP, RKHS genomic selection models.  
+ * [`/analysis`](./analysis) has code for statistical analyses comparing model performances and generating figures from the paper, as well as for the PCA and iterative GWAS analyses.  
 
 ---
 
@@ -39,6 +39,6 @@ All R libraries for training genomic prediction models or generating figures can
 
 ## Contact
 
-Raw genotype and phenotype data used in this study are available upon request to xguo[at]hsrl.rutgers.edu. Please contact hs325[at]duke.edu with any other questions about this project or the contents of this repository.  
+Please contact hs325[at]duke.edu with any questions about the contents of this repository.  
 
-**Citation:** TBA upon study publication. 
+**Citation:** TBA upon study publication.

@@ -28,6 +28,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
 
 from skopt import BayesSearchCV
 from skopt.space import Real, Integer, Categorical
@@ -65,10 +66,13 @@ def get_search_spaces():
     return {
         # Logistic regression
         "LR": (
-            LogisticRegression(max_iter=1000, solver="saga"),
+            Pipeline([
+                ("scaler", StandardScaler()),
+                ("model", LogisticRegression(max_iter=1000, solver="saga")),
+            ]),
             {
-                "C": Real(1e-5, 10, prior="log-uniform"),
-                "penalty": Categorical(["l1", "l2"]),
+                "model__C": Real(1e-5, 10, prior="log-uniform"),
+                "model__penalty": Categorical(["l1", "l2"]),
             },
         ),
         # Random forest
@@ -131,8 +135,13 @@ def tune_model(X, y, model_name, n_iter=100):
         verbose=0,
     )
     opt.fit(X, y)
-    logger.info(f"Best {model_name} params: {opt.best_params_}")
-    return opt.best_estimator_, opt.best_params_
+    # Keep the original JSON parameter names for script 02.
+    best_params = {
+        key.replace("model__", "", 1) if model_name == "LR" else key: value
+        for key, value in opt.best_params_.items()
+    }
+    logger.info(f"Best {model_name} params: {best_params}")
+    return opt.best_estimator_, best_params
 
 #  Main 
 def main():
@@ -148,15 +157,12 @@ def main():
     if generation != "all":
         df = df[df["Generation"] == generation]
     
-    # extract and scale features
+    # Extract raw features; only LR is scaled inside its pipeline
     ax_columns = [col for col in df.columns if col.startswith("AX")]
     X = df[ax_columns]
     y = df["Status"]
     X = X.to_numpy()
     y = y.to_numpy()
-
-    scaler = StandardScaler()
-    X = scaler.fit_transform(X)
 
     tuned_models = {}
     tuned_params = {}
