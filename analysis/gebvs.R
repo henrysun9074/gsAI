@@ -61,9 +61,6 @@ unique(df$hpt)
 nrow(df)
 
 colnames(df)
-# [1]  "hpt"       "gsm"       "MAF"       "gen"       "ID"        "Status"    "LR"        "LR_SD"     "RF"       
-# [11] "RF_SD"     "GB"        "GB_SD"     "GBLUP"     "GBLUP_SD"  "LASSO"     "LASSO_SD"  "RKHS"      "RKHS_SD"   "EGBLUP"   
-# [21] "EGBLUP_SD" "BRR"       "BRR_SD"    "BayesB"    "BayesB_SD"
 
 ################################################################################
 

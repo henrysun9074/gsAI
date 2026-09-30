@@ -199,7 +199,6 @@ make_generation_plot <- function(data, cld_data, generation) {
   plot_data <- data %>%
     filter(gen == generation)
   
-  # Determine y-position for CLD letters separately within each MAF
   cld_positions <- plot_data %>%
     group_by(MAF, model) %>%
     summarise(
@@ -625,7 +624,6 @@ MAF05_gsm  <- plot_data_all_gsm %>% filter(MAF == "0.05")
 
 model_order_index <- setNames(seq_along(new_model_order), new_model_order)
 
-# Helper function to compute ordered Dunn's test and CLD
 get_ordered_cld <- function(df_subset) {
   dunn_res <- dunnTest(corr_iter ~ model, data = df_subset, method = "bh")$res
   
@@ -742,7 +740,6 @@ cld_boxplot_all_gsm <- ggplot(
     legend.position = "none"
   )
 
-# Add KW label
 cld_boxplot_all_gsm <- ggdraw(cld_boxplot_all_gsm) +
   draw_label(
     "KW p < 0.001",
@@ -1125,7 +1122,7 @@ dunn_results_no_gsm
 
 # Pairwise between MAF levels for each model (all generations, gsm == 1)
 maf_pvals <- df_100iter %>%
-  filter(gen == "all", gsm == 1, model != "GBLUP") %>%
+  filter(gen == "all", gsm == 1) %>%
   group_by(model) %>%
   wilcox_test(corr_iter ~ MAF, p.adjust.method = "fdr") %>%
   ungroup()
@@ -1133,7 +1130,7 @@ maf_pvals
 
 # F2 vs All generations at each MAF for each model
 f2_vs_all_pvals <- df_100iter %>%
-  filter(gen %in% c("all", "F2"), gsm == 0, model != "GBLUP") %>%
+  filter(gen %in% c("all", "F2"), gsm == 0) %>%
   group_by(MAF, model) %>%
   wilcox_test(corr_iter ~ gen) %>%
   add_significance() %>%
@@ -1142,7 +1139,7 @@ f2_vs_all_pvals
 
 # GSM Effect: Without GSM (gsm = 0) vs With GSM (gsm = 1) at each MAF
 gsm_pvals <- df_100iter %>%
-  filter(gen == "all", !is.na(gsm), model != "GBLUP") %>%
+  filter(gen == "all", !is.na(gsm)) %>%
   group_by(MAF, model) %>%
   wilcox_test(corr_iter ~ gsm) %>%
   add_significance() %>%
