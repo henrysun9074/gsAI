@@ -4,6 +4,7 @@
 *.dat
 /misc
 /data/MAF*.csv
+/data/*.tsv
 /data/extra/
 /data/*.xlsx
 /analysis/misc
