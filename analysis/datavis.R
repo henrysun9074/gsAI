@@ -885,7 +885,8 @@ best_conv <- df %>%
   filter(
     gen == "all",
     ml == 0,
-    MAF %in% c(0.05, 0.01, 0.005)
+    MAF %in% c(0.05, 0.01, 0.005),
+    model %in% c("GBLUP", "EGBLUP", "BayesB", "LASSO", "BRR", "RKHS")
   ) %>%
   mutate(
     MAF = factor(as.character(MAF), levels = c("0.05", "0.01", "0.005")),
@@ -904,6 +905,8 @@ build_hpt_panel <- function(curr_maf, curr_gsm) {
   bench <- best_conv %>%
     filter(MAF == curr_maf, gsm_label == curr_gsm)
   
+  bench_label_text <- sprintf("%s: %.3f", bench$model, bench$mean_acc)
+  
   hpt_comparisons <- list(
     c("RF_None", "RF_100 Iteration"),
     c("RF_100 Iteration", "RF_Nested"),
@@ -919,6 +922,16 @@ build_hpt_panel <- function(curr_maf, curr_gsm) {
       linetype = "dashed",
       color = "grey30",
       linewidth = 0.75
+    ) +
+    annotate(
+      "text",
+      x = 5.8,
+      y = bench$mean_acc,
+      label = bench_label_text,
+      vjust = 1.5, 
+      hjust = 1,
+      size = 3,
+      color = "grey30"
     ) +
     geom_boxplot(
       aes(color = model, fill = model),
@@ -942,14 +955,13 @@ build_hpt_panel <- function(curr_maf, curr_gsm) {
       size = 2.0,
       position = position_jitter(width = 0.18, seed = 123)
     ) +
-    # Significance tests
     geom_signif(
       comparisons = hpt_comparisons,
       test = "wilcox.test",
       map_signif_level = c("***" = 0.001, "**" = 0.01, "*" = 0.05),
-      step_increase = 0.12,
+      step_increase = 0.1,
       tip_length = 0.015,
-      textsize = 3.2,
+      textsize = 3.5,
       color = "black"
     ) +
     scale_x_discrete(
@@ -964,7 +976,7 @@ build_hpt_panel <- function(curr_maf, curr_gsm) {
     ) +
     scale_color_manual(values = model_color_palette) +
     scale_fill_manual(values = model_color_palette) +
-    scale_y_continuous(expand = expansion(mult = c(0.05, 0.22))) +
+    scale_y_continuous(expand = expansion(mult = c(0.05, 0.18))) +
     labs(
       x = NULL,
       y = "Correlation Accuracy",
@@ -989,12 +1001,31 @@ pE <- build_hpt_panel("0.01",  "GSM (+)")
 pF <- build_hpt_panel("0.005", "GSM (+)")
 
 legend_plot <- ggplot(hpt_data, aes(x = model, y = corr_iter, fill = model, color = model)) +
-  geom_point(alpha = 1, size =5) +
+  geom_point(alpha = 1, size = 5) +
+  geom_line(
+    data = data.frame(model = c("RF", "RF"), corr_iter = c(NA, NA), Line = "Best Conventional Model"),
+    aes(x = model, y = corr_iter, linetype = Line),
+    color = "grey30",
+    linewidth = 0.75,
+    inherit.aes = FALSE
+  ) +
   scale_color_manual(values = model_color_palette) +
   scale_fill_manual(values = model_color_palette) +
+  scale_linetype_manual(
+    name = NULL,
+    values = c("Best Conventional Model" = "dashed")
+  ) +
   labs(fill = "Model", color = "Model") +
   theme_pubr() +
-  theme(legend.position = "bottom")
+  theme(
+    legend.position = "bottom",
+    legend.box = "horizontal"
+  ) +
+  guides(
+    color = guide_legend(order = 1),
+    fill = guide_legend(order = 1),
+    linetype = guide_legend(order = 2, override.aes = list(color = "grey30", linewidth = 0.75))
+  )
 
 shared_legend <- get_legend(legend_plot)
 
@@ -1018,7 +1049,7 @@ combined_hpt_figure <- plot_grid(
 combined_hpt_figure
 
 ggsave(
-  "/work/tfs3/gsAI/analysis/v2/pdfs/Figure4.pdf",
+  "/work/tfs3/gsAI/analysis/v2/pdfs/Figure5.pdf",
   plot = combined_hpt_figure,
   width = 14,
   height = 8,
@@ -1087,7 +1118,6 @@ print(kw_f2_no_gsm)
 print(kw_all_no_gsm)
 print(kw_all_gsm)
 
-# Helper function to compute Dunn's tests per MAF level
 run_dunn_by_maf <- function(data_subset) {
   maf_levels <- c("0.05", "0.01", "0.005")
   
@@ -1137,7 +1167,7 @@ f2_vs_all_pvals <- df_100iter %>%
   ungroup()
 f2_vs_all_pvals
 
-# GSM Effect: Without GSM (gsm = 0) vs With GSM (gsm = 1) at each MAF
+# GSM Effect
 gsm_pvals <- df_100iter %>%
   filter(gen == "all", !is.na(gsm)) %>%
   group_by(MAF, model) %>%
@@ -1147,6 +1177,7 @@ gsm_pvals <- df_100iter %>%
 gsm_pvals
 
 ####################################
+
 # % change between MAF levels split by GSM status 
 pct_change_maf <- df_100iter %>%
   filter(
@@ -1195,6 +1226,7 @@ summary_pct_maf <- pct_change_maf %>%
 summary_pct_maf
 
 ####################################
+
 # % inc after GSMs
 pct_change_df <- df_100iter %>%
   filter(gen == "all", !is.na(gsm)) %>%
@@ -1254,6 +1286,9 @@ summary_pct_gen
 
 
 ####################################
+
+# % change from hpt method
+
 pct_change_hpt <- df %>%
   filter(
     gen == "all",
