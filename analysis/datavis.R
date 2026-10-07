@@ -1024,7 +1024,7 @@ legend_plot <- ggplot(hpt_data, aes(x = model, y = corr_iter, fill = model, colo
   guides(
     color = guide_legend(order = 1),
     fill = guide_legend(order = 1),
-    linetype = guide_legend(order = 2, override.aes = list(color = "grey30", linewidth = 0.75))
+    linetype = guide_legend(order = 2, override.aes = list(color = "grey20", linewidth = 0.75))
   )
 
 shared_legend <- get_legend(legend_plot)
